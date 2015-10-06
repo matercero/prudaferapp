@@ -1,0 +1,54 @@
+<div class="presupuestosproveedores">
+    <?php echo $this->Form->create('Presupuestosproveedore', array('type' => 'file')); ?>
+    <fieldset>
+        <legend><?php __('Añadir Presupuesto de proveedor Directo ( De Almacen )'); ?></legend>
+        <table class="view">
+            <tr>
+                <td><?php echo $this->Form->input('serie', array('type' => 'select', 'options' => $series, 'default' => $config['Seriespresupuestoscompra']['serie'])); ?></td>
+                <td>
+                    <?php echo $this->Form->input('numero', array('label' => 'Número', 'default' => $numero)); ?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <?php echo $this->Autocomplete->replace_select('Proveedore', 'Proveedor', true); ?>
+                </td>
+                <td colspan="2">
+                    <?php echo $this->Form->input('fecha', array('label' => 'Fecha', 'dateFormat' => 'DMY', 'timeFormat' => '24')); ?>
+                </td>
+                <td>
+                    <?php echo $this->Form->input('almacene_id', array('label' => 'Almacén')); ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <?php echo $this->Form->input('observaciones', array('label' => 'Observaciones')); ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <?php echo $this->Form->input('file', array('type' => 'file', 'label' => 'Presupuesto escaneado')); ?>
+                </td>
+                <td>
+                    <?php echo $this->Form->input('estadospresupuestosproveedore_id', array('label' => 'Estado del Presupuesto')); ?>
+                </td>
+                <td>
+                    <?php echo $this->Form->input('fechaplazo', array('label' => 'Plazo de Entrega', 'dateFormat' => 'DMY','empty'=>'--')); ?>
+                </td>
+            </tr>
+            
+            <tr>
+                <td  colspan="2">
+                    <span>Agencia de Transporte</span>
+                    <?php echo $this->Form->input('agenciadetransporte',array('label'=>false)); ?>
+                </td>
+                <td>
+                    <span>Portes</span>
+                    <?php echo $this->Form->input('portes',array('options'=>array('Debidos'=>'Debidos','Pagados'=>'Pagados'),'empty'=>'','label'=>false)); ?>
+                </td>
+            </tr>
+        </table>
+        <input type="hidden" name="data[paraalmacen]" value="1" />
+    </fieldset>
+    <?php echo $this->Form->end(__('Guardar', true)); ?>
+</div>

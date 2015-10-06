@@ -1,0 +1,143 @@
+<div class="ordenes">
+    <?php echo $this->Form->create('Ordene', array('type' => 'file')); ?>
+    <fieldset>
+        <legend>
+            <?php __('Editar Orden Nº ' . $this->Form->value('Ordene.numero')); ?>
+            <?php echo $this->Html->link(__('Ver', true), array('action' => 'view', $this->Form->value('Ordene.id')), array('class' => 'button_link')); ?>
+            <?php echo $this->Html->link(__('Listar Ordenes', true), array('action' => 'index'), array('class' => 'button_link')); ?>
+        </legend>
+        <table class="view">
+            <tr>
+                <td style="font-size: 120%;">
+                    <span>Número</span>
+                    <?php
+                    echo $this->Form->input('id');
+                    echo $this->Form->input('numero', array('label' => false));
+                    ?>
+                </td>
+                <td colspan="2">
+                    <span>Comercial</span>
+                    <?php
+                    echo $this->Form->input('comerciale_id', array('label' => false));
+                    ?>
+                </td>
+                <td>
+                    <span>Aviso de Taller</span>
+                    <?php echo $this->Form->value('Avisostallere.numero'); ?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Cliente</span>
+                    <?php echo $this->Form->value('Cliente.nombre') ?>
+                </td>
+                <td>
+                    <?php
+                    echo $this->Form->input('centrostrabajo_id', array(
+                        'label' => 'Centro de Trabajo',
+                        'class' => 'select_basico',
+                        'div' => array(
+                            'id' => 'CentrostrabajoSelectDiv'
+                        ),
+                        'empty' => '--- Seleccione un centro de trabajo ---'));
+                    echo $ajax->observeField('OrdeneCentrostrabajoId', array(
+                        'frequency' => '1',
+                        'update' => 'MaquinaSelectDiv',
+                        'url' => array(
+                            'controller' => 'maquinas',
+                            'action' => 'selectOrdenes'
+                            ))
+                    );
+                    ?>
+                </td>
+                <td>
+                    <?php
+                    echo $this->Form->input('maquina_id', array(
+                        'label' => 'Máquina',
+                        'empty' => '--- Seleccione una máquina ---',
+                        'class' => 'select_basico',
+                        'div' => array(
+                            'id' => 'MaquinaSelectDiv'
+                        )
+                    ));
+                    ?>
+                    <p>
+                        <span>Horas Maquina</span>
+                        <?php echo $this->Form->input('horas_maquina', array('default' => 0, 'label' => False)) ?>
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        <span>Nº Serie Máquina</span> 
+                        <?php echo $this->Form->value('Maquina.serie_maquina') ?>
+                    </p>
+                    <p>
+                        <span>Nº Serie Motor</span> 
+                        <?php echo $this->Form->value('Maquina.serie_motor') ?>
+                    </p>
+                    <p>
+                        <span>Nº Serie Transmisión</span>
+                        <?php echo $this->Form->value('Maquina.serie_transmision') ?>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Mantenimientos:</span></span><span style="color: green">  
+                    <?php echo $this->Form->input('mantenimientos', array('label' => false)); ?>
+                </td>
+                <td>
+                    <span>Fecha</span>
+                    <?php echo $this->Form->input('fecha', array('dateFormat' => 'DMY', 'label' => false)); ?>
+                </td>
+                <td>
+                    <span>Estado</span>
+                    <?php echo $this->Form->input('estadosordene_id', array('label' => false)); ?>
+                </td>
+                <td>
+                    <span>Reparación Prevista</span>
+                    <?php echo $this->Form->input('fecha_prevista_reparacion', array('dateFormat' => 'DMY', 'label' => false)); ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <span>Fecha de Aceptación del Aviso</span>
+                    <?php $fecha_aceptacion_aviso = $this->Form->value('Avisostallere.fechaaceptacion'); ?>
+                    <?php echo!empty($fecha_aceptacion_aviso) ? $this->Time->format('d-m-Y', $fecha_aceptacion_aviso) : '' ?>
+                </td>
+                <td colspan="">
+                    <span>Urgente</span>
+                    <?php echo $this->Form->input('urgente', array('label' => false)); ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <span>Descripción</span> 
+                    <?php echo $this->Form->input('descripcion', array('label' => false)); ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <span>Observaciones</span> 
+                    <?php echo $this->Form->input('observaciones', array('label' => false)); ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <span>Mensaje</span> 
+                    <?php echo $this->Form->input('mensajesordene_id', array('label' => false)); ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <?php
+                    echo $this->Html->link(__('Orden Escaneada Actual: ' . $this->Form->value('Ordene.ordenescaneada'), true), '/files/ordene/' . $this->Form->value('Ordene.ordenescaneada'));
+                    echo $this->Form->input('remove_file', array('type' => 'checkbox', 'label' => 'Borrar Orden Escaneado Actual', 'hiddenField' => false));
+                    echo $this->Form->input('file', array('type' => 'file', 'label' => False));
+                    ?>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <?php echo $this->Form->end(__('Guardar', true)); ?>
+</div>

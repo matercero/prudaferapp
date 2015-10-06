@@ -1,0 +1,58 @@
+<?php echo $this->Form->create('MaterialesTareasalbaranescliente',array('action' => 'add')); ?>
+<fieldset>
+    <legend><?php __('Añadir Material a La Tarea del Albarán'); ?></legend>
+    <div class="input required">
+        <label for="autocomplete-materiales">Articulo</label>
+        <input type="text" id="autocomplete-materiales" autofocus="autofocus"/>
+        <?php
+        echo $this->Form->input('articulo_id', array('type' => 'hidden'));
+        ?>
+    </div>
+    <p>Existencias: <span id="stock"></span></p>
+    <?php
+    echo $this->Form->input('tareasalbaranescliente_id', array('type' => 'hidden', 'value' => $tareasalbaranescliente_id));
+    echo $this->Form->input('cantidad', array('value' => 0));
+    echo $this->Form->input('descuento', array('value' => 0, 'label' => 'Descuento %'));
+    echo $this->Form->input('precio_unidad', array('value' => 0, 'readonly' => false));
+    echo $this->Form->input('importe', array('value' => 0, 'readonly' => true));
+    ?>
+    <span>Precios sin IVA</span>
+</fieldset>
+<?php echo $this->Ajax->submit(__('Guardar y Nuevo', true), array('url' => array('action' => 'add_ajax',$tareasalbaranescliente_id), 'update' => 'dialog-modal')); ?>
+<?php echo $this->Form->end(__('Guardar y Cerrar', true)); ?>
+<script type="text/javascript">
+    /*Autcocomplete basico de Articulos en los MAteriales de los Presupuestos en sustitucion del select de articulos*/
+    if($( "#autocomplete-materiales" ).length != 0){
+        var autocomplete_materiales =$( "#autocomplete-materiales" ).autocomplete({
+            source: "<?php echo Configure::read('proyect_url') ?>articulos/auto_complete/<?php echo $tareasalbaranescliente['Albaranescliente']['almacene_id'] ?>",
+            minLength: 4,
+            select: function( event, ui ) {
+                $("#MaterialesTareasalbaranesclienteArticuloId").val(ui.item.id);
+                $("#MaterialesTareasalbaranesclientePrecioUnidad").val(ui.item.precio_sin_iva);
+                $("#stock").html(ui.item.existencias);
+            }
+        });
+        autocomplete_materiales.data( "autocomplete" )._renderItem = function( ul, item ) {
+            return $( "<li></li>" )
+            .data( "item.autocomplete", item )
+            .append( "<a>Ref. " + item.ref + " ····· " + item.label + "</a>" )
+            .appendTo( ul );
+        };
+    }
+    //Calculo automático
+    function calcular_materiale(){
+        var importe = $('#MaterialesTareasalbaranesclienteCantidad').val()*$('#MaterialesTareasalbaranesclientePrecioUnidad').val();
+        importe = importe - (importe * (parseFloat($('#MaterialesTareasalbaranesclienteDescuento').val())/100));
+        importe =Math.round(importe *100)/100 
+        $('#MaterialesTareasalbaranesclienteImporte').val(importe);
+    }
+    $('#MaterialesTareasalbaranesclienteCantidad').keyup(function(){
+        calcular_materiale();
+    });
+    $('#MaterialesTareasalbaranesclientePrecioUnidad').keyup(function(){
+        calcular_materiale();
+    });
+    $('#MaterialesTareasalbaranesclienteDescuento').keyup(function(){
+        calcular_materiale();
+    });
+</script>
