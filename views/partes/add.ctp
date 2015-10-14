@@ -47,13 +47,13 @@
                     <th>Imputable</th>
                 </tr>
                 <tr>
-                    <td><?php echo $this->Form->input('horasdesplazamientoinicio_ida', array('type' => 'text', 'label' => false, 'style' => 'width: 80%;')); ?></td>
-                    <td><?php echo $this->Form->input('horasdesplazamientofin_ida', array('type' => 'text', 'label' => false, 'style' => 'width: 80%;')); ?></td>
+                    <td><?php echo $this->Form->input('horasdesplazamientoinicio_ida', array('type' => 'text', 'label' => 'Ida', 'style' => 'width: 60%;')); ?></td>
+                    <td><?php echo $this->Form->input('horasdesplazamientofin_ida', array('type' => 'text', 'label' => false, 'style' => 'width: 60%;')); ?></td>
                     <td><?php echo $this->Form->input('horasdesplazamientoreales_ida', array('label' => false, 'readonly' => true, 'value' => 0, 'class' => 'dineroinput')); ?></td>
                     <td><?php echo $this->Form->input('horasdesplazamientoimputables_ida', array('label' => false, 'value' => 0, 'class' => 'dineroinput')); ?></td>
                 </tr>
                 <tr>
-                    <td><?php echo $this->Form->input('horasdesplazamientoinicio_vuelta', array('type' => 'text', 'label' => false, 'style' => 'width: 80%;')); ?></td>
+                    <td><?php echo $this->Form->input('horasdesplazamientoinicio_vuelta', array('type' => 'text', 'label' => 'Vuelta', 'style' => 'width: 80%;')); ?></td>
                     <td><?php echo $this->Form->input('horasdesplazamientofin_vuelta', array('type' => 'text', 'label' => false, 'style' => 'width: 80%;')); ?></td>
                     <td><?php echo $this->Form->input('horasdesplazamientoreales_vuelta', array('label' => false, 'readonly' => true, 'value' => 0, 'class' => 'dineroinput')); ?></td>
                     <td><?php echo $this->Form->input('horasdesplazamientoimputables_vuelta', array('label' => false, 'value' => 0, 'class' => 'dineroinput')); ?></td>

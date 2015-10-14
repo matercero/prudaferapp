@@ -35,8 +35,7 @@
         echo $this->Javascript->link('dafer-script');
         echo $this->Javascript->link('chosen.jquery');
         echo $this->Javascript->link('select2.min');
-        echo $this->Javascript->link('autocompletes_dafer');
-        echo $this->Javascript->link('zebra_datepicker');
+        echo $this->Javascript->link('autocompletes_dafer');        
         echo $javascript->link('jquery.form.js');
         ?>
     </head>
@@ -52,13 +51,13 @@
 
                 <?php echo $content_for_layout; ?>
 
+                </div>
+                <div id="footer">
+                    <?php echo 'Desarrollo Eme3 ® 2015' ?>
+                </div>
             </div>
-            <div id="footer">
-                <?php echo 'Desarrollo Fundación GUADALUX' ?>
-            </div>
-        </div>
-        <div id="dialog-modal" title="Dafer">
-        </div>
+        </div>        
+        <div id="dialog-modal" title="Dafer"/>        
         <div id="loading_background">
             <div id="loading_animation"></div>
         </div>

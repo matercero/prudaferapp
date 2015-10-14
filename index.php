@@ -17,6 +17,6 @@
  */
 
 /**
- * Version 1.0.0.0
+ * Version 1.0
  */
 require 'webroot' . DIRECTORY_SEPARATOR . 'index.php';

@@ -88,5 +88,5 @@
         <li><span class="divider divider-vert" ></span></li>
         <li class="clear"> </li>
     </ul>
-<div><?php echo "VERSION: 1.0.0.0" ?></div>
+<div><?php echo "Versión 1.0" ?></div>
 </div>

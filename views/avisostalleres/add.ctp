@@ -1,20 +1,10 @@
-<script type="text/javascript">
-    $(document).ready(function () {
-
-        // assuming the controls you want to attach the plugin to 
-        // have the "datepicker" class set
-        $("#DueDate").Zebra_DatePicker({
-            format: 'd/m/Y'
-        });
-
-    });
-</script>
+<script> $(document).ready(function() { $("#datepicker").datepicker(); }); </script> 
 
 <div class="avisostalleres">
     <?php echo $this->Form->create('Avisostallere', array('type' => 'file')); ?>
     <fieldset>
         <legend><?php __('Nuevo Aviso de Taller'); ?></legend>
-        <table>
+        <table border="1">
             <tr>
                 <td>
                     <?php echo $this->Form->input('numero', array('label' => 'Numero', 'value' => $numero)); ?>
@@ -22,35 +12,31 @@
 
                 <td>
                     <?php echo $this->Form->input('fechaaviso', array('label' => 'Fecha y hora aviso', 'dateFormat' => 'DMY', 'timeFormat' => '24')); ?>
-                    <input type="text" name="DueDate" id="DueDate" value="" style="width:200px" />
-                                   
+                    <input id="datepicker" />
                 </td>
                 <td>
                     <?php echo $this->Form->input('estadosavisostallere_id', array('label' => 'Estado', 'default' => '1')); ?>
                 </td>
-            </tr>
-            <tr>
-                <td>
+                <td colspan="2">
                     <?php echo $this->Form->input('avisotelefonico', array('label' => 'Aviso Telefónico')); ?>
-                </td>
-                <td>
                     <?php echo $this->Form->input('avisoemail', array('label' => 'Aviso E-Mail')); ?>
                 </td>
+            </tr>
+            <tr>
                 <td>
                     <?php echo $this->Form->input('fechaaceptacion', array('label' => 'Fecha de Aceptación', 'dateFormat' => 'DMY', 'empty' => '--')); ?>
                 </td>
-            </tr>
-            <tr>
+           
                 <td>
                     <?php
-                    echo $this->Form->input('cliente_id', array('label' => 'Cliente', 'class' => 'chzn-select-required', 'empty' => 'Selecionar Cliente...'));
+                    echo $this->Form->input('cliente_id', array('label' => 'Cliente', 'class' => 'chzn-select-required', 'empty' => 'Seleccionar Cliente...'));
                     echo $ajax->observeField('AvisostallereClienteId', array(
                         'frequency' => '1',
                         'update' => 'CentrostrabajoSelectDiv',
                         'url' => array(
                             'controller' => 'centrostrabajos',
                             'action' => 'selectAvisostalleres'
-                        ))
+                            ))
                     );
                     ?>
                 </td>
@@ -68,7 +54,7 @@
                         'url' => array(
                             'controller' => 'maquinas',
                             'action' => 'selectAvisostalleres'
-                        ))
+                            ))
                     );
                     ?>
                     <?php echo $this->Html->link(__('Nuevo Centro de Trabajo', true), array('controller' => 'centrostrabajos', 'action' => 'add_popup'), array('class' => 'button_link popup')); ?>
@@ -109,8 +95,7 @@
                 <td>
                     <?php echo $this->Form->input('enviara', array('label' => 'Enviar a:')); ?>
                 </td>
-            </tr>
-            <tr>
+           
                 <td colspan="1">
                     <?php echo $this->Form->input('aviso_mantenimiento', array('label' => 'Mantenimiento:')); ?>
                 </td>	
