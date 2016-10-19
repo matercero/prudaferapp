@@ -100,6 +100,7 @@ class MaquinasController extends AppController {
             $this->Session->setFlash(__('Máquina no Válida', true));
             $this->redirect(array('action' => 'index'));
         }
+
         if (!empty($this->data)) {
             if ($this->Maquina->save($this->data)) {
                 /* Edicion de  fichero */
@@ -127,7 +128,28 @@ class MaquinasController extends AppController {
         $clientes = $this->Maquina->Cliente->find('list');
         $maquina = $this->Maquina->find('first', array('contain' => array('Centrostrabajo' => 'Cliente'), 'conditions' => array('Maquina.id' => $id)));
         $centrostrabajos = $this->Maquina->Centrostrabajo->find('list', array('conditions' => array('Centrostrabajo.cliente_id' => $maquina['Centrostrabajo']['cliente_id'])));
-        $this->set(compact('clientes','maquina', 'centrostrabajos'));
+        $this->set(compact('clientes', 'maquina', 'centrostrabajos'));
+
+        /* Control de que la maquina no se pueda editar si esta pdte de facturar */
+        $db = ConnectionManager::getInstance();
+        $conn = $db->getDataSource('default');
+        $query = ' SELECT maquinas.id '
+                . 'FROM estadosalbaranesclientesreparaciones '
+                . 'LEFT JOIN albaranesclientesreparaciones '
+                . 'ON albaranesclientesreparaciones.estadosalbaranesclientesreparacione_id = estadosalbaranesclientesreparaciones.id '
+                . 'LEFT JOIN maquinas '
+                . 'ON albaranesclientesreparaciones.maquina_id = maquinas.id '
+                . 'WHERE estadosalbaranesclientesreparaciones.id <> 3 '
+                . 'AND maquinas.id = "' . $this->Maquina->id . '"';
+        $res = $conn->query($query);
+      //  echo ">>>" . $query;
+        $hayFacturaPdte = FALSE;
+        if (!empty($res) && sizeof($res) > 0) {
+            $hayFacturaPdte = TRUE;
+            $this->Session->setFlash(__('Máquina pendiente de facturar. NO puede cambiar de centro.', true));
+        }
+        $this->set('hayFacturaPdte', $hayFacturaPdte);        
+        /*         * ***************************** */
     }
 
     function delete($id = null) {

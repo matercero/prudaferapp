@@ -27,6 +27,7 @@
         ?></td>
                 <td class="required"><span>Centro de Trabajo</span></td>
                 <td><?php
+                if ($hayFacturaPdte) { 
                     echo $this->Form->input('centrostrabajo_id', array(
                         'style' => 'width: 300px;',
                         'label' => false,
@@ -35,8 +36,23 @@
                         ),
                         'class' => 'chzn-select-required',
                         'data-placeholder' => "Elije un Centro de Trabajo...",
+                        'empty' => '',
+                        'disabled' => 'disabled'));
+                } else {
+                    echo $this->Form->input('centrostrabajo_id', array(
+                        'style' => 'width: 300px;',
+                        'label' => false,
+                        'div' => array(
+                            'id' => 'CentrostrabajoSelectDiv',
+                        ),                        
+                        'class' => 'chzn-select-required',
+                        'data-placeholder' => "Elije un Centro de Trabajo...",
                         'empty' => ''));
-        ?></td> </tr>
+                }                     
+                
+                    
+                    ?></td> 
+            </tr>
             <tr>
                 <td class="required"><span>Modelo</span></td>
                 <td><?php echo $this->Form->input('nombre', array('label' => false)); ?></td>
