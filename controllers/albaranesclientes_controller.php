@@ -105,7 +105,7 @@ class AlbaranesclientesController extends AppController {
                 'Cliente',
                 'Centrostrabajo',
                 'Pedidoscliente' => array(
-                    'Presupuestoscliente' => 'Cliente'),
+                       'Presupuestoscliente' => 'Cliente'),
                 'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina'),
                 'Tareasalbaranescliente' => array('MaterialesTareasalbaranescliente' => 'Articulo', 'ManodeobrasTareasalbaranescliente', 'TareasalbaranesclientesOtrosservicio'), 'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina')), 'conditions' => array('Albaranescliente.id' => $id)));
         $totalmanoobrayservicios = 0;

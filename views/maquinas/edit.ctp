@@ -48,10 +48,7 @@
                         'class' => 'chzn-select-required',
                         'data-placeholder' => "Elije un Centro de Trabajo...",
                         'empty' => ''));
-                }                     
-                
-                    
-                    ?></td> 
+                }  ?></td> 
             </tr>
             <tr>
                 <td class="required"><span>Modelo</span></td>

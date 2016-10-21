@@ -61,51 +61,51 @@
                 <td><?php echo $this->Form->input('Search.articulo_id', array('label' => 'Árticulo', 'type' => 'text', 'class' => 'articulos_select', 'style' => 'width: 300px;')) ?></td>
                 <?php if (!empty($this->params['named']['articulo_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['named']['articulo_id'] ?>', function(data) {
-                            $(".articulos_select").select2("data", {
-                                'id' : data.id,
-                                'ref' : data.ref,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['named']['articulo_id'] ?>', function (data) {
+                                    $(".articulos_select").select2("data", {
+                                        'id': data.id,
+                                        'ref': data.ref,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php elseif (!empty($this->params['url']['articulo_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['url']['articulo_id'] ?>', function(data) {
-                            $(".articulos_select").select2("data", {
-                                'id' : data.id,
-                                'ref' : data.ref,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['url']['articulo_id'] ?>', function (data) {
+                                    $(".articulos_select").select2("data", {
+                                        'id': data.id,
+                                        'ref': data.ref,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php endif; ?>
             <td><?php echo $this->Form->input('Search.cliente_id', array('label' => 'Cliente', 'type' => 'text', 'class' => 'clientes_select', 'style' => 'width: 300px;')) ?></td>
             <?php if (!empty($this->params['named']['cliente_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['named']['cliente_id'] ?>', function(data) {
-                            $(".clientes_select").select2("data", {
-                                'id' : data.id,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['named']['cliente_id'] ?>', function (data) {
+                                    $(".clientes_select").select2("data", {
+                                        'id': data.id,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php elseif (!empty($this->params['url']['cliente_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['url']['cliente_id'] ?>', function(data) {
-                            $(".clientes_select").select2("data", {
-                                'id' : data.id,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['url']['cliente_id'] ?>', function (data) {
+                                    $(".clientes_select").select2("data", {
+                                        'id': data.id,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php endif; ?>
             </tr>
@@ -125,7 +125,7 @@
                 <?php else: ?>
                     <td><?php echo $this->Form->input('Search.comerciale_id', array('label' => 'Comercial', 'type' => 'select', 'class' => 'select_basico', 'empty' => True, 'options' => $comerciales)) ?></td>
                 <?php endif; ?>
-                    
+
                 <?php if (!empty($this->params['named']['estadosalbaranescliente_id'])): ?>
                     <td><?php echo $this->Form->input('Search.estadosalbaranescliente_id', array('label' => 'Estado', 'type' => 'select', 'class' => 'select_basico', 'options' => $estadosalbaranesclientes, 'empty' => True, 'selected' => $this->params['named']['estadosalbaranescliente_id'])) ?></td>
                 <?php elseif (!empty($this->params['url']['estadosalbaranescliente_id'])): ?>
@@ -149,15 +149,15 @@
     <p>
         <?php
         echo $this->Paginator->counter(array(
-            'format' => __('Page %page% of %pages%, showing %current% records out of %count% total, starting on record %start%, ending on %end%', true)
+            'format' => __('Pag. %page% de %pages%, mostrando %current% registros de %count% total. Registro %start%, de %end%', true)
         ));
         ?>	
     </p>
 
     <div class="paging">
-        <?php echo $this->Paginator->prev('<< ' . __('previous', true), array(), null, array('class' => 'disabled')); ?>|
+        <?php echo $this->Paginator->prev('<< ' . __('anterior', true), array(), null, array('class' => 'disabled')); ?>|
         <?php echo $this->Paginator->numbers(); ?> |
-        <?php echo $this->Paginator->next(__('next', true) . ' >>', array(), null, array('class' => 'disabled')); ?>
+        <?php echo $this->Paginator->next(__('siguiente', true) . ' >>', array(), null, array('class' => 'disabled')); ?>
     </div>
     <?php
     $sumatorio_precio = 0;
@@ -199,7 +199,7 @@
                 <td><?php echo $albaranescliente['Cliente']['nombre']; ?>&nbsp;</td>
                 <td><?php echo $this->Time->format('d-m-Y', $albaranescliente['Albaranescliente']['fecha']); ?>&nbsp;</td>
                 <td>
-					<p title="<?php echo $albaranescliente['Albaranescliente']['observaciones'] ?>"><?php echo substr($albaranescliente['Albaranescliente']['observaciones'], 0, 15); ?>...</p>
+                    <p title="<?php echo $albaranescliente['Albaranescliente']['observaciones'] ?>"><?php echo substr($albaranescliente['Albaranescliente']['observaciones'], 0, 15); ?>...</p>
                 </td>
                 <td><?php echo $albaranescliente['Albaranescliente']['precio']; ?>&nbsp;</td>
                 <td><?php echo $albaranescliente['Albaranescliente']['impuestos']; ?>&nbsp;</td>
@@ -216,10 +216,10 @@
                 <td>
                     <?php echo $this->Html->link($albaranescliente['Avisosrepuesto']['numero'], array('controller' => 'avisosrepuestos', 'action' => 'view', $albaranescliente['Avisosrepuesto']['id'])); ?>
                 </td>
-                <?php if(!empty($albaranescliente['Pedidoscliente']['numero'])): ?>
-                <td><?php echo $this->Html->link($albaranescliente['Pedidoscliente']['serie'].'-'.zerofill($albaranescliente['Pedidoscliente']['numero'],4), array('controller' => 'pedidosclientes', 'action' => 'view', $albaranescliente['Pedidoscliente']['id'])); ?></td>
+                <?php if (!empty($albaranescliente['Pedidoscliente']['numero'])): ?>
+                    <td><?php echo $this->Html->link($albaranescliente['Pedidoscliente']['serie'] . '-' . zerofill($albaranescliente['Pedidoscliente']['numero'], 4), array('controller' => 'pedidosclientes', 'action' => 'view', $albaranescliente['Pedidoscliente']['id'])); ?></td>
                 <?php else: ?>
-                <td></td>
+                    <td></td>
                 <?php endif; ?>
                 <td><?php echo $this->Html->link(__($albaranescliente['Albaranescliente']['albaranescaneado'], true), '/files/albaranescliente/' . $albaranescliente['Albaranescliente']['albaranescaneado']); ?>&nbsp;</td>
                 <td><?php echo $albaranescliente['Albaranescliente']['facturable'] == 0 ? 'No' : 'Si' ?></td>
@@ -230,8 +230,13 @@
                 <?php else: ?>
                     No Facturado
                 <?php endif; ?>
+
                 <td class="actions">
-                    <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $albaranescliente['Albaranescliente']['id'])); ?>
+                    <?php if ($albaranescliente['Estadosalbaranescliente']['id'] <> '3'): ?>
+                        <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $albaranescliente['Albaranescliente']['id'])); ?>
+                    <?php else: ?>
+                       <?php echo $this->Html->link(__('Editar', true),  array('action' => 'edit', $albaranescliente['Albaranescliente']['id']), array('class' => 'btn-is-disabled')); ?>
+                    <?php endif; ?>
                     <?php echo $this->Html->link(__('Ver', true), array('action' => 'view', $albaranescliente['Albaranescliente']['id'])); ?>
                     <?php echo $this->Html->link(__('PDF', true), array('action' => 'pdf', $albaranescliente['Albaranescliente']['id'])); ?>
                     <?php echo $this->Html->link(__('Eliminar', true), array('action' => 'delete', $albaranescliente['Albaranescliente']['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $albaranescliente['Albaranescliente']['numero'])); ?>
@@ -259,17 +264,17 @@
             <td class="actions"></td>
         </tr>
     </table>
-    <p>
+    <p> 
         <?php
         echo $this->Paginator->counter(array(
-            'format' => __('Page %page% of %pages%, showing %current% records out of %count% total, starting on record %start%, ending on %end%', true)
+            'format' => __('Pag. %page% de %pages%, mostrando %current% registros de %count% total. Registro %start%, de %end%', true)
         ));
         ?>	
     </p>
 
     <div class="paging">
-        <?php echo $this->Paginator->prev('<< ' . __('previous', true), array(), null, array('class' => 'disabled')); ?>|
+        <?php echo $this->Paginator->prev('<< ' . __('anterior', true), array(), null, array('class' => 'disabled')); ?>|
         <?php echo $this->Paginator->numbers(); ?> |
-        <?php echo $this->Paginator->next(__('next', true) . ' >>', array(), null, array('class' => 'disabled')); ?>
+        <?php echo $this->Paginator->next(__('siguiente', true) . ' >>', array(), null, array('class' => 'disabled')); ?>
     </div>
 </div>

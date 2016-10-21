@@ -14,14 +14,14 @@ class MaquinasController extends AppController {
                     'Maquina.codigo LIKE' => '%' . $this->params['url']['codigo_nombre_serie'] . '%',
                     'Maquina.nombre LIKE' => '%' . $this->params['url']['codigo_nombre_serie'] . '%',
                     'Maquina.serie_maquina LIKE' => '%' . $this->params['url']['codigo_nombre_serie'] . '%'
-                    ));
+            ));
         }
         if (!empty($this->params['named']['codigo_nombre_serie'])) {
             $conditions [] = array("OR" => array(
                     'Maquina.codigo LIKE' => '%' . $this->params['named']['codigo_nombre_serie'] . '%',
                     'Maquina.nombre LIKE' => '%' . $this->params['named']['codigo_nombre_serie'] . '%',
                     'Maquina.serie_maquina LIKE' => '%' . $this->params['named']['codigo_nombre_serie'] . '%'
-                    ));
+            ));
         }
 
         if (!empty($this->params['url']['cliente_id']))
@@ -124,7 +124,7 @@ class MaquinasController extends AppController {
         if (empty($this->data)) {
             $this->data = $this->Maquina->read(null, $id);
         }
-        
+
         $clientes = $this->Maquina->Cliente->find('list');
         $maquina = $this->Maquina->find('first', array('contain' => array('Centrostrabajo' => 'Cliente'), 'conditions' => array('Maquina.id' => $id)));
         $centrostrabajos = $this->Maquina->Centrostrabajo->find('list', array('conditions' => array('Centrostrabajo.cliente_id' => $maquina['Centrostrabajo']['cliente_id'])));
@@ -141,15 +141,15 @@ class MaquinasController extends AppController {
                 . 'ON albaranesclientesreparaciones.maquina_id = maquinas.id '
                 . 'WHERE estadosalbaranesclientesreparaciones.id <> 3 '
                 . 'AND maquinas.id = "' . $this->Maquina->id . '"';
+     //   echo ">>>" . $query;
         $res = $conn->query($query);
-      //  echo ">>>" . $query;
         $hayFacturaPdte = FALSE;
         if (!empty($res) && sizeof($res) > 0) {
             $hayFacturaPdte = TRUE;
             $this->Session->setFlash(__('Máquina pendiente de facturar. NO puede cambiar de centro.', true));
         }
-        $this->set('hayFacturaPdte', $hayFacturaPdte);        
-        /*         * ***************************** */
+        $this->set('hayFacturaPdte', $hayFacturaPdte);
+        
     }
 
     function delete($id = null) {
@@ -228,6 +228,7 @@ class MaquinasController extends AppController {
         $maquinas = $this->Maquina->find('list', array('conditions' => array('Maquina.centrostrabajo_id' => $this->data['Presupuestoscliente']['centrostrabajo_id'])));
         $this->set(compact('maquinas'));
     }
+
     function selectOrdenes() {
         $maquinas = $this->Maquina->find('list', array('conditions' => array('Maquina.centrostrabajo_id' => $this->data['Ordene']['centrostrabajo_id'])));
         $this->set(compact('maquinas'));
@@ -242,7 +243,7 @@ class MaquinasController extends AppController {
             'conditions' => array(
                 'OR' => array('Maquina.codigo LIKE' => '%' . $this->params['url']['q'] . '%', 'Maquina.nombre LIKE' => '%' . $this->params['url']['q'] . '%', 'Maquina.serie_maquina LIKE' => '%' . $this->params['url']['q'] . '%')
             ),
-                ));
+        ));
         $maquinas_array = array();
         foreach ($maquinas as $maquina) {
             $maquinas_array[] = array("id" => $maquina["Maquina"]["id"], "nombre" => $maquina["Maquina"]["nombre"], "codigo" => $maquina["Maquina"]["codigo"], "serie_maquina" => $maquina["Maquina"]["serie_maquina"]);
@@ -261,7 +262,7 @@ class MaquinasController extends AppController {
             'conditions' => array(
                 'Maquina.id ' => $id
             ),
-                ));
+        ));
         $this->set('maquinas', $maquina['Maquina']);
         $this->render('json');
     }
