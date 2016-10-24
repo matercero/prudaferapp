@@ -1,13 +1,15 @@
 <div class="albaranesclientes">
     <h2>
-        <?php __('Albaran a cliente Nº ' . $albaranescliente['Albaranescliente']['numero']); ?>
-        <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $albaranescliente['Albaranescliente']['id']), array('class' => 'button_link')); ?> 
+        <?php __('Albaran a cliente Nº ' . $albaranescliente['Albaranescliente']['numero']); ?>        
+        <?php if ($albaranescliente['Estadosalbaranescliente']['id'] <> '3'): ?>
+            <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $albaranescliente['Albaranescliente']['id']), array('class' => 'button_link')); ?>
+        <?php endif; ?>
         <?php echo $this->Html->link(__('Nuevo Albarán Directo', true), array('action' => 'add'), array('class' => 'button_link')); ?> 
         <?php echo $this->Html->link(__('Listar Albaranes a Clientes', true), array('action' => 'index'), array('class' => 'button_link')); ?> 
     </h2>
-	<?php
-	$sumatorio_materiales_costo = 0;
-	?>	
+    <?php
+    $sumatorio_materiales_costo = 0;
+    ?>	
     <table class="view">
         <tr>
             <td><span>Serie</span></td>
@@ -48,9 +50,9 @@
             <?php endif; ?>
         </tr>
         <tr>
-			<td><span>Riesgo</span>	
+            <td><span>Riesgo</span>	
             <td style="font-size: 120%;">
-                <span><?php echo $albaranescliente['Cliente']['riesgos']== 0 ? '' : '<span style="color: red">RIESGO SUPERADO</span>'; ?></td>
+                <span><?php echo $albaranescliente['Cliente']['riesgos'] == 0 ? '' : '<span style="color: red">RIESGO SUPERADO</span>'; ?></td>
             <td><span><?php __('Albarán Escaneado'); ?></span></td>
             <td colspan="3"><?php echo $this->Html->link(__($albaranescliente['Albaranescliente']['albaranescaneado'], true), '/files/albaranescliente/' . $albaranescliente['Albaranescliente']['albaranescaneado']); ?></td>
             <td><span><?php __('Estado') ?></span></td>
@@ -177,18 +179,18 @@
                                             <?php echo $this->Html->link('Ver Ultima Venta', array('controller' => 'materiales_tareasalbaranesclientes', 'action' => 'ver_ultima_venta', $materiale['id']), array('class' => 'button_link popup')) ?>
                                         </td>
                                     </tr>
-									
-									<?php $sumatorio_materiales_costo +=(redondear_dos_decimal($materiale['Articulo']['ultimopreciocompra'] *  $materiale['cantidad'])) ?>
-									<?php endforeach; ?>
-									<tr class="totales_pagina">
-									<td colspan="5">TOTALES</td>
-									<td><?php echo redondear_dos_decimal($sumatorio_materiales_costo) ?></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td colspan="9"></td>
-									</tr>	
+
+                                    <?php $sumatorio_materiales_costo +=(redondear_dos_decimal($materiale['Articulo']['ultimopreciocompra'] * $materiale['cantidad'])) ?>
+                                <?php endforeach; ?>
+                                <tr class="totales_pagina">
+                                    <td colspan="5">TOTALES</td>
+                                    <td><?php echo redondear_dos_decimal($sumatorio_materiales_costo) ?></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td colspan="9"></td>
+                                </tr>	
                             </table>
                             <p style="background-color: #fff; text-align: right;font-weight: bold;">Total de Materiales</p>
                             <p style="background-color: #fff; text-align: right;"><?php echo $tarea['materiales'] ?> &euro;</p>                        
@@ -226,8 +228,8 @@
         <?php if ($albaranescliente['Albaranescliente']['es_devolucion'] == 0): ?>
             <?php echo $this->Html->link(__('Nuevo Albaran de Devolucion', true), array('controller' => 'albaranesclientes', 'action' => 'devolucion', $albaranescliente['Albaranescliente']['id']), array('class' => 'button_link')); ?>
         <?php endif; ?>
-        <?php echo $this->Html->link(__('Imprimir', true),array('action'=>'pdf',$albaranescliente['Albaranescliente']['id']), array('class' => 'button_link')); ?>
-        <?php echo $this->Html->link(__('Imprimir-serie', true),array('action'=>'pdf_sin_cabecera',$albaranescliente['Albaranescliente']['id']), array('class' => 'button_link')); ?>
+        <?php echo $this->Html->link(__('Imprimir', true), array('action' => 'pdf', $albaranescliente['Albaranescliente']['id']), array('class' => 'button_link')); ?>
+        <?php echo $this->Html->link(__('Imprimir-serie', true), array('action' => 'pdf_sin_cabecera', $albaranescliente['Albaranescliente']['id']), array('class' => 'button_link')); ?>
     </div>
     <div class="datagrid">
         <table>

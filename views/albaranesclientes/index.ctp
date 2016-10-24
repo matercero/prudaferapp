@@ -235,7 +235,7 @@
                     <?php if ($albaranescliente['Estadosalbaranescliente']['id'] <> '3'): ?>
                         <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $albaranescliente['Albaranescliente']['id'])); ?>
                     <?php else: ?>
-                       <?php echo $this->Html->link(__('Editar', true),  array('action' => 'edit', $albaranescliente['Albaranescliente']['id']), array('class' => 'btn-is-disabled')); ?>
+                        <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $albaranescliente['Albaranescliente']['id']), array('class' => 'btn-is-disabled')); ?>
                     <?php endif; ?>
                     <?php echo $this->Html->link(__('Ver', true), array('action' => 'view', $albaranescliente['Albaranescliente']['id'])); ?>
                     <?php echo $this->Html->link(__('PDF', true), array('action' => 'pdf', $albaranescliente['Albaranescliente']['id'])); ?>
