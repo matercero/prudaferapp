@@ -134,6 +134,15 @@
                     <td><?php echo $this->Form->input('Search.estadosalbaranescliente_id', array('label' => 'Estado', 'type' => 'select', 'class' => 'select_basico', 'empty' => True, 'options' => $estadosalbaranesclientes)) ?></td>
                 <?php endif; ?>
 
+                <!--  Add filtro por maquina-->       
+                <?php if (!empty($this->params['named']['maquina_id'])): ?>
+                    <td><?php echo $this->Form->input('Search.maquina_id', array('label' => 'Maquina', 'type' => 'select', 'class' => 'select_basico', 'options' => $maquina, 'empty' => True, 'selected' => $this->params['named']['maquina_id'])) ?></td>
+                <?php elseif (!empty($this->params['url']['maquina_id'])): ?>
+                    <td><?php echo $this->Form->input('Search.maquina_id', array('label' => 'Maquina', 'type' => 'select', 'class' => 'select_basico', 'options' => $maquina, 'empty' => True, 'selected' => $this->params['url']['maquina_id'])) ?></td>
+                <?php else: ?>
+                    <td><?php echo $this->Form->input('Search.maquina_id', array('label' => 'Maquina', 'type' => 'select', 'class' => 'select_basico', 'empty' => True, 'options' => $maquina)) ?></td>
+                <?php endif; ?>
+
                 <?php if (!empty($this->params['named']['resultados_por_pagina'])): ?>
                     <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000, '2000' => 2000, '3000' => 3000), 'default' => '20', 'selected' => $this->params['named']['resultados_por_pagina'])) ?></td>
                 <?php elseif (!empty($this->params['url']['resultados_por_pagina'])): ?>
@@ -239,7 +248,7 @@
                     <?php endif; ?>
                     <?php echo $this->Html->link(__('Ver', true), array('action' => 'view', $albaranescliente['Albaranescliente']['id'])); ?>
                     <?php echo $this->Html->link(__('PDF', true), array('action' => 'pdf', $albaranescliente['Albaranescliente']['id'])); ?>
-                    <?php echo $this->Html->link(__('Eliminar', true), array('action' => 'delete', $albaranescliente['Albaranescliente']['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $albaranescliente['Albaranescliente']['numero'])); ?>
+                    <?php echo $this->Html->link(__('Eliminar', true), array('action' => 'delete', $albaranescliente['Albaranescliente']['id']), null, sprintf(__('¿Estas seguro de eliminar el albarán nº # %s?', true), $albaranescliente['Albaranescliente']['numero'])); ?>
                 </td>
             </tr>
             <?php

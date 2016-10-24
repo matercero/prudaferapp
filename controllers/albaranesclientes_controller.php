@@ -3,7 +3,7 @@
 class AlbaranesclientesController extends AppController {
 
     var $name = 'Albaranesclientes';
-    var $components = array('Auth','RequestHandler', 'Session', 'FileUpload');
+    var $components = array('Auth', 'RequestHandler', 'Session', 'FileUpload');
     var $helpers = array('Form', 'Autocomplete', 'Ajax', 'Js', 'Javascript', 'Time');
 
     function beforeFilter() {
@@ -60,20 +60,25 @@ class AlbaranesclientesController extends AppController {
 
         if (!empty($this->params['url']['comerciale_id']))
             $conditions [] = array('1' => '1 AND Albaranescliente.comerciale_id = ' . $this->params['url']['comerciale_id']);
-        if (!empty($this->params['named']['cliente_id']))
+        if (!empty($this->params['named']['comerciale_id']))
             $conditions [] = array('1' => '1 AND Albaranescliente.comerciale_id = ' . $this->params['named']['comerciale_id']);
 
-         if (!empty($this->params['url']['estadosalbaranescliente_id']))
+        if (!empty($this->params['url']['estadosalbaranescliente_id']))
             $conditions [] = array('Albaranescliente.estadosalbaranescliente_id' => $this->params['url']['estadosalbaranescliente_id']);
         if (!empty($this->params['named']['estadosalbaranescliente_id']))
             $conditions [] = array('Albaranescliente.estadosalbaranescliente_id' => $this->params['named']['estadosalbaranescliente_id']);
-       
-        
+
+         if (!empty($this->params['url']['maquina_id']))
+            $conditions [] = array('1' => '1 AND Albaranescliente.maquina_id = ' . $this->params['url']['maquina_id']);
+        if (!empty($this->params['named']['maquina_id']))
+            $conditions [] = array('1' => '1 AND Albaranescliente.maquina_id = ' . $this->params['named']['maquina_id']);
+
+
         if (!empty($this->params['url']['numero_avisosrepuesto']))
             $conditions [] = array('1' => '1 AND Albaranescliente.avisosrepuesto_id IN (SELECT Avisosrepuesto.id FROM avisosrepuestos Avisosrepuesto WHERE Avisosrepuesto.numero = "' . $this->params['url']['numero_avisosrepuesto'] . '")');
         if (!empty($this->params['named']['numero_avisosrepuesto']))
             $conditions [] = array('1' => '1 AND Albaranescliente.avisosrepuesto_id  IN (SELECT Avisosrepuesto.id FROM avisosrepuestos Avisosrepuesto WHERE Avisosrepuesto.numero = "' . $this->params['named']['numero_avisosrepuesto'] . '")');
-        
+
         $paginate_results_per_page = 20;
         if (!empty($this->params['url']['resultados_por_pagina']))
             $paginate_results_per_page = intval($this->params['url']['resultados_por_pagina']);
@@ -86,6 +91,7 @@ class AlbaranesclientesController extends AppController {
         $this->set('albaranesclientes', $this->paginate());
         $this->set('estadosalbaranesclientes', $this->Albaranescliente->Estadosalbaranescliente->find('list'));
         $this->set('comerciales', $this->Albaranescliente->Comerciale->find('list'));
+        $this->set('maquina', $this->Albaranescliente->Maquina->find('list'));
     }
 
     function view($id = null) {
@@ -105,7 +111,7 @@ class AlbaranesclientesController extends AppController {
                 'Cliente',
                 'Centrostrabajo',
                 'Pedidoscliente' => array(
-                       'Presupuestoscliente' => 'Cliente'),
+                    'Presupuestoscliente' => 'Cliente'),
                 'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina'),
                 'Tareasalbaranescliente' => array('MaterialesTareasalbaranescliente' => 'Articulo', 'ManodeobrasTareasalbaranescliente', 'TareasalbaranesclientesOtrosservicio'), 'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina')), 'conditions' => array('Albaranescliente.id' => $id)));
         $totalmanoobrayservicios = 0;
@@ -130,7 +136,7 @@ class AlbaranesclientesController extends AppController {
                 } elseif (!empty($this->data['Albaranescliente']['avisosrepuesto_id'])) { // Si viene de Avisosrepuesto 
                     $this->__trapaso_from_avisosrepuesto($this->data);
                 } elseif (!empty($this->data['Albaranescliente']['albaranesproveedore_id'])) { // Si viene de Albaranesproveedore
-                    $this->__trapaso_from_albaranesproveedore($this->data);    
+                    $this->__trapaso_from_albaranesproveedore($this->data);
                 } else {
                     $this->Albaranescliente->Tareasalbaranescliente->create();
                     $tareasalbaranescliente = array();
@@ -145,7 +151,7 @@ class AlbaranesclientesController extends AppController {
                 /* Guardar fichero */
                 if ($this->FileUpload->finalFile != null) {
                     $this->Albaranescliente->saveField('albaranescaneado', $this->FileUpload->finalFile);
-                    $this->Albaranescliente->saveField('estadosalbaranescliente_id',2);
+                    $this->Albaranescliente->saveField('estadosalbaranescliente_id', 2);
                 }
                 /* Fin de Guardar Fichero */
                 if (!empty($this->Albaranescliente->Tareasalbaranescliente->session_message)) {
@@ -167,21 +173,22 @@ class AlbaranesclientesController extends AppController {
         $clientes = $this->Albaranescliente->Cliente->find('list');
         $comerciales = $this->Albaranescliente->Comerciale->find('list');
         $centrosdecostes = $this->Albaranescliente->Centrosdecoste->find('list');
+        $maquina = $this->AlbaranesCliente->Maquina->find('list');
         $numero = $this->Albaranescliente->dime_siguiente_numero();
         if ($vienede == 'pedidoscliente') {
             $pedidoscliente = $this->Albaranescliente->Pedidoscliente->find('first', array('contain' => array('Presupuestoscliente' => array('Cliente', 'Centrostrabajo', 'Maquina'), 'Tareaspedidoscliente' => array('MaterialesTareaspedidoscliente' => 'Articulo', 'ManodeobrasTareaspedidoscliente', 'TareaspedidosclientesOtrosservicio')), 'conditions' => array('Pedidoscliente.id' => $iddedondeviene)));
-            $this->set(compact('series', 'pedidoscliente', 'tiposivas', 'numero', 'centrosdecostes', 'comerciales', 'estadosalbaranesclientes', 'almacenes'));
+            $this->set(compact('series', 'pedidoscliente', 'tiposivas', 'numero', 'centrosdecostes', 'comerciales', 'estadosalbaranesclientes', 'almacenes', 'maquina'));
             $this->render('add_from_pedidoscliente');
         } elseif ($vienede == 'avisosrepuesto') {
             $avisosrepuesto = $this->Albaranescliente->Avisosrepuesto->find('first', array('contain' => array('Cliente', 'Centrostrabajo', 'Maquina', 'ArticulosAvisosrepuesto' => 'Articulo'), 'conditions' => array('Avisosrepuesto.id' => $iddedondeviene)));
-            $this->set(compact('series', 'avisosrepuesto', 'tiposivas', 'numero', 'centrosdecostes', 'comerciales', 'estadosalbaranesclientes', 'almacenes'));
+            $this->set(compact('series', 'avisosrepuesto', 'tiposivas', 'numero', 'centrosdecostes', 'comerciales', 'estadosalbaranesclientes', 'almacenes', 'maquina'));
             $this->render('add_from_avisosrepuesto');
         } elseif ($vienede == 'albaranesproveedore') {
             $albaranesproveedore = $this->Albaranescliente->Albaranesproveedore->find('first', array('contain' => array('Cliente', 'Centrostrabajo', 'Maquina', 'MaterialeAlbaranesproveedore' => 'Articulo'), 'conditions' => array('Albaranesproveedore.id' => $iddedondeviene)));
-            $this->set(compact('series', 'tiposivas', 'numero', 'centrosdecostes', 'comerciales', 'estadosalbaranesclientes', 'almacenes'));
-            $this->render('add_from_albaranesproveedore');    
+            $this->set(compact('series', 'tiposivas', 'numero', 'centrosdecostes', 'comerciales', 'estadosalbaranesclientes', 'almacenes', 'maquina'));
+            $this->render('add_from_albaranesproveedore');
         } else {
-            $this->set(compact('clientes','series', 'tiposivas', 'almacenes', 'numero', 'comerciales', 'estadosalbaranesclientes', 'centrosdecostes'));
+            $this->set(compact('clientes', 'series', 'tiposivas', 'almacenes', 'numero', 'comerciales', 'estadosalbaranesclientes', 'centrosdecostes', 'maquina'));
             $this->render('add_direct');
         }
     }
@@ -201,7 +208,7 @@ class AlbaranesclientesController extends AppController {
                 if ($this->FileUpload->finalFile != null) {
                     $this->FileUpload->RemoveFile($upload['Albaranescliente']['albaranescaneado']);
                     $this->Albaranescliente->saveField('albaranescaneado', $this->FileUpload->finalFile);
-                    $this->Albaranescliente->saveField('estadosalbaranescliente_id',2);
+                    $this->Albaranescliente->saveField('estadosalbaranescliente_id', 2);
                 }
 
                 $this->Session->setFlash(__('The albaranescliente has been saved', true));
@@ -224,22 +231,22 @@ class AlbaranesclientesController extends AppController {
         $pedidosclientes = $this->Albaranescliente->Pedidoscliente->find('list');
         $facturasClientes = $this->Albaranescliente->FacturasCliente->find('list');
         $clientes = $this->Albaranescliente->Cliente->find('list');
-        $centrostrabajos = $this->Albaranescliente->Centrostrabajo->find('list',array('conditions'=>array('Centrostrabajo.cliente_id' =>$this->data['Albaranescliente']['cliente_id'])));
-        $maquinas = $this->Albaranescliente->Maquina->find('list',array('conditions'=>array('Maquina.centrostrabajo_id' =>$this->data['Albaranescliente']['centrostrabajo_id'])));
-        
-        $this->set(compact('series', 'avisosrepuestos', 'pedidosclientes', 'facturasClientes', 'tiposivas', 'centrosdecostes', 'almacenes', 'comerciales', 'estadosalbaranesclientes','clientes','centrostrabajos','maquinas'));
+        $centrostrabajos = $this->Albaranescliente->Centrostrabajo->find('list', array('conditions' => array('Centrostrabajo.cliente_id' => $this->data['Albaranescliente']['cliente_id'])));
+        $maquinas = $this->Albaranescliente->Maquina->find('list', array('conditions' => array('Maquina.centrostrabajo_id' => $this->data['Albaranescliente']['centrostrabajo_id'])));
+
+        $this->set(compact('series', 'avisosrepuestos', 'pedidosclientes', 'facturasClientes', 'tiposivas', 'centrosdecostes', 'almacenes', 'comerciales', 'estadosalbaranesclientes', 'clientes', 'centrostrabajos', 'maquinas'));
     }
 
     function delete($id = null) {
         if (!$id) {
-            $this->Session->setFlash(__('Invalid id for albaranescliente', true));
+            $this->Session->setFlash(__('Id invalido para Albaranes cliente', true));
             $this->redirect(array('action' => 'index'));
         }
         if ($this->Albaranescliente->delete($id)) {
-            $this->Session->setFlash(__('Albaranescliente deleted', true));
+            $this->Session->setFlash(__('Albaranes cliente eliminado.', true));
             $this->redirect(array('action' => 'index'));
         }
-        $this->Session->setFlash(__('Albaranescliente was not deleted', true));
+        $this->Session->setFlash(__('Albaranes cliente NO eliminado', true));
         $this->redirect(array('action' => 'index'));
     }
 
@@ -331,7 +338,6 @@ class AlbaranesclientesController extends AppController {
             }
         }
     }
-
 
     function facturacion() {
         if (!empty($this->data)) {
@@ -456,7 +462,7 @@ class AlbaranesclientesController extends AppController {
                 $this->redirect($this->referer());
             }
         }
-        $albaranescliente = $albaranescliente = $this->Albaranescliente->find('first', array('contain' => array('Cliente','Centrostrabajo','Maquina','Cliente', 'Almacene', 'Pedidoscliente' => array('Presupuestoscliente' => 'Cliente'), 'Avisosrepuesto' => 'Cliente', 'Tareasalbaranescliente' => array('MaterialesTareasalbaranescliente' => 'Articulo', 'ManodeobrasTareasalbaranescliente', 'TareasalbaranesclientesOtrosservicio')), 'conditions' => array('Albaranescliente.id' => $id)));
+        $albaranescliente = $albaranescliente = $this->Albaranescliente->find('first', array('contain' => array('Cliente', 'Centrostrabajo', 'Maquina', 'Cliente', 'Almacene', 'Pedidoscliente' => array('Presupuestoscliente' => 'Cliente'), 'Avisosrepuesto' => 'Cliente', 'Tareasalbaranescliente' => array('MaterialesTareasalbaranescliente' => 'Articulo', 'ManodeobrasTareasalbaranescliente', 'TareasalbaranesclientesOtrosservicio')), 'conditions' => array('Albaranescliente.id' => $id)));
         $tiposivas = $this->Albaranescliente->Tiposiva->find('list');
         $series = $this->Config->SeriesAlbaranesventa->find('list', array('fields' => array('SeriesAlbaranesventa.serie', 'SeriesAlbaranesventa.serie')));
         $estadosalbaranesclientes = $this->Albaranescliente->Estadosalbaranescliente->find('list');
@@ -466,7 +472,7 @@ class AlbaranesclientesController extends AppController {
         $comerciales = $this->Albaranescliente->Comerciale->find('list');
         $centrosdecostes = $this->Albaranescliente->Centrosdecoste->find('list');
         $numero = $this->Albaranescliente->dime_siguiente_numero();
-        $this->set(compact('tiposivas', 'albaranescliente','series','estadosalbaranesclientes','almacenes','clientes','comerciales','centrosdecostes','numero'));
+        $this->set(compact('tiposivas', 'albaranescliente', 'series', 'estadosalbaranesclientes', 'almacenes', 'clientes', 'comerciales', 'centrosdecostes', 'numero'));
     }
 
     function __get_albaranes_by_centrostrabajo($centrostrabajo_id, $fecha_inicio, $fecha_fin) {
@@ -564,7 +570,7 @@ class AlbaranesclientesController extends AppController {
                 'Comerciale',
                 'Centrosdecoste',
                 'Almacene',
-                'Cliente'=>'Formapago',
+                'Cliente' => 'Formapago',
                 'Centrostrabajo',
                 'Pedidoscliente' => array(
                     'Presupuestoscliente' => 'Cliente'),
@@ -573,7 +579,7 @@ class AlbaranesclientesController extends AppController {
         $this->set(compact('albaranescliente'));
         $this->render();
     }
-    
+
     function pdf_sin_cabecera($id) {
         Configure::write('debug', 0);
         $this->layout = 'pdf';
@@ -586,7 +592,7 @@ class AlbaranesclientesController extends AppController {
                 'Comerciale',
                 'Centrosdecoste',
                 'Almacene',
-                'Cliente'=>'Formapago',
+                'Cliente' => 'Formapago',
                 'Centrostrabajo',
                 'Pedidoscliente' => array(
                     'Presupuestoscliente' => 'Cliente'),
@@ -596,13 +602,14 @@ class AlbaranesclientesController extends AppController {
         $this->render();
     }
 
-    function siguiente_numero_ajax($serie){
+    function siguiente_numero_ajax($serie) {
         Configure::write('debug', 0);
         $this->layout = 'ajax';
         $numero = $this->Albaranescliente->dime_siguiente_numero_ajax($serie);
         $this->set(compact('numero'));
         $this->render();
     }
+
 }
 
 ?>

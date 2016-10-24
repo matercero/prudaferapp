@@ -1,11 +1,14 @@
 <div class="albaranesclientesreparaciones">
     <h2>
         <?php __('Albarán de Reparación Nº ' . $albaranesclientesreparacione['Albaranesclientesreparacione']['numero']); ?>
-        <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), array('class' => 'button_link')); ?> 
+
+        <?php if ($albaranesclientesreparacione['Estadosalbaranesclientesreparacione']['id'] <> '3'): ?>
+            <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), array('class' => 'button_link')); ?> 
+        <?php endif; ?>
         <?php echo $this->Html->link(__('Eliminar', true), array('action' => 'delete', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), array('class' => 'button_link'), sprintf(__('¿Seguro que quieres borrar el Albaran de Reparación Nº # %s?', true), $albaranesclientesreparacione['Albaranesclientesreparacione']['numero'])); ?> 
         <?php echo $this->Html->link(__('Imprimir', true), array('action' => 'pdf', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), array('class' => 'button_link')); ?> 
-        
-        <?php echo !empty($albaranesclientesreparacione['Albaranesclientesreparacione']['es_presupuestado'])?$this->Html->link(__('Imprimir con Datos Presupuesto', true), array('action' => 'pdf_datos_presupuesto', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), array('class' => 'button_link')) : ''; ?> 
+
+        <?php echo!empty($albaranesclientesreparacione['Albaranesclientesreparacione']['es_presupuestado']) ? $this->Html->link(__('Imprimir con Datos Presupuesto', true), array('action' => 'pdf_datos_presupuesto', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), array('class' => 'button_link')) : ''; ?> 
         <?php echo $this->Html->link(__('Listar Albaranes de Reparación', true), array('action' => 'index'), array('class' => 'button_link')); ?> 
     </h2>
     <table class="view edit">
@@ -100,7 +103,7 @@
                                 <?php echo $this->Html->link(__('Añadir Parte C.Trabajo', true), array('controller' => 'tareas_albaranesclientesreparaciones_partes', 'action' => 'add', $tarea['id']), array('class' => 'popup')); ?>
                             <?php endif; ?>
                             <?php echo $this->Html->link(__('Ver Contenido', true), '#?', array('class' => 'ver-relaciones')); ?>
-                            <?php echo $this->Html->link(__('Editar', true), array('controller' => 'tareas_albaranesclientesreparaciones', 'action' => 'edit', $tarea['id']), array('class'=>'popup')); ?>
+                            <?php echo $this->Html->link(__('Editar', true), array('controller' => 'tareas_albaranesclientesreparaciones', 'action' => 'edit', $tarea['id']), array('class' => 'popup')); ?>
                             <?php echo $this->Html->link(__('Eliminar', true), array('controller' => 'tareas_albaranesclientesreparaciones', 'action' => 'delete', $tarea['id']), null, sprintf(__('¿Seguiro que quieres borrar la Tarea del Albarán de reparación  # %s?', true), $tarea['descripcion'])); ?>
                             <span class="importe_tarea">Importe Tarea <?php echo redondear_dos_decimal($tarea['total_partes_imputable'] + $tarea['total_materiales_imputables']) ?> &euro;</span>
                         </td>
@@ -566,13 +569,13 @@
 
 <script>
     $('.tarea-relations').hide();
-    $('.ver-relaciones').click(function(){
+    $('.ver-relaciones').click(function () {
         $(this).parent().parent().next('.tarea-relations').fadeToggle("slow", "linear");
     });
     $('.orden-relations').hide();
-    $('.ver-relaciones-orden').click(function(){
+    $('.ver-relaciones-orden').click(function () {
         $('.orden-relations').fadeToggle("slow", "linear");
     });
-    
-    
+
+
 </script>
