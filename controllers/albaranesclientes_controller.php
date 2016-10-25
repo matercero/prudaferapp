@@ -21,6 +21,7 @@ class AlbaranesclientesController extends AppController {
     }
 
     function index() {
+        set_time_limit(60);
         $conditions = array();
 
         if (!empty($this->params['url']['serie']))
@@ -46,12 +47,18 @@ class AlbaranesclientesController extends AppController {
             $conditions[] = array("Albaranescliente.fecha BETWEEN '$data1' AND '$data2'");
         }
 
-
+        /* Articulos */
         if (!empty($this->params['url']['articulo_id']))
             $conditions [] = array('1' => '1 AND Albaranescliente.id IN (SELECT Tareasalbaranescliente.albaranescliente_id FROM tareasalbaranesclientes Tareasalbaranescliente WHERE Tareasalbaranescliente.id IN (SELECT MaterialesTareasalbaranescliente.tareasalbaranescliente_id FROM materiales_tareasalbaranesclientes MaterialesTareasalbaranescliente WHERE MaterialesTareasalbaranescliente.articulo_id = ' . $this->params['url']['articulo_id'] . '))');
         if (!empty($this->params['named']['articulo_id']))
             $conditions [] = array('1' => '1 AND Albaranescliente.id IN (SELECT Tareasalbaranescliente.albaranescliente_id FROM tareasalbaranesclientes Tareasalbaranescliente WHERE Tareasalbaranescliente.id IN (SELECT MaterialesTareasalbaranescliente.tareasalbaranescliente_id FROM materiales_tareasalbaranesclientes MaterialesTareasalbaranescliente WHERE MaterialesTareasalbaranescliente.articulo_id = ' . $this->params['named']['articulo_id'] . '))');
 
+        if (!empty($this->params['url']['articulo_descripcion']))
+            $conditions [] = array('1' => "1 AND Albaranescliente.id IN (SELECT  t.albaranescliente_id  FROM articulos a, materiales_tareasalbaranesclientes m, tareasalbaranesclientes t "
+                . "WHERE  m.tareasalbaranescliente_id = t.id AND a.nombre like '%" . $this->params['url']['articulo_descripcion'] . "%')");
+        if (!empty($this->params['named']['articulo_descripcion']))
+            $conditions [] = array('1' => "1 AND Albaranescliente.id IN (SELECT  t.albaranescliente_id  FROM articulos a, materiales_tareasalbaranesclientes m, tareasalbaranesclientes t "
+                . "WHERE  m.tareasalbaranescliente_id = t.id AND a.nombre like '%" . $this->params['named']['articulo_descripcion'] . "%')");
 
         if (!empty($this->params['url']['cliente_id']))
             $conditions [] = array('1' => '1 AND Albaranescliente.cliente_id = ' . $this->params['url']['cliente_id']);
@@ -68,7 +75,7 @@ class AlbaranesclientesController extends AppController {
         if (!empty($this->params['named']['estadosalbaranescliente_id']))
             $conditions [] = array('Albaranescliente.estadosalbaranescliente_id' => $this->params['named']['estadosalbaranescliente_id']);
 
-         if (!empty($this->params['url']['maquina_id']))
+        if (!empty($this->params['url']['maquina_id']))
             $conditions [] = array('1' => '1 AND Albaranescliente.maquina_id = ' . $this->params['url']['maquina_id']);
         if (!empty($this->params['named']['maquina_id']))
             $conditions [] = array('1' => '1 AND Albaranescliente.maquina_id = ' . $this->params['named']['maquina_id']);
@@ -173,7 +180,7 @@ class AlbaranesclientesController extends AppController {
         $clientes = $this->Albaranescliente->Cliente->find('list');
         $comerciales = $this->Albaranescliente->Comerciale->find('list');
         $centrosdecostes = $this->Albaranescliente->Centrosdecoste->find('list');
-        $maquina = $this->AlbaranesCliente->Maquina->find('list');
+    /*    $maquina = $this->AlbaranesCliente->Maquina->find('list');*/
         $numero = $this->Albaranescliente->dime_siguiente_numero();
         if ($vienede == 'pedidoscliente') {
             $pedidoscliente = $this->Albaranescliente->Pedidoscliente->find('first', array('contain' => array('Presupuestoscliente' => array('Cliente', 'Centrostrabajo', 'Maquina'), 'Tareaspedidoscliente' => array('MaterialesTareaspedidoscliente' => 'Articulo', 'ManodeobrasTareaspedidoscliente', 'TareaspedidosclientesOtrosservicio')), 'conditions' => array('Pedidoscliente.id' => $iddedondeviene)));

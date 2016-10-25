@@ -34,6 +34,7 @@
                 <?php else: ?>
                     <td><?php echo $this->Form->input('Search.serie', array('label' => 'Serie', 'type' => 'select', 'empty' => True, 'options' => $series)) ?></td>
                 <?php endif; ?>
+
                 <?php if (!empty($this->params['named']['numero'])): ?>
                     <td style="width: 250px"><?php echo $this->Form->input('Search.numero', array('value' => $this->params['named']['numero'])) ?></td>
                 <?php elseif (!empty($this->params['url']['numero'])): ?>
@@ -58,7 +59,7 @@
                     <td><?php echo $this->Form->input('Search.fecha_fin', array('type' => 'date', 'dateFormat' => 'DMY')) ?></td>
                 <?php endif; ?>
 
-                <td><?php echo $this->Form->input('Search.articulo_id', array('label' => 'Árticulo', 'type' => 'text', 'class' => 'articulos_select', 'style' => 'width: 300px;')) ?></td>
+                <td><?php echo $this->Form->input('Search.articulo_id', array('label' => 'Artículo', 'type' => 'text', 'class' => 'articulos_select', 'style' => 'width: 300px;')) ?></td>
                 <?php if (!empty($this->params['named']['articulo_id'])): ?>
                 <script>
                     $(document).ready(function () {
@@ -84,8 +85,11 @@
                             });
                 </script>
             <?php endif; ?>
-            <td><?php echo $this->Form->input('Search.cliente_id', array('label' => 'Cliente', 'type' => 'text', 'class' => 'clientes_select', 'style' => 'width: 300px;')) ?></td>
-            <?php if (!empty($this->params['named']['cliente_id'])): ?>
+            </tr>
+            <tr>    
+                <td>
+                    <?php echo $this->Form->input('Search.cliente_id', array('label' => 'Cliente', 'type' => 'text', 'class' => 'clientes_select', 'style' => 'width: 300px;')) ?></td>
+                <?php if (!empty($this->params['named']['cliente_id'])): ?>
                 <script>
                     $(document).ready(function () {
                         $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['named']['cliente_id'] ?>', function (data) {
@@ -108,41 +112,51 @@
                             });
                 </script>
             <?php endif; ?>
+
+            <?php if (!empty($this->params['named']['numero_avisosrepuesto'])): ?>
+                <td style="width: 250px"><?php echo $this->Form->input('Search.numero_avisosrepuesto', array('label' => 'Nº Aviso de Repuestos', 'value' => $this->params['named']['numero_avisosrepuesto'])) ?></td>
+            <?php elseif (!empty($this->params['url']['numero_avisosrepuesto'])): ?>
+                <td style="width: 250px"><?php echo $this->Form->input('Search.numero_avisosrepuesto', array('label' => 'Nº Aviso de Repuestos', 'value' => $this->params['url']['numero_avisosrepuesto'])) ?></td>
+            <?php else: ?>
+                <td style="width: 250px"><?php echo $this->Form->input('Search.numero_avisosrepuesto', array('label' => 'Nº Aviso de Repuestos',)) ?></td>
+            <?php endif; ?>
+
+            <?php if (!empty($this->params['named']['comerciale_id'])): ?>
+                <td><?php echo $this->Form->input('Search.comerciale_id', array('label' => 'Comercial', 'type' => 'select', 'class' => 'select_basico', 'options' => $comerciales, 'empty' => True, 'selected' => $this->params['named']['comerciale_id'])) ?></td>
+            <?php elseif (!empty($this->params['url']['comerciale_id'])): ?>
+                <td><?php echo $this->Form->input('Search.comerciale_id', array('label' => 'Comercial', 'type' => 'select', 'class' => 'select_basico', 'options' => $comerciales, 'empty' => True, 'selected' => $this->params['url']['comerciale_id'])) ?></td>
+            <?php else: ?>
+                <td><?php echo $this->Form->input('Search.comerciale_id', array('label' => 'Comercial', 'type' => 'select', 'class' => 'select_basico', 'empty' => True, 'options' => $comerciales)) ?></td>
+            <?php endif; ?>
+
+            <?php if (!empty($this->params['named']['estadosalbaranescliente_id'])): ?>
+                <td><?php echo $this->Form->input('Search.estadosalbaranescliente_id', array('label' => 'Estado', 'type' => 'select', 'class' => 'select_basico', 'options' => $estadosalbaranesclientes, 'empty' => True, 'selected' => $this->params['named']['estadosalbaranescliente_id'])) ?></td>
+            <?php elseif (!empty($this->params['url']['estadosalbaranescliente_id'])): ?>
+                <td><?php echo $this->Form->input('Search.estadosalbaranescliente_id', array('label' => 'Estado', 'type' => 'select', 'class' => 'select_basico', 'options' => $estadosalbaranesclientes, 'empty' => True, 'selected' => $this->params['url']['estadosalbaranescliente_id'])) ?></td>
+            <?php else: ?>
+                <td><?php echo $this->Form->input('Search.estadosalbaranescliente_id', array('label' => 'Estado', 'type' => 'select', 'class' => 'select_basico', 'empty' => True, 'options' => $estadosalbaranesclientes)) ?></td>
+            <?php endif; ?>
+
+            <!--  Add filtro por maquina-->       
+            <?php if (!empty($this->params['named']['maquina_id'])): ?>
+                <td><?php echo $this->Form->input('Search.maquina_id', array('label' => 'Máquina', 'type' => 'select', 'class' => 'select_basico', 'options' => $maquina, 'empty' => True, 'selected' => $this->params['named']['maquina_id'])) ?></td>
+            <?php elseif (!empty($this->params['url']['maquina_id'])): ?>
+                <td><?php echo $this->Form->input('Search.maquina_id', array('label' => 'Máquina', 'type' => 'select', 'class' => 'select_basico', 'options' => $maquina, 'empty' => True, 'selected' => $this->params['url']['maquina_id'])) ?></td>
+            <?php else: ?>
+                <td><?php echo $this->Form->input('Search.maquina_id', array('label' => 'Máquina', 'type' => 'select', 'class' => 'select_basico', 'empty' => True, 'options' => $maquina)) ?></td>
+            <?php endif; ?>
             </tr>
-            <tr>
-                <?php if (!empty($this->params['named']['numero_avisosrepuesto'])): ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.numero_avisosrepuesto', array('label' => 'Nº Aviso de Repuestos', 'value' => $this->params['named']['numero_avisosrepuesto'])) ?></td>
-                <?php elseif (!empty($this->params['url']['numero_avisosrepuesto'])): ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.numero_avisosrepuesto', array('label' => 'Nº Aviso de Repuestos', 'value' => $this->params['url']['numero_avisosrepuesto'])) ?></td>
+            <tr>   
+
+                <?php if (!empty($this->params['named']['articulo_descripcion'])): ?>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.articulo_descripcion', array('label' => 'Descripción de artículo', 'title' => 'Recomendable !! el uso de este campo requiere también  filtrar por fecha !', 'value' => $this->params['named']['articulo_descripcion'])) ?></td>
+                <?php elseif (!empty($this->params['url']['articulo_descripcion'])): ?>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.articulo_descripcion', array('label' => 'Descripción de artículo', 'title' => 'Recomendable !! el uso de este campo requiere tambien filtrar por fecha !', 'value' => $this->params['url']['articulo_descripcion'])) ?></td>
                 <?php else: ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.numero_avisosrepuesto', array('label' => 'Nº Aviso de Repuestos',)) ?></td>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.articulo_descripcion', array('label' => 'Descripción de artículo',)) ?></td>
                 <?php endif; ?>
 
-                <?php if (!empty($this->params['named']['comerciale_id'])): ?>
-                    <td><?php echo $this->Form->input('Search.comerciale_id', array('label' => 'Comercial', 'type' => 'select', 'class' => 'select_basico', 'options' => $comerciales, 'empty' => True, 'selected' => $this->params['named']['comerciale_id'])) ?></td>
-                <?php elseif (!empty($this->params['url']['comerciale_id'])): ?>
-                    <td><?php echo $this->Form->input('Search.comerciale_id', array('label' => 'Comercial', 'type' => 'select', 'class' => 'select_basico', 'options' => $comerciales, 'empty' => True, 'selected' => $this->params['url']['comerciale_id'])) ?></td>
-                <?php else: ?>
-                    <td><?php echo $this->Form->input('Search.comerciale_id', array('label' => 'Comercial', 'type' => 'select', 'class' => 'select_basico', 'empty' => True, 'options' => $comerciales)) ?></td>
-                <?php endif; ?>
-
-                <?php if (!empty($this->params['named']['estadosalbaranescliente_id'])): ?>
-                    <td><?php echo $this->Form->input('Search.estadosalbaranescliente_id', array('label' => 'Estado', 'type' => 'select', 'class' => 'select_basico', 'options' => $estadosalbaranesclientes, 'empty' => True, 'selected' => $this->params['named']['estadosalbaranescliente_id'])) ?></td>
-                <?php elseif (!empty($this->params['url']['estadosalbaranescliente_id'])): ?>
-                    <td><?php echo $this->Form->input('Search.estadosalbaranescliente_id', array('label' => 'Estado', 'type' => 'select', 'class' => 'select_basico', 'options' => $estadosalbaranesclientes, 'empty' => True, 'selected' => $this->params['url']['estadosalbaranescliente_id'])) ?></td>
-                <?php else: ?>
-                    <td><?php echo $this->Form->input('Search.estadosalbaranescliente_id', array('label' => 'Estado', 'type' => 'select', 'class' => 'select_basico', 'empty' => True, 'options' => $estadosalbaranesclientes)) ?></td>
-                <?php endif; ?>
-
-                <!--  Add filtro por maquina-->       
-                <?php if (!empty($this->params['named']['maquina_id'])): ?>
-                    <td><?php echo $this->Form->input('Search.maquina_id', array('label' => 'Maquina', 'type' => 'select', 'class' => 'select_basico', 'options' => $maquina, 'empty' => True, 'selected' => $this->params['named']['maquina_id'])) ?></td>
-                <?php elseif (!empty($this->params['url']['maquina_id'])): ?>
-                    <td><?php echo $this->Form->input('Search.maquina_id', array('label' => 'Maquina', 'type' => 'select', 'class' => 'select_basico', 'options' => $maquina, 'empty' => True, 'selected' => $this->params['url']['maquina_id'])) ?></td>
-                <?php else: ?>
-                    <td><?php echo $this->Form->input('Search.maquina_id', array('label' => 'Maquina', 'type' => 'select', 'class' => 'select_basico', 'empty' => True, 'options' => $maquina)) ?></td>
-                <?php endif; ?>
-
+                    
                 <?php if (!empty($this->params['named']['resultados_por_pagina'])): ?>
                     <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000, '2000' => 2000, '3000' => 3000), 'default' => '20', 'selected' => $this->params['named']['resultados_por_pagina'])) ?></td>
                 <?php elseif (!empty($this->params['url']['resultados_por_pagina'])): ?>
@@ -150,6 +164,7 @@
                 <?php else: ?>
                     <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000, '2000' => 2000, '3000' => 3000), 'default' => '20')) ?></td>
                 <?php endif; ?>
+
             </tr>
         </table>
         <?php echo $this->Form->button('Nueva Búsqueda', array('type' => 'reset', 'class' => 'button_css_green')); ?>
