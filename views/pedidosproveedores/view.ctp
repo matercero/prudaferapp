@@ -49,9 +49,17 @@
             </td>
         </tr>
         <tr>
-            <td colspan="3">
+            <td colspan="1">
                 <span>Pedido Escaneado</span>
                 <?php echo $this->Html->link(__($pedidosproveedore['Pedidosproveedore']['pedidoescaneado'], true), '/files/pedidosproveedore/' . $pedidosproveedore['Pedidosproveedore']['pedidoescaneado']); ?>
+            </td>
+            <td>
+            <span><?php __('Comercial'); ?></span>
+            <?php echo $pedidosproveedore['Comerciale']['nombre']; ?>
+            </td>
+            <td>
+                <span>Centro de Coste</span>
+                <?php echo @$pedidosproveedore['Centrosdecoste']['codigo'] . ' -- ' . @$pedidosproveedore['Centrosdecoste']['denominacion'] ?> 
             </td>
             <td>
                 <span>Fecha de Recepcion</span>

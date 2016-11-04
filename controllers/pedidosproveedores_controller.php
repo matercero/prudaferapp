@@ -102,6 +102,8 @@ class PedidosproveedoresController extends AppController {
                 'Proveedore',
                 'Tiposiva',
                 'Almacene',
+                'Centrosdecoste',
+                'Comerciale',
                 'ArticulosPedidosproveedore' => array('Articulo', 'Tarea'),
                 'Albaranesproveedore' => 'Proveedore',
                 'Estadospedidosproveedore',
@@ -169,7 +171,9 @@ class PedidosproveedoresController extends AppController {
         $this->set('almacenes', $this->Pedidosproveedore->Almacene->find('list'));
         $this->set('transportistas', $this->Pedidosproveedore->Transportista->find('list'));
         $this->set('articulos_pedidosproveedore', $this->Pedidosproveedore->ArticulosPedidosproveedore->findAllByPedidosproveedoreId($id));
-        $this->set('estadospedidosproveedores', $this->Pedidosproveedore->Estadospedidosproveedore->find('list'));
+        $this->set('centrosdecostes', $this->Pedidosproveedore->Centrosdecoste->find('list'));
+        $this->set('comerciales', $this->Pedidosproveedore->Comerciale->find('list'));
+        $this->set('estadospedidosproveedores', $this->Pedidosproveedore->Estadospedidosproveedore->find('list'));      
     }
 
     function delete($id = null, $presupuestosproveedore_id = null) {
@@ -284,6 +288,8 @@ class PedidosproveedoresController extends AppController {
         $this->set('proveedores', $this->Pedidosproveedore->Proveedore->find('list'));
         $this->set('numero', $this->Pedidosproveedore->dime_siguiente_numero());
         $this->set('transportistas', $this->Pedidosproveedore->Transportista->find('list'));
+        $centrosdecostes = $this->Pedidosproveedore->Centrosdecoste->find('list');
+        $comerciales = $this->Pedidosproveedore->Comerciale->find('list');
         $presupuestosproveedore = $this->Pedidosproveedore->Presupuestosproveedore->find(
                 'first', array('contain' =>
             array(
@@ -298,7 +304,7 @@ class PedidosproveedoresController extends AppController {
             'conditions' => array('Presupuestosproveedore.id' => $presupuestosproveedore_id)));
         $this->set('estadospedidosproveedores', $this->Pedidosproveedore->Estadospedidosproveedore->find('list'));
 
-        $this->set(compact('presupuestosproveedore'));
+        $this->set(compact('presupuestosproveedore', 'centrosdecostes', 'comerciales'));
     }
 
     function devolucion($albaranesproveedore_id = null, $presupuestosproveedore_id = null) {

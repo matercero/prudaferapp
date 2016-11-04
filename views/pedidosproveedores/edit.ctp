@@ -42,10 +42,17 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="3">
+                <td colspan="1">
                     Pedido escaneado Actual: <?php echo $this->Html->link(__($this->Form->value('Pedidosproveedore.pedidoescaneado'), true), '/files/pedidosproveedore/' . $this->Form->value('Pedidosproveedore.pedidoescaneado')); ?>
                     <?php echo $this->Form->input('remove_file', array('type' => 'checkbox', 'label' => 'Borrar Documento Escaneado Actual', 'hiddenField' => false)); ?>
                     <?php echo $this->Form->input('file', array('type' => 'file', 'label' => 'Pedidos escaneado')); ?>
+                </td>
+                <td>
+                <span><?php __('Comercial'); ?></span>
+                <?php echo $this->Form->input('comerciale_id', array('label' => False, 'empty' => ' -- Ninguno --')); ?>
+                </td>
+                <td>
+                    <?php echo $this->Form->input('centrosdecoste_id', array('label' => 'Centros de Coste')); ?>
                 </td>
                 <td>
                     <?php echo $this->Form->input('fecharecepcion', array('label' => 'Fecha de Recepcion','dateFormat'=>'DMY')); ?>
