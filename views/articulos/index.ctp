@@ -17,11 +17,11 @@
         <table class="view">
             <tr>
                 <?php if (!empty($this->params['named']['ref'])): ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.ref', array('label' => 'Referencia','value' => $this->params['named']['ref'])) ?></td>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.ref', array('label' => 'Referencia', 'value' => $this->params['named']['ref'])) ?></td>
                 <?php elseif (!empty($this->params['url']['ref'])): ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.ref', array('label' => 'Referencia','value' => $this->params['url']['ref'])) ?></td>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.ref', array('label' => 'Referencia', 'value' => $this->params['url']['ref'])) ?></td>
                 <?php else: ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.ref',array('label' => 'Referencia')) ?></td>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.ref', array('label' => 'Referencia')) ?></td>
                 <?php endif; ?>
 
                 <?php if (!empty($this->params['named']['nombre'])): ?>
@@ -43,25 +43,25 @@
                 <td><?php echo $this->Form->input('Search.proveedore_id', array('label' => 'Proveedor', 'type' => 'text', 'class' => 'proveedores_select', 'style' => 'width: 300px;')) ?></td>
                 <?php if (!empty($this->params['named']['proveedore_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>proveedores/get_json/<?php echo $this->params['named']['proveedore_id'] ?>', function(data) {
-                            $(".proveedores_select").select2("data", {
-                                'id' : data.id,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>proveedores/get_json/<?php echo $this->params['named']['proveedore_id'] ?>', function (data) {
+                                    $(".proveedores_select").select2("data", {
+                                        'id': data.id,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php elseif (!empty($this->params['url']['proveedore_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>proveedores/get_json/<?php echo $this->params['url']['proveedore_id'] ?>', function(data) {
-                            $(".proveedores_select").select2("data", {
-                                'id' : data.id,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>proveedores/get_json/<?php echo $this->params['url']['proveedore_id'] ?>', function (data) {
+                                    $(".proveedores_select").select2("data", {
+                                        'id': data.id,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php endif; ?>
 
@@ -82,35 +82,38 @@
             <?php endif; ?>
 
             <?php if (!empty($this->params['named']['resultados_por_pagina'])): ?>
-                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20,  '500' => 500, '1000' => 1000, '5000' => 5000, '10000' => 10000, '100000' => 100000), 'default' => '20', 'selected' => $this->params['named']['resultados_por_pagina'])) ?></td>
+                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '500' => 500, '1000' => 1000, '5000' => 5000, '10000' => 10000, '100000' => 100000), 'default' => '20', 'selected' => $this->params['named']['resultados_por_pagina'])) ?></td>
             <?php elseif (!empty($this->params['url']['resultados_por_pagina'])): ?>
-                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20,  '500' => 500, '1000' => 1000, '5000' => 5000, '10000' => 10000, '100000' => 100000), 'default' => '20', 'selected' => $this->params['url']['resultados_por_pagina'])) ?></td>
+                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '500' => 500, '1000' => 1000, '5000' => 5000, '10000' => 10000, '100000' => 100000), 'default' => '20', 'selected' => $this->params['url']['resultados_por_pagina'])) ?></td>
             <?php else: ?>
-                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20,  '500' => 500, '1000' => 1000, '5000' => 5000, '10000' => 10000, '100000' => 100000), 'default' => '20')) ?></td>
+                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '500' => 500, '1000' => 1000, '5000' => 5000, '10000' => 10000, '100000' => 100000), 'default' => '20')) ?></td>
             <?php endif; ?>
-
             </tr>
             <tr>
                 <?php if (!empty($this->params['named']['localizacion_de'])): ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.localizacion_de', array('label' => 'Localización de','value' => $this->params['named']['localizacion_de'])) ?></td>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.localizacion_de', array('label' => 'Localización de', 'value' => $this->params['named']['localizacion_de'])) ?></td>
                 <?php elseif (!empty($this->params['url']['localizacion_de'])): ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.localizacion_de', array('label' => 'Localización de','value' => $this->params['url']['localizacion_de'])) ?></td>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.localizacion_de', array('label' => 'Localización de', 'value' => $this->params['url']['localizacion_de'])) ?></td>
                 <?php else: ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.localizacion_de',array('label' => 'Localización de')) ?></td>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.localizacion_de', array('label' => 'Localización de')) ?></td>
                 <?php endif; ?>
-                    <?php if (!empty($this->params['named']['localizacion_hasta'])): ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.localizacion_hasta', array('label' => 'Localización hasta','value' => $this->params['named']['localizacion_hasta'])) ?></td>
+                <?php if (!empty($this->params['named']['localizacion_hasta'])): ?>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.localizacion_hasta', array('label' => 'Localización hasta', 'value' => $this->params['named']['localizacion_hasta'])) ?></td>
                 <?php elseif (!empty($this->params['url']['localizacion_hasta'])): ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.localizacion_hasta', array('label' => 'Localización hasta','value' => $this->params['url']['localizacion_hasta'])) ?></td>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.localizacion_hasta', array('label' => 'Localización hasta', 'value' => $this->params['url']['localizacion_hasta'])) ?></td>
                 <?php else: ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.localizacion_hasta',array('label' => 'Localización hasta')) ?></td>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.localizacion_hasta', array('label' => 'Localización hasta')) ?></td>
                 <?php endif; ?>
-            </tr>
-        </table>
+            </tr>   
+        </table>          
         <?php echo $this->Form->button('Nueva Búsqueda', array('type' => 'reset', 'class' => 'button_css_green')); ?>
         <?php echo $this->Form->end(array('label' => 'Buscar', 'div' => True, 'class' => 'button_css_blue')) ?>
     </div>
-     <h3 style="margin-top: 20px;"></h3>
+    <h3 style="margin-top: 20px;"></h3>
+    
+    <?php echo $this->Form->create('articulos', array('action' => 'import')) ?>
+    
+    <?php echo $this->Html->link(__('Importar', true), array('action' => 'import')) ?>    
     <?php echo $this->Form->create('Presupuestosproveedore', array('action' => 'add')) ?>
     <?php echo $this->Form->submit('Nuevo Presupuesto Directo', array('div' => false, 'style' => 'font-size: 20px;')); ?>
     <h4 style="margin-top: 20px;"></h4>
@@ -178,19 +181,19 @@
                 <td><?php echo $this->Form->input('validar', array('name' => 'data[articulos_validados][]', 'type' => 'checkbox', 'value' => $articulo['Articulo']['id'], 'hiddenField' => false, 'label' => false)) ?></td>
                 <td><?php echo $this->Html->link($articulo['Familia']['nombre'], array('controller' => 'familias', 'action' => 'view', $articulo['Familia']['id'])); ?></td>
                 <td class="actions">
-					<?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $articulo['Articulo']['id'])); ?>
+                    <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $articulo['Articulo']['id'])); ?>
                     <?php echo $this->Html->link(__('Ver', true), array('action' => 'view', $articulo['Articulo']['id'])); ?>
                     <?php echo $this->Html->link(__('Eliminar', true), array('action' => 'delete', $articulo['Articulo']['id']), null, sprintf(__('¿Desea borrar el artículo %s?', true), $articulo['Articulo']['id'])); ?>
                 </td>
-                
-            <?php
-            $sumatorio_ultimopreciocompra += $articulo['Articulo']['ultimopreciocompra'];
-            $sumatorio_valoracion += $articulo['Articulo']['valoracion'];
-            $sumatorio_precio_sin_iva+= $articulo['Articulo']['precio_sin_iva'] ;
-            $sumatorio_existencias += $articulo['Articulo']['existencias'];
-            $sumatorio_costetuds += ($articulo['Articulo']['ultimopreciocompra'] * $articulo['Articulo']['existencias']);
-            ?>                
-        <?php endforeach; ?>
+
+                <?php
+                $sumatorio_ultimopreciocompra += $articulo['Articulo']['ultimopreciocompra'];
+                $sumatorio_valoracion += $articulo['Articulo']['valoracion'];
+                $sumatorio_precio_sin_iva+= $articulo['Articulo']['precio_sin_iva'];
+                $sumatorio_existencias += $articulo['Articulo']['existencias'];
+                $sumatorio_costetuds += ($articulo['Articulo']['ultimopreciocompra'] * $articulo['Articulo']['existencias']);
+                ?>                
+            <?php endforeach; ?>
         <tr class="totales_pagina">
             <td colspan="1" style="text-align: right">TOTAL</td>
             <td></td>
@@ -227,35 +230,35 @@
     </div>
 </div>
 <script type="text/javascript">
-    $(function(){
+    $(function () {
         var regularizar_activado = 0;
-        $('#regularizar').click(function(){
+        $('#regularizar').click(function () {
             var rows = $('.existencias-field');
-            if(regularizar_activado == 0){
-                rows.each(function(index) {
+            if (regularizar_activado == 0) {
+                rows.each(function (index) {
                     var existencias = $(this).html();
-                    if(isNaN(parseInt(existencias))){
+                    if (isNaN(parseInt(existencias))) {
                         existencias = 0;
                     }
-                    html = '<input type="text" value="'+parseInt(existencias)+'" class="regularizar-input" />';
+                    html = '<input type="text" value="' + parseInt(existencias) + '" class="regularizar-input" />';
                     $(this).html(html);
                 });
                 regularizar_activado = 1;
-            }else{
-                rows.each(function(index) {
+            } else {
+                rows.each(function (index) {
                     $(this).html($(this).children().val());
                 });
                 regularizar_activado = 0;
             }
-            
+
         });
-    
-        $('.regularizar-input').live("change", function(){
+
+        $('.regularizar-input').live("change", function () {
             var id = $(this).parent().attr('id');
-            $.post("<?php echo Configure::read('proyect_url') ?>articulos/regularizar/"+id, { nueva_existencia: $(this).val()},
-            function(data) {
-                alert(data);
-            });
+            $.post("<?php echo Configure::read('proyect_url') ?>articulos/regularizar/" + id, {nueva_existencia: $(this).val()},
+                    function (data) {
+                        alert(data);
+                    });
         });
     });
 </script>

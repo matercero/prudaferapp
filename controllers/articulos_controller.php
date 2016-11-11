@@ -23,44 +23,44 @@ class ArticulosController extends AppController {
     }
 
     function index() {
-        
+
         $contain = array('Familia', 'Almacene');
         $conditions = array();
 
         if (!empty($this->params['url']['ref']))
-            $conditions [] = array('Articulo.ref LIKE' => '%'.$this->params['url']['ref'].'%');
+            $conditions [] = array('Articulo.ref LIKE' => '%' . $this->params['url']['ref'] . '%');
         if (!empty($this->params['named']['ref']))
-            $conditions [] = array('Articulo.ref LIKE' => '%'.$this->params['named']['ref'].'%');
+            $conditions [] = array('Articulo.ref LIKE' => '%' . $this->params['named']['ref'] . '%');
 
         if (!empty($this->params['url']['nombre']))
-            $conditions [] = array('Articulo.nombre LIKE' => '%'.$this->params['url']['nombre'].'%');
+            $conditions [] = array('Articulo.nombre LIKE' => '%' . $this->params['url']['nombre'] . '%');
         if (!empty($this->params['named']['nombre']))
-            $conditions [] = array('Articulo.nombre LIKE' => '%'.$this->params['named']['nombre'].'%');
-        
+            $conditions [] = array('Articulo.nombre LIKE' => '%' . $this->params['named']['nombre'] . '%');
+
         if (!empty($this->params['url']['codigobarras']))
-            $conditions [] = array('Articulo.codigobarras LIKE' => '%'.$this->params['url']['codigobarras'].'%');
+            $conditions [] = array('Articulo.codigobarras LIKE' => '%' . $this->params['url']['codigobarras'] . '%');
         if (!empty($this->params['named']['codigobarras']))
-            $conditions [] = array('Articulo.codigobarras LIKE' => '%'.$this->params['named']['codigobarras'].'%');
+            $conditions [] = array('Articulo.codigobarras LIKE' => '%' . $this->params['named']['codigobarras'] . '%');
 
         if (!empty($this->params['url']['proveedore_id']))
             $conditions [] = array('Articulo.proveedore_id' => $this->params['url']['proveedore_id']);
         if (!empty($this->params['named']['proveedore_id']))
             $conditions [] = array('Articulo.proveedore_id' => $this->params['named']['proveedore_id']);
-        
+
         if (!empty($this->params['url']['almacene_id']))
-            $conditions [] = array('Articulo.almacene_id' =>  $this->params['url']['almacene_id']);
+            $conditions [] = array('Articulo.almacene_id' => $this->params['url']['almacene_id']);
         if (!empty($this->params['named']['almacene_id']))
             $conditions [] = array('Articulo.almacene_id' => $this->params['named']['almacene_id']);
-      
+
         if (!empty($this->params['url']['familia_id']))
-            $conditions [] = array('Articulo.familia_id' =>  $this->params['url']['familia_id']);
+            $conditions [] = array('Articulo.familia_id' => $this->params['url']['familia_id']);
         if (!empty($this->params['named']['familia_id']))
             $conditions [] = array('Articulo.familia_id' => $this->params['named']['familia_id']);
 
         if (!empty($this->params['url']['localizacion_de']) && !empty($this->params['url']['localizacion_hasta']))
-            $conditions [] = array('Articulo.localizacion BETWEEN ? AND ?' => array($this->params['url']['localizacion_de'],$this->params['url']['localizacion_hasta']));
+            $conditions [] = array('Articulo.localizacion BETWEEN ? AND ?' => array($this->params['url']['localizacion_de'], $this->params['url']['localizacion_hasta']));
         if (!empty($this->params['named']['localizacion_hasta']) && !empty($this->params['named']['localizacion_hasta']))
-            $conditions [] = array('Articulo.localizacion BETWEEN ? AND ?' => array($this->params['named']['localizacion_de'],$this->params['named']['localizacion_hasta']));
+            $conditions [] = array('Articulo.localizacion BETWEEN ? AND ?' => array($this->params['named']['localizacion_de'], $this->params['named']['localizacion_hasta']));
 
         $paginate_results_per_page = 20;
         if (!empty($this->params['url']['resultados_por_pagina']))
@@ -69,7 +69,7 @@ class ArticulosController extends AppController {
             $paginate_results_per_page = intval($this->params['named']['resultados_por_pagina']);
 
         $this->paginate = array('limit' => $paginate_results_per_page, 'contain' => $contain, 'conditions' => $conditions, 'url' => $this->params['pass']);
-        
+
         $articulos = $this->paginate('Articulo');
         $this->set('familias', $this->Articulo->Familia->find('list'));
         $this->set('almacenes', $this->Articulo->Almacene->find('list'));
@@ -172,7 +172,7 @@ class ArticulosController extends AppController {
         $cond = "";
         $i = 0;
         foreach ($this->{$this->modelClass}->_schema as $field => $value) {
-            //debug($field);
+//debug($field);
             if ($i > 0) {
                 $cond = $cond . " OR ";
             }
@@ -215,12 +215,11 @@ class ArticulosController extends AppController {
                         'Articulo.nombre LIKE' => $this->params['url']['term'] . '%',
                         'Articulo.codigobarras LIKE' => $this->params['url']['term'] . '%',
                         'Articulo.ref LIKE' => $this->params['url']['term'] . '%'
-                        
                     ),
                 ),
-                'fields' => array('nombre', 'ref', 'id', 'precio_sin_iva','existencias'),
+                'fields' => array('nombre', 'ref', 'id', 'precio_sin_iva', 'existencias'),
                 'recursive' => -1,
-                    ));
+            ));
         } else {
             $articulos = $this->Articulo->find('all', array(
                 'conditions' => array(
@@ -230,9 +229,9 @@ class ArticulosController extends AppController {
                         'Articulo.ref LIKE' => $this->params['url']['term'] . '%'
                     ),
                 ),
-                'fields' => array('nombre', 'ref', 'id', 'precio_sin_iva','existencias'),
+                'fields' => array('nombre', 'ref', 'id', 'precio_sin_iva', 'existencias'),
                 'recursive' => -1,
-                    ));
+            ));
         }
         $articulos_array = array();
         foreach ($articulos as $articulo) {
@@ -264,12 +263,12 @@ class ArticulosController extends AppController {
             'conditions' => array(
                 'OR' => array('Articulo.nombre LIKE' => '%' . $this->params['url']['q'] . '%', 'Articulo.ref LIKE' => '%' . $this->params['url']['q'] . '%')
             ),
-                ));
+        ));
         $total = $this->Articulo->find('count', array(
             'conditions' => array(
                 'OR' => array('Articulo.nombre LIKE' => '%' . $this->params['url']['q'] . '%', 'Articulo.ref LIKE' => '%' . $this->params['url']['q'] . '%')
             ),
-                ));
+        ));
         $articulos_array = array();
         foreach ($articulos as $articulo) {
             $articulos_array[] = array("id" => $articulo["Articulo"]["id"], "nombre" => $articulo["Articulo"]["nombre"], "ref" => $articulo["Articulo"]["ref"]);
@@ -284,15 +283,15 @@ class ArticulosController extends AppController {
         Configure::write('debug', 0);
         $this->layout = 'json';
         $articulos = $this->Articulo->find('all', array(
-            'fields' => array('id', 'ref', 'nombre','Almacene.nombre'),
+            'fields' => array('id', 'ref', 'nombre', 'Almacene.nombre'),
             'contain' => 'Almacene',
             'conditions' => array(
                 'OR' => array('Articulo.nombre LIKE' => '%' . $this->params['url']['q'] . '%', 'Articulo.ref LIKE' => '%' . $this->params['url']['q'] . '%')
             ),
-                ));
+        ));
         $articulos_array = array();
         foreach ($articulos as $articulo) {
-            $articulos_array[] = array("id" => $articulo["Articulo"]["id"], "nombre" => $articulo["Articulo"]["nombre"].' --- '.$articulo["Almacene"]["nombre"], "ref" => $articulo["Articulo"]["ref"],'almacene'=>$articulo["Almacene"]["nombre"]);
+            $articulos_array[] = array("id" => $articulo["Articulo"]["id"], "nombre" => $articulo["Articulo"]["nombre"] . ' --- ' . $articulo["Almacene"]["nombre"], "ref" => $articulo["Articulo"]["ref"], 'almacene' => $articulo["Almacene"]["nombre"]);
         }
         $json['articulos'] = $articulos_array;
         $this->set('articulos', $json);
@@ -308,9 +307,105 @@ class ArticulosController extends AppController {
             'conditions' => array(
                 'Articulo.id ' => $id
             ),
-                ));
+        ));
         $this->set('articulos', $articulo['Articulo']);
         $this->render('json');
+    }
+
+    /**
+     * Accion de importar un fichero .csv y carga en la tabla articulos
+     */
+    function import() {
+        $resultado = NULL;
+//Upload File
+        if (isset($_POST['submit'])) {
+            if (is_uploaded_file($_FILES['filename']['tmp_name'])) {
+                //echo "<h1>" . "El fichero " . $_FILES['filename']['name'] . " uploaded successfully." . "</h1>";
+                $resultadoUpload = "El fichero " . $_FILES['filename']['name'] . " subido con éxito. <br />";
+                /* echo "<h2>Displaying contents:</h2>";
+                  readfile($_FILES['filename']['tmp_name']);
+                 */
+            }
+
+//Import uploaded file to Database en modo Lectura
+            $handle = fopen($_FILES['filename']['tmp_name'], "r");
+            $cntRegistros = 0;
+            $cntInsert = 0;
+            $cntUpdate = 0;
+            $cntNoProcede = 0;
+            $flag = true; // para saltar la cabecera
+            while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+                if ($flag) {
+                    $flag = false;
+                    continue;
+                }
+                $cntRegistros ++;
+
+                $consulta = sprintf("SELECT count(*) as total, id FROM articulos 
+                                      WHERE UPPER(ref) LIKE UPPER('%s')", '%' . mysql_real_escape_string($data[0]) . '%');
+
+// Ejecutar la consulta
+                $resultadoSQL = mysql_query($consulta);
+
+                if (!$resultadoSQL) {
+                    $mensaje = 'Consulta no válida: ' . mysql_error() . "\n";
+                    $mensaje .= 'Consulta completa: ' . $consulta;
+                    die($mensaje);
+                }
+
+                // $resultado .= $consulta . '<br />';
+                $dataSQL = mysql_fetch_assoc($resultadoSQL);
+                //echo "Registros con ref " . $data[0] . " coincide = " . $dataSQL['total'] . '<br />';
+                // Depende del resultado obtenido
+                switch ($dataSQL['total']) {
+                    case 0:
+                        //$resultado .= "<li>Referencia = " . $data[0] . ', ha encontrado 0 articulo.  Consulta para comprobar = ' . $consulta . '</li><br />';
+                        $resultado .= "<li>Referencia = " . $data[0] . ', INSERTADO.</li><br />';
+                        $insertOrUpdate = "INSERT INTO articulos(REF,NOMBRE,ULTIMOPRECIOCOMPRA,PRECIO_SIN_IVA,ALMACENE_ID,FAMILIA_ID,PROVEEDORE_ID) "
+                                . "values(TRIM('$data[0]'),TRIM('$data[1]'),REPLACE(TRIM('$data[2]'),',',''),REPLACE(TRIM('$data[3]'),',',''),TRIM('$data[4]'),"
+                                . "TRIM('$data[5]'),TRIM('$data[6]'))";
+                     //   echo "insertOrUpdate = " . $insertOrUpdate . "<br />";
+                        $cntInsert ++;
+                        break;
+                    case 1:
+                        //$resultado .= "<li>Referencia = " . $data[0] . ', ha encontrado 1 articulo. Consulta para comprobar = ' . $consulta . '</li><br />';
+                        $resultado .= "<li>Referencia = " . $data[0] . ', ACTUALIZADO.</li><br />';
+                        $insertOrUpdate = "UPDATE articulos  "
+                                . " SET PRECIO_SIN_IVA = REPLACE(TRIM('" . $data[3] . "'),',','')"
+                                . " WHERE id = '" . $dataSQL['id'] . "'";
+                       // echo "UPD  = " . $insertOrUpdate . "<br />";
+                        $cntUpdate ++;
+                        break;
+                    default :
+                        $resultado .= "<li><span style='color:red;font-weight:bold'> Existe mas de una refencia coincidente con la referencia = " . $data[0] .
+                                ' ¿Cómo se procede? </span>. Consulta para comprobar = ' . $consulta . '</li><br />';
+                        $cntNoProcede ++;
+                }
+
+                $resultado2SQL = mysql_query($insertOrUpdate);
+                if (!$resultado2SQL) {
+                    $mensaje = 'Consulta no válida: ' . mysql_error() . "\n";
+                    $mensaje .= 'Consulta completa: ' . $insertOrUpdate;
+                    die($mensaje);
+                }
+
+                mysql_free_result($resultado2SQL);
+
+                mysql_free_result($resultadoSQL);
+            } // While
+            fclose($handle);
+
+            $this->set('resultadoUpload', $resultadoUpload);
+            $this->Session->setFlash(__('Importación finalizada con éxito   .', true));
+            $resultadoResumen .= " Total de registros analizados : " . $cntRegistros . '<br />'
+                    . "     Registros insertados nuevos : " . $cntInsert . '<br />'
+                    . "     Registros actualizados : " . $cntUpdate . '<br />'
+                    . "     Registros No procesados : " . $cntNoProcede;
+            $this->set('resultadoResumen', $resultadoResumen);
+            $this->set('resultado', $resultado);
+        } else {
+            $this->set('resultadoUpload', "No hay fichero a subir");
+        }
     }
 
 }
