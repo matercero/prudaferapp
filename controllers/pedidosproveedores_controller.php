@@ -81,6 +81,16 @@ class PedidosproveedoresController extends AppController {
         if (!empty($this->params['named']['numero_ordene']))
             $conditions [] = array('1' => '1 AND Pedidosproveedore.presupuestosproveedore_id IN (SELECT Presupuestosproveedore.id FROM presupuestosproveedores Presupuestosproveedore WHERE Presupuestosproveedore.ordene_id IN (SELECT Ordene.id FROM ordenes Ordene WHERE Ordene.numero = "' . $this->params['named']['numero_ordene'] . '"))');
 
+        if (!empty($this->params['url']['comerciale_id']))
+            $conditions [] = array('1' => '1 AND Pedidosproveedore.comerciale_id = ' . $this->params['url']['comerciale_id']);
+        if (!empty($this->params['named']['comerciale_id']))
+            $conditions [] = array('1' => '1 AND Pedidosproveedore.comerciale_id = ' . $this->params['named']['comerciale_id']);
+
+        if (!empty($this->params['url']['estadoProveedor_id']))
+            $conditions [] = array('1' => '1 AND Pedidosproveedore.estadospedidosproveedore_id = ' . $this->params['url']['estadoProveedor_id']);
+        if (!empty($this->params['named']['estadoProveedor_id']))
+            $conditions [] = array('1' => '1 AND Pedidosproveedore.estadospedidosproveedore_id = ' . $this->params['named']['estadoProveedor_id']);
+
         $paginate_results_per_page = 20;
         if (!empty($this->params['url']['resultados_por_pagina']))
             $paginate_results_per_page = intval($this->params['url']['resultados_por_pagina']);
@@ -89,6 +99,9 @@ class PedidosproveedoresController extends AppController {
 
         $this->paginate = array('limit' => $paginate_results_per_page, 'contain' => $contain, 'conditions' => $conditions, 'url' => $this->params['pass']);
         $pedidosproveedores = $this->paginate();
+
+        $this->set('comerciales', $this->Pedidosproveedore->Comerciale->find('list'));
+        $this->set('estadoProveedor', $this->Pedidosproveedore->Estadospedidosproveedore->find('list'));
         $this->set('pedidosproveedores', $pedidosproveedores);
     }
 
@@ -119,7 +132,7 @@ class PedidosproveedoresController extends AppController {
                     'ArticulosPresupuestosproveedore' => 'Articulo', 'Proveedore', 'Almacene')
             ),
             'conditions' => array('Pedidosproveedore.id' => $id)
-                ));
+        ));
         if (empty($pedidosproveedore)) {
             $this->flashWarnings('No existe el Pedido solicitado');
             $this->redirect(array('action' => 'index'));
@@ -173,7 +186,7 @@ class PedidosproveedoresController extends AppController {
         $this->set('articulos_pedidosproveedore', $this->Pedidosproveedore->ArticulosPedidosproveedore->findAllByPedidosproveedoreId($id));
         $this->set('centrosdecostes', $this->Pedidosproveedore->Centrosdecoste->find('list'));
         $this->set('comerciales', $this->Pedidosproveedore->Comerciale->find('list'));
-        $this->set('estadospedidosproveedores', $this->Pedidosproveedore->Estadospedidosproveedore->find('list'));      
+        $this->set('estadospedidosproveedores', $this->Pedidosproveedore->Estadospedidosproveedore->find('list'));
     }
 
     function delete($id = null, $presupuestosproveedore_id = null) {
@@ -216,26 +229,26 @@ class PedidosproveedoresController extends AppController {
         Configure::write('debug', 0);
         $this->layout = 'pdf';
         $this->set('pedidosproveedore', $this->Pedidosproveedore->find('first', array(
-            'contain' => array(
-                'Proveedore',
-                'Tiposiva',
-                'Almacene',
-                'ArticulosPedidosproveedore' => array('Articulo', 'Tarea'),
-                'Albaranesproveedore' => 'Proveedore',
-                'Estadospedidosproveedore',
-                'Transportista',
-                'Presupuestosproveedore' => array(
-                    'Proveedore' => 'Tiposiva',
-                    'Estadospresupuestosproveedore',
-                    'Presupuestoscliente' => 'Cliente',
-                    'Pedidoscliente' => array('Presupuestoscliente' => 'Cliente'),
-                    'Ordene' => array('Avisostallere' => array('Cliente', 'Centrostrabajo', 'Maquina')),
-                    'Avisostallere' => array('Cliente', 'Centrostrabajo', 'Maquina', 'Estadosavisostallere'),
-                    'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina', 'Estadosaviso'),
-                    'ArticulosPresupuestosproveedore' => 'Articulo', 'Proveedore', 'Almacene')
-            ),
-            'conditions' => array('Pedidosproveedore.id' => $id)
-                )));
+                    'contain' => array(
+                        'Proveedore',
+                        'Tiposiva',
+                        'Almacene',
+                        'ArticulosPedidosproveedore' => array('Articulo', 'Tarea'),
+                        'Albaranesproveedore' => 'Proveedore',
+                        'Estadospedidosproveedore',
+                        'Transportista',
+                        'Presupuestosproveedore' => array(
+                            'Proveedore' => 'Tiposiva',
+                            'Estadospresupuestosproveedore',
+                            'Presupuestoscliente' => 'Cliente',
+                            'Pedidoscliente' => array('Presupuestoscliente' => 'Cliente'),
+                            'Ordene' => array('Avisostallere' => array('Cliente', 'Centrostrabajo', 'Maquina')),
+                            'Avisostallere' => array('Cliente', 'Centrostrabajo', 'Maquina', 'Estadosavisostallere'),
+                            'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina', 'Estadosaviso'),
+                            'ArticulosPresupuestosproveedore' => 'Articulo', 'Proveedore', 'Almacene')
+                    ),
+                    'conditions' => array('Pedidosproveedore.id' => $id)
+        )));
         $this->render();
     }
 
@@ -349,7 +362,7 @@ class PedidosproveedoresController extends AppController {
         $this->set('estadospedidosproveedores', $this->Pedidosproveedore->Estadospedidosproveedore->find('list'));
         $this->set('almacenes', $this->Pedidosproveedore->Almacene->find('list'));
         $this->set('transportistas', $this->Pedidosproveedore->Transportista->find('list'));
-        $albaranesproveedore = $this->Pedidosproveedore->Albaranesproveedore->find('first', array('contain' => array('ArticulosAlbaranesproveedore'=>'Articulo','Pedidosproveedore' => array('Presupuestosproveedore' => array('Proveedore', 'Almacene', 'Avisosrepuesto' => array('Cliente', 'Maquina', 'Centrostrabajo'), 'Avisostallere' => array('Cliente', 'Maquina', 'Centrostrabajo')))), 'conditions' => array('Albaranesproveedore.id' => $albaranesproveedore_id))); //findById($albaranesproveedore_id);
+        $albaranesproveedore = $this->Pedidosproveedore->Albaranesproveedore->find('first', array('contain' => array('ArticulosAlbaranesproveedore' => 'Articulo', 'Pedidosproveedore' => array('Presupuestosproveedore' => array('Proveedore', 'Almacene', 'Avisosrepuesto' => array('Cliente', 'Maquina', 'Centrostrabajo'), 'Avisostallere' => array('Cliente', 'Maquina', 'Centrostrabajo')))), 'conditions' => array('Albaranesproveedore.id' => $albaranesproveedore_id))); //findById($albaranesproveedore_id);
         $presupuestosproveedore = $this->Pedidosproveedore->Presupuestosproveedore->find('first', array('contain' => array('Pedidosproveedore' => array('Presupuestosproveedore' => array('Proveedore', 'Almacene', 'Avisosrepuesto' => array('Cliente', 'Maquina', 'Centrostrabajo'), 'Avisostallere' => array('Cliente', 'Maquina', 'Centrostrabajo')))), 'conditions' => array('Presupuestosproveedore.id' => $presupuestosproveedore_id))); //findById($presupuestosproveedore_id);
         $this->set(compact('albaranesproveedore', 'presupuestosproveedore'));
     }

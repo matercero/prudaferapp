@@ -61,51 +61,51 @@
                 <td><?php echo $this->Form->input('Search.articulo_id', array('label' => 'Árticulo', 'type' => 'text', 'class' => 'articulos_select', 'style' => 'width: 300px;')) ?></td>
                 <?php if (!empty($this->params['named']['articulo_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['named']['articulo_id'] ?>', function(data) {
-                            $(".articulos_select").select2("data", {
-                                'id' : data.id,
-                                'ref' : data.ref,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['named']['articulo_id'] ?>', function (data) {
+                                    $(".articulos_select").select2("data", {
+                                        'id': data.id,
+                                        'ref': data.ref,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php elseif (!empty($this->params['url']['articulo_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['url']['articulo_id'] ?>', function(data) {
-                            $(".articulos_select").select2("data", {
-                                'id' : data.id,
-                                'ref' : data.ref,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['url']['articulo_id'] ?>', function (data) {
+                                    $(".articulos_select").select2("data", {
+                                        'id': data.id,
+                                        'ref': data.ref,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php endif; ?>
             <td><?php echo $this->Form->input('Search.proveedore_id', array('label' => 'Proveedor', 'type' => 'text', 'class' => 'proveedores_select', 'style' => 'width: 300px;')) ?></td>
             <?php if (!empty($this->params['named']['proveedore_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>proveedores/get_json/<?php echo $this->params['named']['proveedore_id'] ?>', function(data) {
-                            $(".proveedores_select").select2("data", {
-                                'id' : data.id,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>proveedores/get_json/<?php echo $this->params['named']['proveedore_id'] ?>', function (data) {
+                                    $(".proveedores_select").select2("data", {
+                                        'id': data.id,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php elseif (!empty($this->params['url']['proveedore_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>proveedores/get_json/<?php echo $this->params['url']['proveedore_id'] ?>', function(data) {
-                            $(".proveedores_select").select2("data", {
-                                'id' : data.id,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>proveedores/get_json/<?php echo $this->params['url']['proveedore_id'] ?>', function (data) {
+                                    $(".proveedores_select").select2("data", {
+                                        'id': data.id,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php endif; ?>
             </tr>
@@ -131,31 +131,49 @@
                 <?php else: ?>
                     <td style="width: 250px"><?php echo $this->Form->input('Search.numero_ordene', array('label' => 'Nº Orden')) ?></td>
                 <?php endif; ?>
+                    
                 <td><?php echo $this->Form->input('Search.maquina_id', array('label' => 'Máquina', 'type' => 'text', 'class' => 'maquinas_select', 'style' => 'width: 300px;')) ?></td>
                 <?php if (!empty($this->params['named']['maquina_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>maquinas/get_json/<?php echo $this->params['named']['maquina_id'] ?>', function(data) {
-                            $(".maquinas_select").select2("data", {
-                                'id' : data.id,
-                                'codigo' : data.codigo,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>maquinas/get_json/<?php echo $this->params['named']['maquina_id'] ?>', function (data) {
+                                    $(".maquinas_select").select2("data", {
+                                        'id': data.id,
+                                        'codigo': data.codigo,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php elseif (!empty($this->params['url']['maquina_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>maquinas/get_json/<?php echo $this->params['url']['maquina_id'] ?>', function(data) {
-                            $(".maquinas_select").select2("data", {
-                                'id' : data.id,
-                                'codigo' : data.codigo,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>maquinas/get_json/<?php echo $this->params['url']['maquina_id'] ?>', function (data) {
+                                    $(".maquinas_select").select2("data", {
+                                        'id': data.id,
+                                        'codigo': data.codigo,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
+            <?php endif; ?>
+                
+                
+            <?php if (!empty($this->params['named']['estadoProveedor_id'])): ?>
+                <td><?php echo $this->Form->input('Search.estadoProveedor_id', array('label' => 'Estado', 'type' => 'select', 'class' => 'select_basico', 'options' => $estadoProveedor, 'empty' => True, 'selected' => $this->params['named']['estadoProveedor_id'])) ?></td>
+            <?php elseif (!empty($this->params['url']['estadoProveedor_id'])): ?>
+                <td><?php echo $this->Form->input('Search.estadoProveedor_id', array('label' => 'Estado', 'type' => 'select', 'class' => 'select_basico', 'options' => $estadoProveedor, 'empty' => True, 'selected' => $this->params['url']['estadoProveedor_id'])) ?></td>
+            <?php else: ?>
+                <td><?php echo $this->Form->input('Search.estadoProveedor_id', array('label' => 'Estado', 'type' => 'select', 'class' => 'select_basico', 'empty' => True, 'options' => $estadoProveedor)) ?></td>
+            <?php endif; ?>
+
+            <?php if (!empty($this->params['named']['comerciale_id'])): ?>
+                <td><?php echo $this->Form->input('Search.comerciale_id', array('label' => 'Comercial', 'type' => 'select', 'class' => 'select_basico', 'options' => $comerciales, 'empty' => True, 'selected' => $this->params['named']['comerciale_id'])) ?></td>
+            <?php elseif (!empty($this->params['url']['comerciale_id'])): ?>
+                <td><?php echo $this->Form->input('Search.comerciale_id', array('label' => 'Comercial', 'type' => 'select', 'class' => 'select_basico', 'options' => $comerciales, 'empty' => True, 'selected' => $this->params['url']['comerciale_id'])) ?></td>
+            <?php else: ?>
+                <td><?php echo $this->Form->input('Search.comerciale_id', array('label' => 'Comercial', 'type' => 'select', 'class' => 'select_basico', 'empty' => True, 'options' => $comerciales)) ?></td>
             <?php endif; ?>
 
             <?php if (!empty($this->params['named']['resultados_por_pagina'])): ?>
@@ -219,14 +237,14 @@
     <p>
         <?php
         echo $this->Paginator->counter(array(
-            'format' => __('Page %page% of %pages%, showing %current% records out of %count% total, starting on record %start%, ending on %end%', true)
+            'format' => __('Página %page% de %pages%, mostrando %current% registros de un total de %count%, starting on record %start%, ending on %end%', true)
         ));
         ?>	</p>
 
     <div class="paging">
-        <?php echo $this->Paginator->prev('<< ' . __('previous', true), array(), null, array('class' => 'disabled')); ?>
+        <?php echo $this->Paginator->prev('<< ' . __('anterior', true), array(), null, array('class' => 'disabled')); ?>
         | 	<?php echo $this->Paginator->numbers(); ?>
         |
-        <?php echo $this->Paginator->next(__('next', true) . ' >>', array(), null, array('class' => 'disabled')); ?>
+        <?php echo $this->Paginator->next(__('siguiente', true) . ' >>', array(), null, array('class' => 'disabled')); ?>
     </div>
 </div>
