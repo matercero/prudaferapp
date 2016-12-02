@@ -10,7 +10,7 @@
         <tr>
             <td>
                 <span>Fecha:</span>
-                <?php echo $this->Time->format('d-m-Y H:i:s',$avisosrepuesto['Avisosrepuesto']['fechahora']) ?>
+                <?php echo $this->Time->format('d-m-Y H:i:s', $avisosrepuesto['Avisosrepuesto']['fechahora']) ?>
             </td>
             <td>
                 <span>Estado:</span>
@@ -18,7 +18,7 @@
             </td>
             <td>
                 <span>Fecha de Aceptación:</span>
-                <?php echo $this->Time->format('d-m-Y',$avisosrepuesto['Avisosrepuesto']['fechaaceptacion']) ?>
+                <?php echo $this->Time->format('d-m-Y', $avisosrepuesto['Avisosrepuesto']['fechaaceptacion']) ?>
             </td>
         </tr>
         <tr>
@@ -87,7 +87,7 @@
                 <span>Observaciones:</span>
                 <?php echo $avisosrepuesto['Avisosrepuesto']['observaciones']; ?>
             </td>
-             <td>
+            <td>
                 <span>Solicita Presupuesto:</span>
                 <?php echo!empty($avisosrepuesto['Avisosrepuesto']['solicitapresupuesto']) ? 'Sí' : 'No'; ?>
             </td>
@@ -110,7 +110,7 @@
     <h3><?php __('Artículos del Aviso de Repuesto'); ?> - Almacen de los Materiales - <?php echo $avisosrepuesto['Almacene']['nombre']; ?></h3>
     <div class="actions">
         <ul style="width: 300px">
-            <li><?php echo $this->Html->link(__('Añadir Articulo al Aviso de Repuesto', true), array('controller' => 'articulos_avisosrepuestos', 'action' => 'add_popup', $avisosrepuesto['Avisosrepuesto']['id']), array('id' => 'popup_articulosavisosrepuesto')) ?></li>
+            <li><?php echo $this->Html->link(__('Añadir Articulo al Aviso de Repuesto', true), array('controller' => 'articulos_avisosrepuestos', 'action' => 'add_popup', $avisosrepuesto['Avisosrepuesto']['id']), array('id' => 'popup_articulosavisosrepuesto')) ?></li>   
         </ul>
     </div>
     <?php if (!empty($avisosrepuesto['ArticulosAvisosrepuesto'])): ?>
@@ -150,7 +150,8 @@
             <?php endforeach; ?>
         </table>      
     <?php endif; ?>
-    <div style="display: block; padding: 25px">
+    <div style="display: block; padding: 20px">
+        <?php echo $this->Html->link(__('IMPORTAR Articulos al Aviso', true), array('action' => 'import', $avisosrepuesto['Avisosrepuesto']['id']), array('class' => 'button_link_import')) ?>
         <?php echo $this->Html->link(__('Nuevo Presupuesto Proveedor', true), array('controller' => 'presupuestosproveedores', 'action' => 'add', $avisosrepuesto['Avisosrepuesto']['id']), array('class' => 'button_link')) ?>
         <?php echo $this->Html->link(__('Nuevo Presupuesto a Cliente', true), array('controller' => 'presupuestosclientes', 'action' => 'add', 'avisosrepuesto', $avisosrepuesto['Avisosrepuesto']['id']), array('class' => 'button_link')) ?>
         <?php echo $this->Html->link(__('Nuevo Albaran a Cliente', true), array('controller' => 'albaranesclientes', 'action' => 'add', 'avisosrepuesto', $avisosrepuesto['Avisosrepuesto']['id']), array('class' => 'button_link')) ?>
@@ -177,9 +178,9 @@
                 <tr <?php echo $class ?>>
                     <td>Albarán de Cliente Directo ( Sin pasar por Presupuestoo y Pedido )</td>
                     <td><?php echo $albaranescliente['numero'] ?></td>
-                    <td><?php echo !empty($albaranescliente['fecha'])? $this->Time->format('d-m-Y',$albaranescliente['fecha']) : '' ?></td>
+                    <td><?php echo!empty($albaranescliente['fecha']) ? $this->Time->format('d-m-Y', $albaranescliente['fecha']) : '' ?></td>
                     <td><?php echo $albaranescliente['Cliente']['nombre'] ?></td>
-                    <td><?php echo $this->Html->link('Ver',array('controller'=>'albaranesclientes','action'=>'view',$albaranescliente['id']),array('class'=>'button_brownie')) ?></td>
+                    <td><?php echo $this->Html->link('Ver', array('controller' => 'albaranesclientes', 'action' => 'view', $albaranescliente['id']), array('class' => 'button_brownie')) ?></td>
                 </tr>
             <?php endforeach; ?>
             <?php
@@ -192,9 +193,9 @@
                 <tr <?php echo $class ?>>
                     <td>Presupuesto a Cliente</td>
                     <td><?php echo $presupuestoscliente['numero'] ?></td>
-                    <td><?php echo !empty($presupuestoscliente['fecha'])? $this->Time->format('d-m-Y',$presupuestoscliente['fecha']) : '' ?></td>
+                    <td><?php echo!empty($presupuestoscliente['fecha']) ? $this->Time->format('d-m-Y', $presupuestoscliente['fecha']) : '' ?></td>
                     <td><?php echo $presupuestoscliente['Cliente']['nombre'] ?></td>
-                    <td><?php echo $this->Html->link('Ver',array('controller'=>'presupuestosclientes','action'=>'view',$presupuestoscliente['id']),array('class'=>'button_brownie')) ?></td>
+                    <td><?php echo $this->Html->link('Ver', array('controller' => 'presupuestosclientes', 'action' => 'view', $presupuestoscliente['id']), array('class' => 'button_brownie')) ?></td>
                 </tr>
             <?php endforeach; ?>
             <?php
@@ -207,31 +208,31 @@
                 <tr <?php echo $class ?>>
                     <td>Presupuesto a Proveedor</td>
                     <td><?php echo $presupuestosproveedore['numero'] ?></td>
-                    <td><?php echo !empty($presupuestosproveedore['fecha'])? $this->Time->format('d-m-Y',$presupuestosproveedore['fecha']) : '' ?></td>
+                    <td><?php echo!empty($presupuestosproveedore['fecha']) ? $this->Time->format('d-m-Y', $presupuestosproveedore['fecha']) : '' ?></td>
                     <td><?php echo $presupuestosproveedore['Proveedore']['nombre'] ?></td>
-                    <td><?php echo $this->Html->link('Ver',array('controller'=>'presupuestosproveedores','action'=>'view',$presupuestosproveedore['id']),array('class'=>'button_brownie')) ?></td>
+                    <td><?php echo $this->Html->link('Ver', array('controller' => 'presupuestosproveedores', 'action' => 'view', $presupuestosproveedore['id']), array('class' => 'button_brownie')) ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
 </div>
 <script type="text/javascript">
-    $(function() {
-        $( "#dialog:ui-dialog" ).dialog( "destroy" );
-	
-        $( "#dialog-modal" ).dialog({
+    $(function () {
+        $("#dialog:ui-dialog").dialog("destroy");
+
+        $("#dialog-modal").dialog({
             autoOpen: false,
             width: '800',
             height: 'auto',
             modal: true
         });
-        
-        $('#popup_articulosavisosrepuesto').click(function(){
-            $( "#dialog-modal" ).load($(this).attr('href'),function(){
-                $( "#dialog-modal" ).dialog('open');
+
+        $('#popup_articulosavisosrepuesto').click(function () {
+            $("#dialog-modal").load($(this).attr('href'), function () {
+                $("#dialog-modal").dialog('open');
             });
             return false;
         });
     });
-    
+
 </script>

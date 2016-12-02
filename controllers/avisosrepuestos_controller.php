@@ -4,7 +4,7 @@ class AvisosrepuestosController extends AppController {
 
     var $name = 'Avisosrepuestos';
     var $components = array('RequestHandler', 'Session', 'FileUpload');
-    var $helpers = array('Form', 'MultipleRecords', 'Ajax', 'Js', 'Time','Autocomplete');
+    var $helpers = array('Form', 'MultipleRecords', 'Ajax', 'Js', 'Time', 'Autocomplete');
 
     function beforeFilter() {
         parent::beforeFilter();
@@ -76,7 +76,7 @@ class AvisosrepuestosController extends AppController {
         }
         $articulo_aviso_repuesto = $this->Avisosrepuesto->ArticulosAvisosrepuesto->id;
         $estadosavisos = $this->Avisosrepuesto->Estadosaviso->find('list');
-        $this->set('avisosrepuesto', $this->Avisosrepuesto->find('first', array('contain' => array('Albaranescliente' => 'Cliente','Presupuestosproveedore'=>'Proveedore','Presupuestoscliente' => 'Cliente','ArticulosAvisosrepuesto' => 'Articulo', 'Cliente', 'Centrostrabajo', 'Maquina', 'Almacene', 'Estadosaviso'), 'conditions' => array('Avisosrepuesto.id' => $id))), 'estadosaviso');
+        $this->set('avisosrepuesto', $this->Avisosrepuesto->find('first', array('contain' => array('Albaranescliente' => 'Cliente', 'Presupuestosproveedore' => 'Proveedore', 'Presupuestoscliente' => 'Cliente', 'ArticulosAvisosrepuesto' => 'Articulo', 'Cliente', 'Centrostrabajo', 'Maquina', 'Almacene', 'Estadosaviso'), 'conditions' => array('Avisosrepuesto.id' => $id))), 'estadosaviso');
         $this->Session->write('idAvisorepuesto', $this->Avisosrepuesto->id);
     }
 
@@ -138,8 +138,8 @@ class AvisosrepuestosController extends AppController {
         }
         $almacenes = $this->Avisosrepuesto->Almacene->find('list');
         $clientes = $this->Avisosrepuesto->Cliente->find('list');
-        $centrostrabajos = $this->Avisosrepuesto->Centrostrabajo->find('list',array('conditions'=>array('Centrostrabajo.cliente_id'=>$this->data['Avisosrepuesto']['cliente_id'])));
-        $maquinas = $this->Avisosrepuesto->Maquina->find('list',array('conditions'=>array('Maquina.centrostrabajo_id'=>$this->data['Maquina']['centrostrabajo_id'])));
+        $centrostrabajos = $this->Avisosrepuesto->Centrostrabajo->find('list', array('conditions' => array('Centrostrabajo.cliente_id' => $this->data['Avisosrepuesto']['cliente_id'])));
+        $maquinas = $this->Avisosrepuesto->Maquina->find('list', array('conditions' => array('Maquina.centrostrabajo_id' => $this->data['Maquina']['centrostrabajo_id'])));
         $avisorepuesto = $this->Avisosrepuesto->findById($id);
         $articulos_aviso = $avisorepuesto['ArticulosAvisosrepuesto'];
         $this->Avisosrepuesto->ArticulosAvisosrepuesto->Articulo->recursive = -1;
@@ -190,9 +190,9 @@ class AvisosrepuestosController extends AppController {
 
     function mapa() {
         $conditions = array(
-            'Avisosrepuesto.estadosaviso_id' =>array("1", "3")
-            );
-        $avisosrepuestos = $this->Avisosrepuesto->find('all',array('contain'=>array('Cliente','Centrostrabajo','Maquina','Estadosaviso','Presupuestoscliente','Presupuestosproveedore'=>'Presupuestoscliente'),'conditions'=>$conditions));
+            'Avisosrepuesto.estadosaviso_id' => array("1", "3")
+        );
+        $avisosrepuestos = $this->Avisosrepuesto->find('all', array('contain' => array('Cliente', 'Centrostrabajo', 'Maquina', 'Estadosaviso', 'Presupuestoscliente', 'Presupuestosproveedore' => 'Presupuestoscliente'), 'conditions' => $conditions));
         $this->set('avisosrepuestos', $avisosrepuestos);
         $this->set(compact('avisosrepuestos'));
     }
@@ -240,7 +240,104 @@ class AvisosrepuestosController extends AppController {
         /* Fin de comprobación de Stock */
         return $warnings;
     }
-    
+
+    function import() {
+         Configure::write('debug', 0);
+        $id = $this->Avisosrepuesto->id;
+        $this->set('avisosrepuesto', $this->Avisosrepuesto->find('first', array('contain' => array('Albaranescliente' => 'Cliente', 'Presupuestosproveedore' => 'Proveedore', 'Presupuestoscliente' => 'Cliente', 'ArticulosAvisosrepuesto' => 'Articulo', 'Cliente', 'Centrostrabajo', 'Maquina', 'Almacene', 'Estadosaviso'), 'conditions' => array('Avisosrepuesto.id' => $id))), 'estadosaviso');
+        //  echo "id= ". $this->Avisosrepuesto->id . "<br />";            
+//Upload File
+        if (isset($_POST['submit'])) {
+            if (isset($_POST['idAviso'])) {
+                $id = $_POST['idAviso'];
+            }
+
+            if (is_uploaded_file($_FILES['filename']['tmp_name'])) {
+                //echo "<h1>" . "El fichero " . $_FILES['filename']['name'] . " uploaded successfully." . "</h1>";
+                $resultadoUpload = "El fichero <b>" . $_FILES['filename']['name'] . "</b> subido con éxito. <br />";
+                /* echo "<h2>Displaying contents:</h2>";
+                  readfile($_FILES['filename']['tmp_name']); */
+            }
+            //Import uploaded file to Database en modo Lectura
+            $handle = fopen($_FILES['filename']['tmp_name'], "r");
+            $cntRegistros = 0;
+            $cntInsert = 0;
+            $cntNoProcede = 0;
+            $resultadoIncidencias = "<ol>";
+            $flag = true; // para saltar la cabecera
+            while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+                if ($flag) {
+                    $flag = false;
+                    continue;
+                }
+                $cntRegistros ++;
+                // buscados el idArticulo por la referencia
+                $consulta = sprintf("SELECT id, count(*) as total FROM articulos 
+                                      WHERE UPPER(ref) LIKE UPPER('%s')", '%' . mysql_real_escape_string($data[0]) . '%');
+
+// Ejecutar la consulta
+                $resultadoSQL = mysql_query($consulta);
+                if (!$resultadoSQL) {
+                    $mensaje = 'Consulta no válida: ' . mysql_error() . "\n";
+                    $mensaje .= 'Consulta completa: ' . $consulta;
+                    die($mensaje);
+                }
+
+                //$resultado .= $consulta . '<br />';
+                //     echo $consulta . ' id= ' . $dataSQL['id'] . ' total= ' . $dataSQL['total'] . '<br />';
+                $dataSQL = mysql_fetch_assoc($resultadoSQL);
+                //echo "Registros con ref " . $data[0] . " coincide = " . $dataSQL['total'] . '<br />';
+                // Depende del resultado obtenido                
+                $articulo_id = $dataSQL['id'];
+
+                switch ($dataSQL['total']) {
+                    case 0:
+                        $resultadoIncidencias .= "<li> Referencia = " . $data[0] .
+                                ", <span style='color:red;font-weight:bold'> NO  existe </span> como articulo en el sistema</li>";
+                        $cntNoProcede ++;
+                        break;
+                    case 1:
+                        //$resultado .= "<li>Referencia = " . $data[0] . ', ha encontrado 0 articulo.  Consulta para comprobar = ' . $consulta . '</li><br />';
+                        $insertOrUpdate = "INSERT INTO articulos_avisosrepuestos (avisosrepuesto_id, articulo_id, cantidad) "
+                                . "values('$id','$articulo_id', TRIM('$data[1]'))";
+                        $cntInsert ++;
+                        break;
+                    default :
+                        $resultadoIncidencias .= "<li> Incidencia con referencia = " . $data[0] .
+                                "<span style='color:red;font-weight:bold'>, Coincide mas de un articulo </span> con esta referencia "
+                                . ' Comprobar = ' . $consulta . '</li>';
+                        $cntNoProcede ++;
+                } // switch 
+
+                if (strlen($insertOrUpdate) > 0) {
+                    $resultado2SQL = mysql_query($insertOrUpdate);
+                    if (!$resultado2SQL) {
+                        $mensaje = 'Consulta no válida: ' . mysql_error() . "\n";
+                        $mensaje .= 'Consulta completa: ' . $insertOrUpdate;
+                        die($mensaje);
+                    }
+                    mysql_free_result($resultado2SQL);
+                }
+
+                $insertOrUpdate = "";
+                mysql_free_result($resultadoSQL);
+            } // While
+            fclose($handle);
+
+            $resultadoResumen = " Total de registros analizados : " . $cntRegistros . '<br />'
+                    . "     Articulos creados en el aviso : " . $cntInsert . '<br />'
+                    . "     Registros NO procesados por incidencias : " . $cntNoProcede;
+            
+            $this->set('resultadoUpload',  isset($resultadoUpload) ? $resultadoUpload : " " ); 
+            $this->set('resultadoResumen', isset($resultadoResumen) ? $resultadoResumen : " " );
+            $this->set('resultado', (isset($resultadoIncidencias) ? $resultadoIncidencias : " " ) . "</ol>");
+            $this->Session->setFlash(__('Importación finalizada con éxito   .', true));
+        } else {
+            $this->set('resultadoResumen', "");
+            $this->set('resultadoUpload', "No hay fichero a subir");
+        }
+    }
+
 }
 
 ?>

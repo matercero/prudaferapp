@@ -47,11 +47,11 @@
             </td>
             <td colspan="2">
                 <span>Fecha</span>
-                <?php echo !empty($presupuestosproveedore['Presupuestosproveedore']['fecha'])? $this->Time->format('d-m-Y',$presupuestosproveedore['Presupuestosproveedore']['fecha']) : ''; ?>
+                <?php echo!empty($presupuestosproveedore['Presupuestosproveedore']['fecha']) ? $this->Time->format('d-m-Y', $presupuestosproveedore['Presupuestosproveedore']['fecha']) : ''; ?>
             </td>
             <td>
                 <span>Tipo de IVA</span>
-                <?php echo $presupuestosproveedore['Tiposiva']['tipoiva'].' --- '.$presupuestosproveedore['Tiposiva']['porcentaje_aplicable']; ?>
+                <?php echo $presupuestosproveedore['Tiposiva']['tipoiva'] . ' --- ' . $presupuestosproveedore['Tiposiva']['porcentaje_aplicable']; ?>
             </td>
             <td>
                 <span>Almacén de los Materiales</span>
@@ -75,7 +75,7 @@
             </td>
             <td>
                 <span>Plazo de Entrega</span>
-                <?php echo !empty($presupuestosproveedore['Presupuestosproveedore']['fechaplazo'])? $this->Time->format('d-m-Y',$presupuestosproveedore['Presupuestosproveedore']['fechaplazo']) : ''; ?>
+                <?php echo!empty($presupuestosproveedore['Presupuestosproveedore']['fechaplazo']) ? $this->Time->format('d-m-Y', $presupuestosproveedore['Presupuestosproveedore']['fechaplazo']) : ''; ?>
             </td>
         </tr>
         <tr>
@@ -94,6 +94,9 @@
         <ul>   
             <li><?php echo $this->Html->link(__('Añadir Artículo', true), array('controller' => 'articulos_presupuestosproveedores', 'action' => 'add', $presupuestosproveedore['Presupuestosproveedore']['id']), array('class' => 'popup')); ?> </li>
         </ul>
+    </div>
+    <div class="actions">
+        <li><?php echo $this->Html->link(__('IMPORTAR Articulos', true), array('action' => 'import', $presupuestosproveedore['Presupuestosproveedore']['id']), array('class' => 'button_link_import')) ?></li>
     </div>
     <div style="clear:both;"></div>
     <?php if (!empty($articulos_presupuestosproveedore)): ?>
@@ -120,7 +123,7 @@
                     }
                     ?>
                     <tr<?php echo $class; ?>>
-						<td><?php echo $this->Html->link(__($articulo_presupuestosproveedor['Articulo']['ref'], true), array('controller' => 'articulos', 'action' => 'view', $articulo_presupuestosproveedor['Articulo']['id'])); ?></td>
+                        <td><?php echo $this->Html->link(__($articulo_presupuestosproveedor['Articulo']['ref'], true), array('controller' => 'articulos', 'action' => 'view', $articulo_presupuestosproveedor['Articulo']['id'])); ?></td>
                         <td><?php echo $articulo_presupuestosproveedor['Articulo']['nombre']; ?></td>
                         <td><?php echo $articulo_presupuestosproveedor['Tarea']['descripcion']; ?></td>
                         <td><?php echo $articulo_presupuestosproveedor['ArticulosPresupuestosproveedore']['cantidad']; ?></td>

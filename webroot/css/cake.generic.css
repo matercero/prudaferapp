@@ -968,6 +968,24 @@ a.button_link {
     text-shadow: #fff 0px 1px 0px;
     min-width: 0;
 }
+
+a.button_link_import {
+    font-size: 14px;
+    font-weight:bold ;
+    padding: 4px 8px;
+    margin-left: 40px;
+    background:#e6e4ff;
+    background: -webkit-gradient(linear, left top, left bottom, from(#f1f1d4), to(#e6e49f));
+    background-image: -moz-linear-gradient(top, #f1f1d4, #e6e49f);
+    color:#333;
+    border:1px solid #aaac62;
+    -webkit-border-radius:8px;
+    -moz-border-radius:8px;
+    border-radius:8px;
+    text-decoration:none;
+    text-shadow: #fff 0px 1px 0px;
+    min-width: 0;
+}
 a.btn-is-disabled {
   pointer-events: none; /* Disables the button completely. Better than just cursor: default; */
   opacity: 0.3 ;

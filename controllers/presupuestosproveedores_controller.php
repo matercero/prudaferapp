@@ -111,7 +111,8 @@ class PresupuestosproveedoresController extends AppController {
                         'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina', 'Estadosaviso'),
                         'ArticulosPresupuestosproveedore' => 'Articulo', 'Proveedore', 'Almacene'),
                     'conditions' => array('Presupuestosproveedore.id' => $id))));
-        $this->set('articulos_presupuestosproveedore', $this->Presupuestosproveedore->ArticulosPresupuestosproveedore->find('all', array('contain' => array('Articulo', 'Tarea'), 'conditions' => array('ArticulosPresupuestosproveedore.presupuestosproveedore_id' => $id))));
+        $this->set('articulos_presupuestosproveedore', $this->Presupuestosproveedore->ArticulosPresupuestosproveedore->find('all', array('contain' => array('Articulo', 'Tarea'),
+                    'conditions' => array('ArticulosPresupuestosproveedore.presupuestosproveedore_id' => $id))));
     }
 
     function add($avisorepuestos_id = null, $avisostallere_id = null, $ordene_id = null) {
@@ -290,7 +291,7 @@ class PresupuestosproveedoresController extends AppController {
                         'first', array('contain' =>
                     array(
                         'Tiposiva',
-                        'Proveedore' => array('Tiposiva','Formapago'),
+                        'Proveedore' => array('Tiposiva', 'Formapago'),
                         'Estadospresupuestosproveedore',
                         'Pedidosproveedore' => 'Proveedore',
                         'Presupuestoscliente' => 'Cliente',
@@ -307,6 +308,124 @@ class PresupuestosproveedoresController extends AppController {
         $proveedores = $this->Presupuestosproveedore->Proveedore->find('list');
         $almacenes = $this->Presupuestosproveedore->Almacene->find('list');
         $this->set(compact('proveedores', 'almacenes'));
+    }
+
+    /**
+     * funcion importar articulos desde fichero CSV con refencia, cantidad e idTarea
+     */
+    function import() {
+        Configure::write('debug', 0);
+        
+        $id = $this->Presupuestosproveedore->id;
+        
+        if (strcmp($id, 'import') == 0) {
+            if (isset($_POST['idPresProvee'])) {
+                $id = $_POST['idPresProvee'];
+            }
+        }
+        $this->set('presupuestosproveedore', $this->Presupuestosproveedore->find(
+                        'first', array('contain' =>
+                    array(
+                        'Tiposiva',
+                        'Proveedore' => array('Tiposiva', 'Formapago'),
+                        'Estadospresupuestosproveedore',
+                        'Pedidosproveedore' => 'Proveedore',
+                        'Presupuestoscliente' => 'Cliente',
+                        'Pedidoscliente' => array('Presupuestoscliente' => 'Cliente'),
+                        'Ordene' => array('Avisostallere' => array('Cliente', 'Centrostrabajo', 'Maquina')),
+                        'Avisostallere' => array('Cliente', 'Centrostrabajo', 'Maquina', 'Estadosavisostallere'),
+                        'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina', 'Estadosaviso'),
+                        'ArticulosPresupuestosproveedore' => 'Articulo', 'Proveedore', 'Almacene'),
+                    'conditions' => array('Presupuestosproveedore.id' => $id))));
+        //Upload File
+        if (isset($_POST['submit'])) {          
+
+            if (is_uploaded_file($_FILES['filename']['tmp_name'])) {
+                //echo "<h1>" . "El fichero " . $_FILES['filename']['name'] . " uploaded successfully." . "</h1>";
+                $resultadoUpload = "Fichero <b>" . $_FILES['filename']['name'] . "</b> subido con éxito. <br />";
+                /* echo "<h2>Displaying contents:</h2>";
+                  readfile($_FILES['filename']['tmp_name']); */
+            }
+            //Import uploaded file to Database en modo Lectura
+            $handle = fopen($_FILES['filename']['tmp_name'], "r");
+            $cntRegistros = 0;
+            $cntInsert = 0;
+            $cntNoProcede = 0;
+            $resultadoIncidencias = "<ol>";
+            $flag = true; // para saltar la cabecera
+            while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+                if ($flag) {
+                    $flag = false;
+                    continue;
+                }
+                $cntRegistros ++;
+                // buscados el idArticulo por la referencia
+                $consulta = sprintf("SELECT id, count(*) as total FROM articulos 
+                                      WHERE UPPER(ref) LIKE UPPER('%s')", '%' . mysql_real_escape_string($data[0]) . '%');
+
+// Ejecutar la consulta
+                $resultadoSQL = mysql_query($consulta);
+                if (!$resultadoSQL) {
+                    $mensaje = 'Consulta no válida: ' . mysql_error() . "\n";
+                    $mensaje .= 'Consulta completa: ' . $consulta;
+                    die($mensaje);
+                }
+
+                // $resultado .= $consulta . '<br />';
+                // echo $consulta . ' id= ' . $dataSQL['id'] . ' total= ' . $dataSQL['total'] . '<br />';
+                $dataSQL = mysql_fetch_assoc($resultadoSQL);
+                // echo "Registros con ref " . $data[0] . " coincide = " . $dataSQL['total'] . '<br />';
+                // Depende del resultado obtenido                
+                $articulo_id = $dataSQL['id'];
+
+                switch ($dataSQL['total']) {
+                    case 0:
+                        $resultadoIncidencias .= "<li> Referencia = " . $data[0] .
+                                ", <span style='color:red;font-weight:bold'> NO  existe </span> como articulo en el sistema</li>";
+                        $cntNoProcede ++;
+                        break;
+                    case 1:
+                        //$resultado .= "<li>Referencia = " . $data[0] . ', ha encontrado 0 articulo.  Consulta para comprobar = ' . $consulta . '</li><br />';
+                        if (isset($data[2])) {
+                            $insertOrUpdate = "INSERT INTO articulos_presupuestosproveedores (presupuestosproveedore_id, articulo_id, "
+                                    . " cantidad, tarea_id) values ('$id','$articulo_id', '$data[1]', '$data[2]') ";
+                        } else {
+                            $insertOrUpdate = "INSERT INTO articulos_presupuestosproveedores (presupuestosproveedore_id, articulo_id, "
+                                    . " cantidad ) values ('$id','$articulo_id', '$data[1]') ";
+                        }
+                        $cntInsert ++;
+                        break;
+                    default :
+                        $resultadoIncidencias .= "<li> Incidencia con referencia = " . $data[0] .
+                                "<span style='color:red;font-weight:bold'>, Coincide mas de un articulo </span> con esta referencia "
+                                . ' Comprobar = ' . $consulta . '</li>';
+                        $cntNoProcede ++;
+                } // switch 
+                // echo $insertOrUpdate. "<br />";    
+                if (strlen($insertOrUpdate) > 0) {
+                    $resultado2SQL = mysql_query($insertOrUpdate);
+                    if (!$resultado2SQL) {
+                        $mensaje = 'Consulta no válida: ' . mysql_error() . "\n";
+                        $mensaje .= 'Consulta completa: ' . $insertOrUpdate;
+                        die($mensaje);
+                    }
+                }
+
+                $insertOrUpdate = "";
+            } // While
+            fclose($handle);
+
+            $resultadoResumen = " Total de registros analizados : " . $cntRegistros . '<br />'
+                    . "     Articulos creados en el presupuesto : " . $cntInsert . '<br />'
+                    . "     Registros NO procesados por incidencias : " . $cntNoProcede;
+
+            $this->set('resultadoUpload',  isset($resultadoUpload) ? $resultadoUpload : " " ); 
+            $this->set('resultadoResumen', isset($resultadoResumen) ? $resultadoResumen : " " );
+            $this->set('resultado', (isset($resultadoIncidencias) ? $resultadoIncidencias : "No hay. " ) . "</ol>");
+            $this->Session->setFlash(__('Importación finalizada con éxito .', true));
+        } else {
+            $this->set('resultadoUpload', "No hay fichero a subir");
+        }
     }
 
 }

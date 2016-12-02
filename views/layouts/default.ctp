@@ -53,7 +53,7 @@
 
                 </div>
                 <div id="footer">
-                    <?php echo 'Desarrollo Eme3 ® 2015' ?>
+                        <?php echo 'Desarrollo Eme3 ® 2015' ?>
                 </div>
             </div>
         </div>        
