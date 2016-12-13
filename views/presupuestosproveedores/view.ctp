@@ -96,7 +96,9 @@
         </ul>
     </div>
     <div class="actions">
-        <li><?php echo $this->Html->link(__('IMPORTAR Articulos', true), array('action' => 'import', $presupuestosproveedore['Presupuestosproveedore']['id']), array('class' => 'button_link_import')) ?></li>
+        <li><?php echo $this->Html->link(__('IMPORTAR Articulos desde .CSV', true), array('action' => 'import',
+                    $presupuestosproveedore['Presupuestosproveedore']['id'], 
+                    $presupuestosproveedore['Almacene']['id']), array('class' => 'button_link_import')) ?></li>
     </div>
     <div style="clear:both;"></div>
     <?php if (!empty($articulos_presupuestosproveedore)): ?>

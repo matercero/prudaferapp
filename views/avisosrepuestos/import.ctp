@@ -1,7 +1,8 @@
 
 <div class="articulos">
     <h2>
-        <?php __('Importar artículos al Aviso de repuesto Nº. ' . $avisosrepuesto['Avisosrepuesto']['numero']); ?>
+        <?php __('Importar artículos al Aviso de repuesto Nº. ' . $avisosrepuesto['Avisosrepuesto']['numero'] .
+                ' en el almacén ' . $avisosrepuesto['Almacene']['nombre']) ; ?>
     </h2>
 
     <?php
@@ -10,9 +11,12 @@
         print "<h3>Seleccione el fichero .CSV con Referencia y cantidad de los artículos a importar.</h3><br /><br />";
         print "<form enctype='multipart/form-data' action='import' method='post'>";
         print "<input size='50' type='file' name='filename'><br />";
-        print "<input type='hidden' name='idAviso' value='" . $avisosrepuesto['Avisosrepuesto']['id'] . "'><br />";
+        print "<input type='hidden' name='idAviso' value='" . $avisosrepuesto['Avisosrepuesto']['id'] . "'>";
+        print "<input type='hidden' name='idAlmacene' value='" . $avisosrepuesto['Almacene']['id'] . "'>";
         print "<br /><br />"
-                . "   <input type='submit' name='submit' value='Importar ' style='width: 10em;  height: 2.5em;'>"
+                . " <div style='text-align:center'>  <input type='submit' name='submit' value=' Importar ' class='button_css_blue' "
+                . " style='width: 8em;  height: 2em;'>"
+                . " <div/>"
                 . "</form>";
     } else {
         print_r($resultadoUpload);

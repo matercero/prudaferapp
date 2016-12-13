@@ -108,10 +108,12 @@
 </div>
 <div class="related">
     <h3><?php __('Artículos del Aviso de Repuesto'); ?> - Almacen de los Materiales - <?php echo $avisosrepuesto['Almacene']['nombre']; ?></h3>
-    <div class="actions">
-        <ul style="width: 300px">
-            <li><?php echo $this->Html->link(__('Añadir Articulo al Aviso de Repuesto', true), array('controller' => 'articulos_avisosrepuestos', 'action' => 'add_popup', $avisosrepuesto['Avisosrepuesto']['id']), array('id' => 'popup_articulosavisosrepuesto')) ?></li>   
-        </ul>
+    <div >
+        <div class="actions"   >
+            <ul><li><?php echo $this->Html->link(__('Añadir Articulo al Aviso de Repuesto', true), array('controller' => 'articulos_avisosrepuestos', 'action' => 'add_popup', $avisosrepuesto['Avisosrepuesto']['id']), array('id' => 'popup_articulosavisosrepuesto')) ?></li>
+            </ul>
+        </div>
+        <?php echo $this->Html->link(__('IMPORTAR Articulos desde .CSV', true), array('action' => 'import', $avisosrepuesto['Avisosrepuesto']['id']), array('class' => 'button_link_import')) ?>
     </div>
     <?php if (!empty($avisosrepuesto['ArticulosAvisosrepuesto'])): ?>
         <table cellpadding = "0" cellspacing = "0">
@@ -150,8 +152,7 @@
             <?php endforeach; ?>
         </table>      
     <?php endif; ?>
-    <div style="display: block; padding: 20px">
-        <?php echo $this->Html->link(__('IMPORTAR Articulos al Aviso', true), array('action' => 'import', $avisosrepuesto['Avisosrepuesto']['id']), array('class' => 'button_link_import')) ?>
+    <div style="display: block; padding: 20px">      
         <?php echo $this->Html->link(__('Nuevo Presupuesto Proveedor', true), array('controller' => 'presupuestosproveedores', 'action' => 'add', $avisosrepuesto['Avisosrepuesto']['id']), array('class' => 'button_link')) ?>
         <?php echo $this->Html->link(__('Nuevo Presupuesto a Cliente', true), array('controller' => 'presupuestosclientes', 'action' => 'add', 'avisosrepuesto', $avisosrepuesto['Avisosrepuesto']['id']), array('class' => 'button_link')) ?>
         <?php echo $this->Html->link(__('Nuevo Albaran a Cliente', true), array('controller' => 'albaranesclientes', 'action' => 'add', 'avisosrepuesto', $avisosrepuesto['Avisosrepuesto']['id']), array('class' => 'button_link')) ?>

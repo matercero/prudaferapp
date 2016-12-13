@@ -315,14 +315,16 @@ class PresupuestosproveedoresController extends AppController {
      */
     function import() {
         Configure::write('debug', 0);
-        
         $id = $this->Presupuestosproveedore->id;
-        
-        if (strcmp($id, 'import') == 0) {
-            if (isset($_POST['idPresProvee'])) {
-                $id = $_POST['idPresProvee'];
-            }
+
+        if (isset($_POST['idPresProvee'])) {
+            $id = $_POST['idPresProvee'];
         }
+        if (isset($_POST['idAlmacene'])) {
+            $idAlmacen = $_POST['idAlmacene'];
+        }
+        //   echo ">>" . $id . ' >> ' . $idAlmacen;
+
         $this->set('presupuestosproveedore', $this->Presupuestosproveedore->find(
                         'first', array('contain' =>
                     array(
@@ -337,9 +339,10 @@ class PresupuestosproveedoresController extends AppController {
                         'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina', 'Estadosaviso'),
                         'ArticulosPresupuestosproveedore' => 'Articulo', 'Proveedore', 'Almacene'),
                     'conditions' => array('Presupuestosproveedore.id' => $id))));
-        //Upload File
-        if (isset($_POST['submit'])) {          
 
+
+//Upload File
+        if (isset($_POST['submit'])) {
             if (is_uploaded_file($_FILES['filename']['tmp_name'])) {
                 //echo "<h1>" . "El fichero " . $_FILES['filename']['name'] . " uploaded successfully." . "</h1>";
                 $resultadoUpload = "Fichero <b>" . $_FILES['filename']['name'] . "</b> subido con éxito. <br />";
@@ -347,27 +350,29 @@ class PresupuestosproveedoresController extends AppController {
                   readfile($_FILES['filename']['tmp_name']); */
             }
             //Import uploaded file to Database en modo Lectura
-            $handle = fopen($_FILES['filename']['tmp_name'], "r");
             $cntRegistros = 0;
             $cntInsert = 0;
             $cntNoProcede = 0;
             $resultadoIncidencias = "<ol>";
+            $insertOrUpdate = "";
             $flag = true; // para saltar la cabecera
+            $handle = fopen($_FILES['filename']['tmp_name'], "r");
             while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
                 if ($flag) {
                     $flag = false;
                     continue;
                 }
                 $cntRegistros ++;
+
                 // buscados el idArticulo por la referencia
                 $consulta = sprintf("SELECT id, count(*) as total FROM articulos 
-                                      WHERE UPPER(ref) LIKE UPPER('%s')", '%' . mysql_real_escape_string($data[0]) . '%');
+                                      WHERE UPPER(ref) LIKE UPPER('%s') 
+                                      AND almacene_id = '%s'", '%' . mysql_real_escape_string($data[0]) . '%', $idAlmacen);
 
 // Ejecutar la consulta
                 $resultadoSQL = mysql_query($consulta);
                 if (!$resultadoSQL) {
-                    $mensaje = 'Consulta no válida: ' . mysql_error() . "\n";
-                    $mensaje .= 'Consulta completa: ' . $consulta;
+                    $mensaje = sprintf('Consulta no válida: %s . Consulta completa: %s ', mysql_error(), $consulta);
                     die($mensaje);
                 }
 
@@ -377,40 +382,36 @@ class PresupuestosproveedoresController extends AppController {
                 // echo "Registros con ref " . $data[0] . " coincide = " . $dataSQL['total'] . '<br />';
                 // Depende del resultado obtenido                
                 $articulo_id = $dataSQL['id'];
-
                 switch ($dataSQL['total']) {
                     case 0:
-                        $resultadoIncidencias .= "<li> Referencia = " . $data[0] .
-                                ", <span style='color:red;font-weight:bold'> NO  existe </span> como articulo en el sistema</li>";
+                        $resultadoIncidencias .= sprintf("<li> Referencia = %s , "
+                                . "<span style='color:red;font-weight:bold'> NO  existe </span> como articulo en el almacen </li>", $data[0]);
                         $cntNoProcede ++;
                         break;
                     case 1:
                         //$resultado .= "<li>Referencia = " . $data[0] . ', ha encontrado 0 articulo.  Consulta para comprobar = ' . $consulta . '</li><br />';
-                        if (isset($data[2])) {
-                            $insertOrUpdate = "INSERT INTO articulos_presupuestosproveedores (presupuestosproveedore_id, articulo_id, "
-                                    . " cantidad, tarea_id) values ('$id','$articulo_id', '$data[1]', '$data[2]') ";
-                        } else {
-                            $insertOrUpdate = "INSERT INTO articulos_presupuestosproveedores (presupuestosproveedore_id, articulo_id, "
-                                    . " cantidad ) values ('$id','$articulo_id', '$data[1]') ";
-                        }
+                        $idtarea = ($data[2] == 0 ? 'NULL' : $data[2]);
+                        $precio = ($data[3] == 0 ? 0 : $data[3]);
+                        $dto = ($data[4] == 0 ? 0 : $data[4]);
+                        $insertOrUpdate = "INSERT INTO articulos_presupuestosproveedores (presupuestosproveedore_id, articulo_id, "
+                                . " cantidad, tarea_id, precio_proveedor, descuento) values ('$id', '$articulo_id', "
+                                . " $data[1], $idtarea, $precio, $dto ) ";
                         $cntInsert ++;
                         break;
                     default :
-                        $resultadoIncidencias .= "<li> Incidencia con referencia = " . $data[0] .
-                                "<span style='color:red;font-weight:bold'>, Coincide mas de un articulo </span> con esta referencia "
-                                . ' Comprobar = ' . $consulta . '</li>';
+                        $resultadoIncidencias .= sprintf("<li> Incidencia con referencia = %s, "
+                                . "<span style='color:red;font-weight:bold'>, Coincide más de un artículo </span> con esta referencia "
+                                . ". Comprobar = %s </li>", $data[0], $consulta);
                         $cntNoProcede ++;
                 } // switch 
                 // echo $insertOrUpdate. "<br />";    
                 if (strlen($insertOrUpdate) > 0) {
                     $resultado2SQL = mysql_query($insertOrUpdate);
                     if (!$resultado2SQL) {
-                        $mensaje = 'Consulta no válida: ' . mysql_error() . "\n";
-                        $mensaje .= 'Consulta completa: ' . $insertOrUpdate;
+                        $mensaje = sprintf('Consulta no válida: %s . Consulta completa: %s ', mysql_error(), $insertOrUpdate);
                         die($mensaje);
                     }
                 }
-
                 $insertOrUpdate = "";
             } // While
             fclose($handle);
@@ -419,7 +420,7 @@ class PresupuestosproveedoresController extends AppController {
                     . "     Articulos creados en el presupuesto : " . $cntInsert . '<br />'
                     . "     Registros NO procesados por incidencias : " . $cntNoProcede;
 
-            $this->set('resultadoUpload',  isset($resultadoUpload) ? $resultadoUpload : " " ); 
+            $this->set('resultadoUpload', isset($resultadoUpload) ? $resultadoUpload : " " );
             $this->set('resultadoResumen', isset($resultadoResumen) ? $resultadoResumen : " " );
             $this->set('resultado', (isset($resultadoIncidencias) ? $resultadoIncidencias : "No hay. " ) . "</ol>");
             $this->Session->setFlash(__('Importación finalizada con éxito .', true));
