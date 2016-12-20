@@ -139,11 +139,11 @@
                         <td style="background-color: #FACC2E">Tarea <?php echo empty($tarea['numero'])? $i : $tarea['numero'] ?> - <?php echo $tarea['tipo'] ?></td>
                         <td style="background-color: #FACC2E"><?php echo $tarea['descripcion']; ?></td>
                         <td class="actions" style="background-color: #FACC2E">
-                            <?php echo $this->Html->link(__('Añadir Material', true), array('controller' => 'articulos_tareas', 'action' => 'add', $tarea['id']), array('class' => 'popup')); ?> 
+                            <?php echo $this->Html->link(__('+ Material', true), array('controller' => 'articulos_tareas', 'action' => 'add', $tarea['id']), array('class' => 'popup')); ?> 
                             <?php if ($tarea['tipo'] == 'taller'): ?>
-                                <?php echo $this->Html->link(__('Añadir Parte Taller', true), array('controller' => 'partestalleres', 'action' => 'add', $tarea['id']), array('class' => 'popup')); ?>
+                                <?php echo $this->Html->link(__('+ Parte Taller', true), array('controller' => 'partestalleres', 'action' => 'add', $tarea['id']), array('class' => 'popup')); ?>
                             <?php elseif ($tarea['tipo'] == 'centro'): ?>
-                                <?php echo $this->Html->link(__('Añadir Parte C.Trabajo', true), array('controller' => 'partes', 'action' => 'add', $tarea['id']), array('class' => 'popup')); ?>
+                                <?php echo $this->Html->link(__('+ Parte C.Trabajo', true), array('controller' => 'partes', 'action' => 'add', $tarea['id']), array('class' => 'popup')); ?>
                             <?php endif; ?>
                             <?php echo $this->Html->link(__('Editar', true), array('controller' => 'tareas', 'action' => 'edit', $tarea['id']), array('class' => 'popup')); ?>
                             <?php echo $this->Html->link(__('Ver Contenido', true), '#?', array('class' => 'ver-relaciones')); ?>

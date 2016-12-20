@@ -47,6 +47,18 @@
                 </td>
             </tr>
             <tr>
+                <td><span>Peso (Kgs)</span></td>
+                <td><?php echo $this->Form->input('peso', array('label' => false)); ?></td>
+                <td><span>Largo (mm)</span></td>
+                <td><?php echo $this->Form->input('largo', array('label' => false)); ?></td>
+            </tr>
+            <tr>
+                <td><span>Ancho(mm)</span></td>
+                <td><?php echo $this->Form->input('ancho', array('label' => false)); ?></td>
+                <td><span>Alto (mm)</span></td>
+                <td><?php echo $this->Form->input('alto', array('label' => false)); ?></td>
+            </tr>
+            <tr>
                 <td><span>Observaciones</span></td>
                 <td><?php echo $this->Form->input('observaciones', array('label' => false)); ?></td>
                 <td class="required"><span>Proveedor habitual</span></td>

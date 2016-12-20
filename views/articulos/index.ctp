@@ -109,11 +109,9 @@
         <?php echo $this->Form->button('Nueva Búsqueda', array('type' => 'reset', 'class' => 'button_css_green')); ?>
         <?php echo $this->Form->end(array('label' => 'Buscar', 'div' => True, 'class' => 'button_css_blue')) ?>
     </div>
-    <h3 style="margin-top: 20px;"></h3>
-    
-    <?php echo $this->Form->create('articulos', array('action' => 'import')) ?>
-    
-    <?php echo $this->Html->link(__('Importar', true), array('action' => 'import')) ?>    
+    <div class="actions" style="width: 30%;margin: 10px"> 
+        <?php echo $this->Html->link(__('IMPORTAR Articulos desde .CSV', true), array('action' => 'import'), array('class' => 'button_link_import')) . "<br />" ?>
+    </div>
     <?php echo $this->Form->create('Presupuestosproveedore', array('action' => 'add')) ?>
     <?php echo $this->Form->submit('Nuevo Presupuesto Directo', array('div' => false, 'style' => 'font-size: 20px;')); ?>
     <h4 style="margin-top: 20px;"></h4>
@@ -122,7 +120,8 @@
         echo $this->Paginator->counter(array(
             'format' => __('Página %page% de %pages%, mostrando %current% registros de un total de %count%, empezando en registro %start%, finalizando en el registro %end%', true)
         ));
-        ?>	</p>
+        ?>
+    </p>
 
     <div class="paging">
         <?php echo $this->Paginator->prev('<< ' . __('Anterior', true), array(), null, array('class' => 'disabled')); ?>
@@ -141,8 +140,8 @@
         <tr>
             <th><?php echo $paginator->sort('Referencia', 'ref'); ?></th>
             <th><?php echo $paginator->sort('Descripción', 'nombre'); ?></th>
-            <th><?php echo $paginator->sort('Código barras', 'codigobarras'); ?></th>
-            <th><?php echo $paginator->sort('Precio Coste (* unidad)', 'ultimopreciocompra'); ?></th>
+            <th><?php echo $paginator->sort('Cód. barras', 'codigobarras'); ?></th>
+            <th><?php echo $paginator->sort('Precio Coste (* uds)', 'ultimopreciocompra'); ?></th>
             <th><?php echo $paginator->sort('Valoración', 'valoracion'); ?></th>
             <th><?php echo $paginator->sort('PVP', 'precio_sin_iva'); ?></th>
             <th><?php echo $paginator->sort('Almacén', 'almacene_id'); ?></th>
@@ -154,6 +153,11 @@
             <th><?php echo __('A Pedir'); ?></th>
             <th><?php echo __('Validar'); ?></th>
             <th><?php echo $paginator->sort('Familia', 'familia_id'); ?></th>
+            <th><?php echo $paginator->sort('Peso (Kgs)', 'peso'); ?></th>
+            <th><?php echo $paginator->sort('largo (mm)', 'largo'); ?></th>
+            <th><?php echo $paginator->sort('Ancho (mm)', 'ancho'); ?></th>
+            <th><?php echo $paginator->sort('Alto (mm)', 'alto'); ?></th>
+            <th><?php echo $paginator->sort('Importado', 'es_importado'); ?></th>
             <th class="actions"><?php __('Acciones'); ?></th>
         </tr>
         <?php
@@ -180,9 +184,24 @@
                 <td><?php echo ($articulo['Articulo']['stock_maximo'] - $articulo['Articulo']['existencias']) < 0 ? 0 : $articulo['Articulo']['stock_maximo'] - $articulo['Articulo']['existencias']; ?>&nbsp;</td>
                 <td><?php echo $this->Form->input('validar', array('name' => 'data[articulos_validados][]', 'type' => 'checkbox', 'value' => $articulo['Articulo']['id'], 'hiddenField' => false, 'label' => false)) ?></td>
                 <td><?php echo $this->Html->link($articulo['Familia']['nombre'], array('controller' => 'familias', 'action' => 'view', $articulo['Familia']['id'])); ?></td>
+                <td><?php echo $articulo['Articulo']['peso']; ?>&nbsp;</td>
+                <td><?php echo $articulo['Articulo']['largo']; ?>&nbsp;</td>
+                <td><?php echo $articulo['Articulo']['ancho']; ?>&nbsp;</td>
+                <td><?php echo $articulo['Articulo']['alto']; ?>&nbsp;</td>
+                <td><?php echo $articulo['Articulo']['es_importado']==1? 'Sí': 'No'; ?>&nbsp;</td>
                 <td class="actions">
-                    <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $articulo['Articulo']['id'])); ?>
-                    <?php echo $this->Html->link(__('Ver', true), array('action' => 'view', $articulo['Articulo']['id'])); ?>
+                    <?php
+                    echo $this->Html->image("icon/pencil.svg", [
+                        'alt' => 'Editar',
+                        'url' => ['controller' => 'articulos',
+                            'action' => 'edit', $articulo['Articulo']['id']]]);
+                    ?>
+                    <?php
+                    echo $this->Html->image("icon/eye.svg", [
+                        'alt' => 'Ver',
+                        'url' => ['controller' => 'articulos',
+                            'action' => 'view', $articulo['Articulo']['id']]]);
+                    ?>
                     <?php echo $this->Html->link(__('Eliminar', true), array('action' => 'delete', $articulo['Articulo']['id']), null, sprintf(__('¿Desea borrar el artículo %s?', true), $articulo['Articulo']['id'])); ?>
                 </td>
 
@@ -197,7 +216,7 @@
         <tr class="totales_pagina">
             <td colspan="1" style="text-align: right">TOTAL</td>
             <td></td>
-            <td></td>            
+            <td></td>                
             <td></td>
             <td></td>
             <td></td>
@@ -209,6 +228,8 @@
             <td></td>
             <td></td>     
             <td></td>
+            <td></td>
+            <td></td>                      
             <td></td>
             <td></td>                      
             <td class="actions"></td>

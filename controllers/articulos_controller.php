@@ -99,10 +99,10 @@ class ArticulosController extends AppController {
                         $this->Articulo->saveField('articuloescaneado', $this->FileUpload->finalFile);
                     }
                     /* FIn Guardar Fichero */
-                    $this->Session->setFlash(__('The articulo has been saved', true));
+                    $this->Session->setFlash(__('El artículo se ha guardado con éxito', true));
                     $this->redirect($this->referer());
                 } else {
-                    $this->flashWarnings(__('The articulo could not be saved. Please, try again.', true));
+                    $this->flashWarnings(__('El artículo NO se ha guardado. Por favor, inténtelo de nuevo.', true));
                     $this->redirect($this->referer());
                 }
             }
@@ -132,10 +132,10 @@ class ArticulosController extends AppController {
                     $this->FileUpload->RemoveFile($upload['Articulo']['articuloescaneado']);
                     $this->Articulo->saveField('articuloescaneado', $this->FileUpload->finalFile);
                 }
-                $this->Session->setFlash(__('The articulo has been saved', true));
+                $this->Session->setFlash(__('El articulo ha sido guardado con éxito', true));
                 $this->redirect($this->referer());
             } else {
-                $this->flashWarnings(__('The articulo could not be saved. Please, try again.', true));
+                $this->flashWarnings(__('El articulo NO se ha guardado. Por favor, inténtelo de nuevo.', true));
             }
         }
         if (empty($this->data)) {
@@ -161,7 +161,8 @@ class ArticulosController extends AppController {
             $this->Session->setFlash(__('Artículo borrado', true));
             $this->redirect($this->referer());
         }
-        $this->Session->setFlash(__('El artículo no ha podido ser eliminado', true));
+        $this->flashWarnings(__('El artículo NO ha podido ser eliminado.'
+                        . 'Posiblemente porque este relacionado.', true));
         $this->redirect($this->referer());
     }
 
@@ -316,98 +317,114 @@ class ArticulosController extends AppController {
      * Accion de importar un fichero .csv y carga en la tabla articulos
      */
     function import() {
-        $resultado = NULL;
+        Configure::write('debug', 0);
 //Upload File
         if (isset($_POST['submit'])) {
             if (is_uploaded_file($_FILES['filename']['tmp_name'])) {
                 //echo "<h1>" . "El fichero " . $_FILES['filename']['name'] . " uploaded successfully." . "</h1>";
                 $resultadoUpload = "El fichero " . $_FILES['filename']['name'] . " subido con éxito. <br />";
-                /* echo "<h2>Displaying contents:</h2>";
-                  readfile($_FILES['filename']['tmp_name']);
-                 */
+                /*  echo "<h2>Displaying contents:</h2>";
+                  readfile($_FILES['filename']['tmp_name']); */
+                $id_almacen = $_POST['almacen'];
+            } else {
+                $this->set('resultado', "<span style='color:blue;font-weight:bold'>No ha seleccionado fichero .CSV</span>."
+                        . "<br /><br />Pulse 'Volver' y seleccione un fichero. ");
+                return false;
             }
 
 //Import uploaded file to Database en modo Lectura
-            $handle = fopen($_FILES['filename']['tmp_name'], "r");
+            $resultado = "<ol>";
             $cntRegistros = 0;
             $cntInsert = 0;
             $cntUpdate = 0;
             $cntNoProcede = 0;
-            $flag = true; // para saltar la cabecera
+            $flag = true;
+            $handle = fopen($_FILES['filename']['tmp_name'], "r");
             while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
                 if ($flag) {
                     $flag = false;
                     continue;
                 }
                 $cntRegistros ++;
-
-                $consulta = sprintf("SELECT count(*) as total, id FROM articulos 
-                                      WHERE UPPER(ref) LIKE UPPER('%s')", '%' . mysql_real_escape_string($data[0]) . '%');
+                
+                $consulta = sprintf("SELECT id, count(*) as total FROM articulos 
+                                      WHERE UPPER(ref) LIKE UPPER('%s') 
+                                      AND almacene_id = '%s'", '%' . mysql_real_escape_string($data[0]) . '%', $id_almacen);
 
 // Ejecutar la consulta
                 $resultadoSQL = mysql_query($consulta);
-
                 if (!$resultadoSQL) {
-                    $mensaje = 'Consulta no válida: ' . mysql_error() . "\n";
-                    $mensaje .= 'Consulta completa: ' . $consulta;
+                    $mensaje = sprintf('Consulta no válida: %s . Consulta completa: %s ', mysql_error(), $consulta);
                     die($mensaje);
                 }
 
                 // $resultado .= $consulta . '<br />';
                 $dataSQL = mysql_fetch_assoc($resultadoSQL);
                 //echo "Registros con ref " . $data[0] . " coincide = " . $dataSQL['total'] . '<br />';
-                // Depende del resultado obtenido
+                // Depende del resultado obtenido 
                 switch ($dataSQL['total']) {
+                    // Caso de referencia NO existente
                     case 0:
-                        //$resultado .= "<li>Referencia = " . $data[0] . ', ha encontrado 0 articulo.  Consulta para comprobar = ' . $consulta . '</li><br />';
-                        $resultado .= "<li>Referencia = " . $data[0] . ', INSERTADO.</li><br />';
-                        $insertOrUpdate = "INSERT INTO articulos(REF,NOMBRE,ULTIMOPRECIOCOMPRA,PRECIO_SIN_IVA,ALMACENE_ID,FAMILIA_ID,PROVEEDORE_ID) "
-                                . "values(TRIM('$data[0]'),TRIM('$data[1]'),REPLACE(TRIM('$data[2]'),',',''),REPLACE(TRIM('$data[3]'),',',''),TRIM('$data[4]'),"
-                                . "TRIM('$data[5]'),TRIM('$data[6]'))";
-                     //   echo "insertOrUpdate = " . $insertOrUpdate . "<br />";
+                        $insertOrUpdate = "INSERT INTO articulos("
+                                . "REF, NOMBRE, ULTIMOPRECIOCOMPRA,PRECIO_SIN_IVA,"
+                                . "FAMILIA_ID,PROVEEDORE_ID,PESO,"
+                                . "LARGO,ANCHO,ALTO,ES_IMPORTADO) "
+                                . "values(TRIM('$data[0]'),TRIM('$data[1]'),TRIM('$data[2]'),"
+                                . "TRIM('$data[3]'),TRIM('$data[4]'),"
+                                . "TRIM('$data[5]'),TRIM('$data[6]'),"
+                                . "TRIM('$data[7]'),TRIM('$data[8]'),"
+                                . "TRIM('$data[9]'), 1 )";
+                        $resultado .= sprintf("<li>Referencia = %s,  "
+                                . "<span style='color:green;font-weight:bold'>INSERTADA</span>", $data[0]);
                         $cntInsert ++;
                         break;
+                    // Caso de Referencia existente. Se actualiza
                     case 1:
-                        //$resultado .= "<li>Referencia = " . $data[0] . ', ha encontrado 1 articulo. Consulta para comprobar = ' . $consulta . '</li><br />';
-                        $resultado .= "<li>Referencia = " . $data[0] . ', ACTUALIZADO.</li><br />';
                         $insertOrUpdate = "UPDATE articulos  "
-                                . " SET PRECIO_SIN_IVA = REPLACE(TRIM('" . $data[3] . "'),',','')"
-                                . " WHERE id = '" . $dataSQL['id'] . "'";
-                       // echo "UPD  = " . $insertOrUpdate . "<br />";
+                                . " SET "
+                                . "PRECIO_SIN_IVA = TRIM('" . $data[3] . "'),"
+                                . "PESO = '" . $data[7] . "',"
+                                . "LARGO = '" . $data[8] . "',"
+                                . "ANCHO = '" . $data[9] . "',"
+                                . "ALTO = '" . $data[10] . "'"
+                                . "WHERE id = '" . $dataSQL['id'] . "'";
+                        $resultado .= sprintf("<li>Referencia = %s,  "
+                                . "<span style='color:blue;font-weight:bold'>ACTUALIZADA</span>", $data[0]);
                         $cntUpdate ++;
                         break;
                     default :
-                        $resultado .= "<li><span style='color:red;font-weight:bold'> Existe mas de una refencia coincidente con la referencia = " . $data[0] .
-                                ' ¿Cómo se procede? </span>. Consulta para comprobar = ' . $consulta . '</li><br />';
+                        $resultado .= sprintf("<li>Referencia = %s,  "
+                                . "<span style='color:red;font-weight:bold'>INCIDENCIA</span>. Comprobar: %s", $data[0], $consulta);
                         $cntNoProcede ++;
                 }
-
-                $resultado2SQL = mysql_query($insertOrUpdate);
-                if (!$resultado2SQL) {
-                    $mensaje = 'Consulta no válida: ' . mysql_error() . "\n";
-                    $mensaje .= 'Consulta completa: ' . $insertOrUpdate;
-                    die($mensaje);
+                if (strlen($insertOrUpdate) > 0) {
+                    $resultado2SQL = mysql_query($insertOrUpdate);
+                    if (!$resultado2SQL) {
+                        $mensaje = sprintf('Consulta no válida: %s . Consulta completa: %s ', mysql_error(), $consulta);
+                        die($mensaje);
+                    }
                 }
-
-                mysql_free_result($resultado2SQL);
-
-                mysql_free_result($resultadoSQL);
+                $insertOrUpdate = "";
             } // While
             fclose($handle);
 
-            $this->set('resultadoUpload', $resultadoUpload);
-            $this->Session->setFlash(__('Importación finalizada con éxito   .', true));
-            $resultadoResumen .= " Total de registros analizados : " . $cntRegistros . '<br />'
-                    . "     Registros insertados nuevos : " . $cntInsert . '<br />'
-                    . "     Registros actualizados : " . $cntUpdate . '<br />'
-                    . "     Registros No procesados : " . $cntNoProcede;
-            $this->set('resultadoResumen', $resultadoResumen);
-            $this->set('resultado', $resultado);
-        } else {
-            $this->set('resultadoUpload', "No hay fichero a subir");
-        }
-    }
 
+            if (!$flag) {
+                $resultadoResumen = "<br /><b>Resumen de la importación:</b><br />."
+                        . " Total de registros analizados : " . $cntRegistros . '<br />'
+                        . "     Artículos creados en el presupuesto : " . $cntInsert . '<br />'
+                        . "     Registros NO procesados por incidencias : " . $cntNoProcede;
+
+                $this->set('resultado', (isset($resultado) ? $resultado : "No hay. " ) . "</ol>");
+                $this->Session->setFlash(__('Importación finalizada con éxito .', true));
+            }
+            $this->set('resultadoResumen', isset($resultadoResumen) ? $resultadoResumen : " " );
+            $this->set('resultadoUpload', isset($resultadoUpload) ? $resultadoUpload : " " );
+        } else {
+            $this->set('resultadoResumen', "");
+            $this->set('resultadoUpload', isset($resultadoUpload) ? $resultadoUpload : "No hay fichero a subir " );
+        }
+    }    
 }
 
 ?>
