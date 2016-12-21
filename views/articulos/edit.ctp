@@ -69,6 +69,10 @@
                 <td class="required"><span>Proveedor habitual</span></td>
                 <td><?php echo $this->Form->input('proveedore_id', array('label' => false, 'empty' => '', 'data-placeholder' => 'Seleccione el Proveedor...', 'class' => 'chzn-select-required')); ?></td>
             </tr>
+            <tr>
+                <td><span>Descripción larga</span></td>
+                <td><?php echo $this->Form->textarea('descripcionLarga', array('label' => false)); ?></td>
+            </tr>
         </table>
     </fieldset>
     <?php echo $this->Form->end(__('Guardar', true), array ('class' => 'button_link')); ?>

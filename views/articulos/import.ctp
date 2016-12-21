@@ -31,6 +31,7 @@
             print_r($resultadoResumen);
             echo "<br /><br /><b>Detalle por registro:</b><br /><br />";
             print_r($resultado);
+            echo "<br /><br />";
             echo $this->Html->link(__('Listar Artículos', true), array('action' => 'index'), array('class' => 'button_link'));
         }
     }

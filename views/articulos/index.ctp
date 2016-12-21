@@ -81,13 +81,7 @@
                 <td><?php echo $this->Form->input('Search.familia_id', array('label' => 'Familia', 'type' => 'select', 'empty' => True, 'options' => $familias, 'class' => 'select_basico')) ?></td>
             <?php endif; ?>
 
-            <?php if (!empty($this->params['named']['resultados_por_pagina'])): ?>
-                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '500' => 500, '1000' => 1000, '5000' => 5000, '10000' => 10000, '100000' => 100000), 'default' => '20', 'selected' => $this->params['named']['resultados_por_pagina'])) ?></td>
-            <?php elseif (!empty($this->params['url']['resultados_por_pagina'])): ?>
-                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '500' => 500, '1000' => 1000, '5000' => 5000, '10000' => 10000, '100000' => 100000), 'default' => '20', 'selected' => $this->params['url']['resultados_por_pagina'])) ?></td>
-            <?php else: ?>
-                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '500' => 500, '1000' => 1000, '5000' => 5000, '10000' => 10000, '100000' => 100000), 'default' => '20')) ?></td>
-            <?php endif; ?>
+
             </tr>
             <tr>
                 <?php if (!empty($this->params['named']['localizacion_de'])): ?>
@@ -103,6 +97,22 @@
                     <td style="width: 250px"><?php echo $this->Form->input('Search.localizacion_hasta', array('label' => 'Localización hasta', 'value' => $this->params['url']['localizacion_hasta'])) ?></td>
                 <?php else: ?>
                     <td style="width: 250px"><?php echo $this->Form->input('Search.localizacion_hasta', array('label' => 'Localización hasta')) ?></td>
+                <?php endif; ?>
+                   
+                <?php if (!empty($this->params['named']['descripcionLarga'])): ?>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.descripcionLarga', array('label' => 'Descripcion Larga', 'value' => $this->params['named']['descripcionLarga'])) ?></td>
+                <?php elseif (!empty($this->params['url']['descripcionLarga'])): ?>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.descripcionLarga', array('label' => 'Descripcion Larga', 'value' => $this->params['url']['descripcionLarga'])) ?></td>
+                <?php else: ?>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.descripcionLarga', array('label' => 'Descripcion Larga')) ?></td>
+                <?php endif; ?>
+
+                <?php if (!empty($this->params['named']['resultados_por_pagina'])): ?>
+                    <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '500' => 500, '1000' => 1000, '5000' => 5000, '10000' => 10000, '100000' => 100000), 'default' => '20', 'selected' => $this->params['named']['resultados_por_pagina'])) ?></td>
+                <?php elseif (!empty($this->params['url']['resultados_por_pagina'])): ?>
+                    <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '500' => 500, '1000' => 1000, '5000' => 5000, '10000' => 10000, '100000' => 100000), 'default' => '20', 'selected' => $this->params['url']['resultados_por_pagina'])) ?></td>
+                <?php else: ?>
+                    <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '500' => 500, '1000' => 1000, '5000' => 5000, '10000' => 10000, '100000' => 100000), 'default' => '20')) ?></td>
                 <?php endif; ?>
             </tr>   
         </table>          
@@ -152,7 +162,7 @@
             <th><?php echo $paginator->sort('Stock Max.', 'stock_maximo'); ?></th>
             <th><?php echo __('A Pedir'); ?></th>
             <th><?php echo __('Validar'); ?></th>
-            <th><?php echo $paginator->sort('Familia', 'familia_id'); ?></th>
+            <th><?php echo $paginator->sort('Familia', 'familia_id'); ?></th>   
             <th><?php echo $paginator->sort('Peso (Kgs)', 'peso'); ?></th>
             <th><?php echo $paginator->sort('largo (mm)', 'largo'); ?></th>
             <th><?php echo $paginator->sort('Ancho (mm)', 'ancho'); ?></th>
@@ -188,7 +198,7 @@
                 <td><?php echo $articulo['Articulo']['largo']; ?>&nbsp;</td>
                 <td><?php echo $articulo['Articulo']['ancho']; ?>&nbsp;</td>
                 <td><?php echo $articulo['Articulo']['alto']; ?>&nbsp;</td>
-                <td><?php echo $articulo['Articulo']['es_importado']==1? 'Sí': 'No'; ?>&nbsp;</td>
+                <td><?php echo $articulo['Articulo']['es_importado'] == 1 ? 'Sí' : 'No'; ?>&nbsp;</td>
                 <td class="actions">
                     <?php
                     echo $this->Html->image("icon/pencil.svg", [

@@ -62,6 +62,12 @@ class ArticulosController extends AppController {
         if (!empty($this->params['named']['localizacion_hasta']) && !empty($this->params['named']['localizacion_hasta']))
             $conditions [] = array('Articulo.localizacion BETWEEN ? AND ?' => array($this->params['named']['localizacion_de'], $this->params['named']['localizacion_hasta']));
 
+        if (!empty($this->params['url']['descripcionLarga']))
+            $conditions [] = array('Articulo.descripcionLarga LIKE' => '%' . $this->params['url']['descripcionLarga'] . '%');
+        if (!empty($this->params['named']['descripcionLarga']))
+            $conditions [] = array('Articulo.descripcionLarga LIKE' => '%' . $this->params['named']['descripcionLarga'] . '%');
+
+
         $paginate_results_per_page = 20;
         if (!empty($this->params['url']['resultados_por_pagina']))
             $paginate_results_per_page = intval($this->params['url']['resultados_por_pagina']);
@@ -346,7 +352,7 @@ class ArticulosController extends AppController {
                     continue;
                 }
                 $cntRegistros ++;
-                
+
                 $consulta = sprintf("SELECT id, count(*) as total FROM articulos 
                                       WHERE UPPER(ref) LIKE UPPER('%s') 
                                       AND almacene_id = '%s'", '%' . mysql_real_escape_string($data[0]) . '%', $id_almacen);
@@ -411,8 +417,9 @@ class ArticulosController extends AppController {
 
             if (!$flag) {
                 $resultadoResumen = "<br /><b>Resumen de la importación:</b><br />."
-                        . " Total de registros analizados : " . $cntRegistros . '<br />'
+                        . "Total de registros analizados : " . $cntRegistros . '<br />'
                         . "     Artículos creados en el presupuesto : " . $cntInsert . '<br />'
+                        . "     Artículos creados en el presupuesto : " . $cntUpdate . '<br />'
                         . "     Registros NO procesados por incidencias : " . $cntNoProcede;
 
                 $this->set('resultado', (isset($resultado) ? $resultado : "No hay. " ) . "</ol>");
@@ -424,7 +431,8 @@ class ArticulosController extends AppController {
             $this->set('resultadoResumen', "");
             $this->set('resultadoUpload', isset($resultadoUpload) ? $resultadoUpload : "No hay fichero a subir " );
         }
-    }    
+    }
+
 }
 
 ?>
