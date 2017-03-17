@@ -48,18 +48,52 @@ class AlbaranesclientesController extends AppController {
         }
 
         /* Articulos */
-        if (!empty($this->params['url']['articulo_id']))
-            $conditions [] = array('1' => '1 AND Albaranescliente.id IN (SELECT Tareasalbaranescliente.albaranescliente_id FROM tareasalbaranesclientes Tareasalbaranescliente WHERE Tareasalbaranescliente.id IN (SELECT MaterialesTareasalbaranescliente.tareasalbaranescliente_id FROM materiales_tareasalbaranesclientes MaterialesTareasalbaranescliente WHERE MaterialesTareasalbaranescliente.articulo_id = ' . $this->params['url']['articulo_id'] . '))');
-        if (!empty($this->params['named']['articulo_id']))
-            $conditions [] = array('1' => '1 AND Albaranescliente.id IN (SELECT Tareasalbaranescliente.albaranescliente_id FROM tareasalbaranesclientes Tareasalbaranescliente WHERE Tareasalbaranescliente.id IN (SELECT MaterialesTareasalbaranescliente.tareasalbaranescliente_id FROM materiales_tareasalbaranesclientes MaterialesTareasalbaranescliente WHERE MaterialesTareasalbaranescliente.articulo_id = ' . $this->params['named']['articulo_id'] . '))');
+        if (!empty($this->params['url']['articulo_id'])) {
+            $conditions [] = array('1' => '1 AND Albaranescliente.id IN (SELECT Tareasalbaranescliente.albaranescliente_id '
+                . 'FROM tareasalbaranesclientes Tareasalbaranescliente'
+                . ' WHERE Tareasalbaranescliente.id IN (SELECT MaterialesTareasalbaranescliente.tareasalbaranescliente_id '
+                . ' FROM materiales_tareasalbaranesclientes MaterialesTareasalbaranescliente'
+                . ' WHERE MaterialesTareasalbaranescliente.articulo_id = ' . $this->params['url']['articulo_id'] . '))');
+        }
+        if (!empty($this->params['named']['articulo_id'])) {
+            $conditions [] = array('1' => '1 AND Albaranescliente.id IN (SELECT Tareasalbaranescliente.albaranescliente_id '
+                . 'FROM tareasalbaranesclientes Tareasalbaranescliente'
+                . ' WHERE Tareasalbaranescliente.id IN (SELECT MaterialesTareasalbaranescliente.tareasalbaranescliente_id '
+                . ' FROM materiales_tareasalbaranesclientes MaterialesTareasalbaranescliente'
+                . ' WHERE MaterialesTareasalbaranescliente.articulo_id = ' . $this->params['named']['articulo_id'] . '))');
+        }
 
-        if (!empty($this->params['url']['articulo_descripcion']))
-            $conditions [] = array('1' => "1 AND Albaranescliente.id IN (SELECT  t.albaranescliente_id  FROM articulos a, materiales_tareasalbaranesclientes m, tareasalbaranesclientes t "
-                . "WHERE  m.tareasalbaranescliente_id = t.id AND a.nombre like '%" . $this->params['url']['articulo_descripcion'] . "%')");
-        if (!empty($this->params['named']['articulo_descripcion']))
-            $conditions [] = array('1' => "1 AND Albaranescliente.id IN (SELECT  t.albaranescliente_id  FROM articulos a, materiales_tareasalbaranesclientes m, tareasalbaranesclientes t "
-                . "WHERE  m.tareasalbaranescliente_id = t.id AND a.nombre like '%" . $this->params['named']['articulo_descripcion'] . "%')");
 
+        /* nombre de articulo */
+        if (!empty($this->params['url']['articulo_nombre'])){
+            $conditions [] = array('1' => "1 AND Albaranescliente.id IN (SELECT t.albaranescliente_id "
+                . 'FROM tareasalbaranesclientes t'
+                . ' WHERE t.id IN (SELECT m.tareasalbaranescliente_id '
+                . 'FROM materiales_tareasalbaranesclientes m, articulos a'
+                . " WHERE m.tareasalbaranescliente_id = t.id AND LOWER(a.nombre) like LOWER('%" . $this->params['url']['articulo_nombre'] . "%')))");
+        }
+        if (!empty($this->params['named']['articulo_nombre'])) {
+            $conditions [] = array('1' => "1 AND Albaranescliente.id IN (SELECT t.albaranescliente_id "
+                . 'FROM tareasalbaranesclientes t'
+                . ' WHERE t.id IN (SELECT m.tareasalbaranescliente_id '
+                . 'FROM materiales_tareasalbaranesclientes m, articulos a'
+                . " WHERE m.tareasalbaranescliente_id = t.id AND LOWER(a.nombre) like LOWER('%" . $this->params['url']['articulo_nombre'] . "%')))");
+        }
+
+        /*  if (!empty($this->params['url']['articulo_nombre']))
+          $conditions [] = array('1' => "1 AND Albaranescliente.id IN (SELECT Tareasalbaranescliente.albaranescliente_id '
+          . 'FROM tareasalbaranesclientes Tareasalbaranescliente'
+          . ' WHERE Tareasalbaranescliente.id IN (SELECT t.albaranescliente_id "
+          . " FROM articulos a, materiales_tareasalbaranesclientes m, tareasalbaranesclientes t "
+          . " WHERE  "
+          . "m.tareasalbaranescliente_id = t.id AND LOWER(a.nombre) like LOWER('%" . $this->params['url']['articulo_nombre'] . "%')))");
+          if (!empty($this->params['named']['articulo_nombre']))
+          $conditions [] = array('1' => "1 AND Albaranescliente.id IN (SELECT Tareasalbaranescliente.albaranescliente_id '
+          . 'FROM tareasalbaranesclientes Tareasalbaranescliente'
+          . ' WHERE Tareasalbaranescliente.id IN (SELECT  t.albaranescliente_id  "
+          . "FROM articulos a, materiales_tareasalbaranesclientes m, tareasalbaranesclientes t "
+          . "WHERE  m.tareasalbaranescliente_id = t.id AND LOWER(a.nombre) like LOWER('%" . $this->params['named']['articulo_nombre'] . "%')))");
+         */
         if (!empty($this->params['url']['cliente_id']))
             $conditions [] = array('1' => '1 AND Albaranescliente.cliente_id = ' . $this->params['url']['cliente_id']);
         if (!empty($this->params['named']['cliente_id']))
@@ -135,7 +169,7 @@ class AlbaranesclientesController extends AppController {
     function add($vienede = null, $iddedondeviene = null) {
         if (!empty($this->data)) {
             $this->Albaranescliente->create();
-            if ($this->Albaranescliente->save($this->data)) {
+            if ($this->Albaranescliente->save($this->data, array('validate' => True))) {
                 if (!empty($this->data['Albaranescliente']['pedidoscliente_id'])) { // Si viene de Pedidoscliente 
                     $this->__trapaso_from_pedidoscliente($this->data);
                 } elseif (!empty($this->data['Albaranescliente']['ordene_id'])) { // Si viene de Ordene 
@@ -172,41 +206,46 @@ class AlbaranesclientesController extends AppController {
                 $this->redirect($this->referer());
             }
         }
-        $this->loadModel('Config');
-        $series = $this->Config->SeriesAlbaranesventa->find('list', array('fields' => array('SeriesAlbaranesventa.serie', 'SeriesAlbaranesventa.serie')));
-        $estadosalbaranesclientes = $this->Albaranescliente->Estadosalbaranescliente->find('list');
-        $almacenes = $this->Albaranescliente->Almacene->find('list');
-        $tiposivas = $this->Albaranescliente->Tiposiva->find('list');
-        $clientes = $this->Albaranescliente->Cliente->find('list');
-        $comerciales = $this->Albaranescliente->Comerciale->find('list');
-        $centrosdecostes = $this->Albaranescliente->Centrosdecoste->find('list');
-    /*    $maquina = $this->AlbaranesCliente->Maquina->find('list');*/
-        $numero = $this->Albaranescliente->dime_siguiente_numero();
-        if ($vienede == 'pedidoscliente') {
-            $pedidoscliente = $this->Albaranescliente->Pedidoscliente->find('first', array('contain' => array('Presupuestoscliente' => array('Cliente', 'Centrostrabajo', 'Maquina'), 'Tareaspedidoscliente' => array('MaterialesTareaspedidoscliente' => 'Articulo', 'ManodeobrasTareaspedidoscliente', 'TareaspedidosclientesOtrosservicio')), 'conditions' => array('Pedidoscliente.id' => $iddedondeviene)));
-            $this->set(compact('series', 'pedidoscliente', 'tiposivas', 'numero', 'centrosdecostes', 'comerciales', 'estadosalbaranesclientes', 'almacenes', 'maquina'));
-            $this->render('add_from_pedidoscliente');
-        } elseif ($vienede == 'avisosrepuesto') {
-            $avisosrepuesto = $this->Albaranescliente->Avisosrepuesto->find('first', array('contain' => array('Cliente', 'Centrostrabajo', 'Maquina', 'ArticulosAvisosrepuesto' => 'Articulo'), 'conditions' => array('Avisosrepuesto.id' => $iddedondeviene)));
-            $this->set(compact('series', 'avisosrepuesto', 'tiposivas', 'numero', 'centrosdecostes', 'comerciales', 'estadosalbaranesclientes', 'almacenes', 'maquina'));
-            $this->render('add_from_avisosrepuesto');
-        } elseif ($vienede == 'albaranesproveedore') {
-            $albaranesproveedore = $this->Albaranescliente->Albaranesproveedore->find('first', array('contain' => array('Cliente', 'Centrostrabajo', 'Maquina', 'MaterialeAlbaranesproveedore' => 'Articulo'), 'conditions' => array('Albaranesproveedore.id' => $iddedondeviene)));
-            $this->set(compact('series', 'tiposivas', 'numero', 'centrosdecostes', 'comerciales', 'estadosalbaranesclientes', 'almacenes', 'maquina'));
-            $this->render('add_from_albaranesproveedore');
-        } else {
-            $this->set(compact('clientes', 'series', 'tiposivas', 'almacenes', 'numero', 'comerciales', 'estadosalbaranesclientes', 'centrosdecostes', 'maquina'));
-            $this->render('add_direct');
+
+        if (!$this->Albaranescliente->save($this->data, array('validate' => True))) {
+            $this->loadModel('Config');
+            $clientes = $this->Albaranescliente->Cliente->find('list');
+            $series = $this->Config->SeriesAlbaranesventa->find('list', array('fields' => array('SeriesAlbaranesventa.serie', 'SeriesAlbaranesventa.serie')));
+            $tiposivas = $this->Albaranescliente->Tiposiva->find('list');
+            $almacenes = $this->Albaranescliente->Almacene->find('list');
+            $comerciales = $this->Albaranescliente->Comerciale->find('list');
+            $estadosalbaranesclientes = $this->Albaranescliente->Estadosalbaranescliente->find('list');
+            $centrosdecostes = $this->Albaranescliente->Centrosdecoste->find('list');
+            /* $centrodetrabajo = $this->Albaranescliente->Centro ->find('list');
+              $maquina = $this->AlbaranesCliente->Maquina->find('list');
+             */ $numero = $this->Albaranescliente->dime_siguiente_numero();
+
+            if ($vienede == 'pedidoscliente') {
+                $pedidoscliente = $this->Albaranescliente->Pedidoscliente->find('first', array('contain' => array('Presupuestoscliente' => array('Cliente', 'Centrostrabajo', 'Maquina'), 'Tareaspedidoscliente' => array('MaterialesTareaspedidoscliente' => 'Articulo', 'ManodeobrasTareaspedidoscliente', 'TareaspedidosclientesOtrosservicio')), 'conditions' => array('Pedidoscliente.id' => $iddedondeviene)));
+                $this->set(compact('series', 'pedidoscliente', 'tiposivas', 'numero', 'centrosdecostes', 'comerciales', 'estadosalbaranesclientes', 'almacenes', 'maquina'));
+                $this->render('add_from_pedidoscliente');
+            } elseif ($vienede == 'avisosrepuesto') {
+                $avisosrepuesto = $this->Albaranescliente->Avisosrepuesto->find('first', array('contain' => array('Cliente', 'Centrostrabajo', 'Maquina', 'ArticulosAvisosrepuesto' => 'Articulo'), 'conditions' => array('Avisosrepuesto.id' => $iddedondeviene)));
+                $this->set(compact('series', 'avisosrepuesto', 'tiposivas', 'numero', 'centrosdecostes', 'comerciales', 'estadosalbaranesclientes', 'almacenes', 'maquina'));
+                $this->render('add_from_avisosrepuesto');
+            } elseif ($vienede == 'albaranesproveedore') {
+                $albaranesproveedore = $this->Albaranescliente->Albaranesproveedore->find('first', array('contain' => array('Cliente', 'Centrostrabajo', 'Maquina', 'MaterialeAlbaranesproveedore' => 'Articulo'), 'conditions' => array('Albaranesproveedore.id' => $iddedondeviene)));
+                $this->set(compact('series', 'tiposivas', 'numero', 'centrosdecostes', 'comerciales', 'estadosalbaranesclientes', 'almacenes', 'maquina'));
+                $this->render('add_from_albaranesproveedore');
+            } else {
+                $this->set(compact('clientes', 'series', 'tiposivas', 'almacenes', 'numero', 'comerciales', 'estadosalbaranesclientes', 'centrosdecostes', 'maquina'));
+                $this->render('add_direct');
+            }
         }
     }
 
     function edit($id = null) {
         if (!$id && empty($this->data)) {
-            $this->flashWarnings(__('Invalid albaranescliente', true));
+            $this->flashWarnings(__('Invalido albaranes cliente', true));
             $this->redirect(array('action' => 'index'));
         }
         if (!empty($this->data)) {
-            if ($this->Albaranescliente->save($this->data)) {
+            if ($this->Albaranescliente->save($this->data, array('validate' => True))) {
                 $upload = $this->Albaranescliente->findById($id);
                 if (!empty($this->data['Albaranescliente']['remove_file'])) {
                     $this->FileUpload->RemoveFile($upload['Albaranescliente']['albaranescaneado']);
@@ -218,10 +257,10 @@ class AlbaranesclientesController extends AppController {
                     $this->Albaranescliente->saveField('estadosalbaranescliente_id', 2);
                 }
 
-                $this->Session->setFlash(__('The albaranescliente has been saved', true));
+                $this->Session->setFlash(__('The albaranescliente ha sido guardado', true));
                 $this->redirect(array('action' => 'view', $id));
             } else {
-                $this->flashWarnings(__('The albaranescliente could not be saved. Please, try again.', true));
+                $this->flashWarnings(__('El albaran cliente No ha podido ser guardado. Revise los datos e intentelo de nuevo.', true));
             }
         }
         if (empty($this->data)) {
@@ -555,7 +594,7 @@ class AlbaranesclientesController extends AppController {
                             $otrosservicio_modelo = $this->Albaranescliente->Tareasalbaranescliente->TareasalbaranesclientesOtrosservicio->find('first', array('contain' => '', 'conditions' => array('TareasalbaranesclientesOtrosservicio.id' => $otrosservicio['id'])));
                             $otrosserviciosalbaranescliente['TareasalbaranesclientesOtrosservicio'] = $otrosservicio_modelo['TareasalbaranesclientesOtrosservicio'];
                             unset($otrosserviciosalbaranescliente['TareasalbaranesclientesOtrosservicio']['id']);
-                            //$otrosserviciosalbaranescliente['TareasalbaranesclientesOtrosservicio'] = $otrosserviciosalbaranescliente['TareasalbaranesclientesOtrosservicio'] * -1;
+//$otrosserviciosalbaranescliente['TareasalbaranesclientesOtrosservicio'] = $otrosserviciosalbaranescliente['TareasalbaranesclientesOtrosservicio'] * -1;
                             $otrosserviciosalbaranescliente['TareasalbaranesclientesOtrosservicio']['tareasalbaranescliente_id'] = $this->Albaranescliente->Tareasalbaranescliente->id;
                             $this->Albaranescliente->Tareasalbaranescliente->TareasalbaranesclientesOtrosservicio->save($otrosserviciosalbaranescliente);
                         }

@@ -148,12 +148,12 @@
             </tr>
             <tr>   
 
-                <?php if (!empty($this->params['named']['articulo_descripcion'])): ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.articulo_descripcion', array('label' => 'Descripción de artículo', 'title' => 'Recomendable !! el uso de este campo requiere también  filtrar por fecha !', 'value' => $this->params['named']['articulo_descripcion'])) ?></td>
-                <?php elseif (!empty($this->params['url']['articulo_descripcion'])): ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.articulo_descripcion', array('label' => 'Descripción de artículo', 'title' => 'Recomendable !! el uso de este campo requiere tambien filtrar por fecha !', 'value' => $this->params['url']['articulo_descripcion'])) ?></td>
+                <?php if (!empty($this->params['named']['articulo_nombre'])): ?>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.articulo_nombre', array('label' => 'Descripción de artículo', 'title' => 'Recomendable !! el uso de este campo requiere también  filtrar por fecha !', 'value' => $this->params['named']['articulo_nombre'])) ?></td>
+                <?php elseif (!empty($this->params['url']['articulo_nombre'])): ?>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.articulo_nombre', array('label' => 'Descripción de artículo', 'title' => 'Recomendable !! el uso de este campo requiere tambien filtrar por fecha !', 'value' => $this->params['url']['articulo_nombre'])) ?></td>
                 <?php else: ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.articulo_descripcion', array('label' => 'Descripción de artículo',)) ?></td>
+                    <td style="width: 250px"><?php echo $this->Form->input('Search.articulo_nombre', array('label' => 'Descripción de artículo',)) ?></td>
                 <?php endif; ?>
 
                     

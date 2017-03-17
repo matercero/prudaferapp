@@ -34,7 +34,7 @@
  * In production mode, flash messages redirect after a time interval.
  * In development mode, you need to click the flash message to continue.
  */
-	Configure::write('debug', 1);
+	Configure::write('debug', 2);
 
 /**
  * CakePHP Log Level:
@@ -305,5 +305,5 @@ if ((substr($_SERVER['REMOTE_ADDR'],0,8) == "192.168.") || ($_SERVER['REMOTE_ADD
         Configure::write('proyect_url', 'http://213.139.10.181:6969/daferapp/');
 }
 */
-        Configure::write('proyect_url', 'http://localhost/prudaferapp/');
+        Configure::write('proyect_url', 'http://localhost:8080/prudaferapp/');
 	Cache::config('default', array('engine' => 'File'));

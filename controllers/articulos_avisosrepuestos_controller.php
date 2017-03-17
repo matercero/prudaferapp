@@ -101,7 +101,7 @@ class ArticulosAvisosrepuestosController extends AppController {
         $this->set(compact('avisosrepuesto_id', 'avisosrepuesto'));
         $this->render('/articulos_avisosrepuestos/add_popup');
     }
-
+     
 }
 
 ?>

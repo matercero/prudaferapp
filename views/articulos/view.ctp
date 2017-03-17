@@ -1,7 +1,7 @@
 <div class="articulos">
     <h2>
         <?php __('Ficha de Artículo Ref. ' . $articulo['Articulo']['ref']); ?>
-        <?php echo $this->Html->link(__('Editar Artículo', true), array('action' => 'edit',$articulo['Articulo']['id']), array('class' => 'button_link')); ?>
+        <?php echo $this->Html->link(__('Editar Artículo', true), array('action' => 'edit', $articulo['Articulo']['id']), array('class' => 'button_link')); ?>
         <?php echo $this->Html->link(__('Nuevo Artículo', true), array('action' => 'add'), array('class' => 'button_link')); ?>
         <?php echo $this->Html->link(__('Listar Artículos', true), array('action' => 'index'), array('class' => 'button_link')); ?>
     </h2>
@@ -26,6 +26,10 @@
             <td><span>Proveedor habitual</span></td>
             <td><?php echo $this->Html->link($articulo['Proveedore']['nombre'], array('controller' => 'proveedores', 'action' => 'view', $articulo['Proveedore']['id'])); ?></td>
         </tr>
+        <tr>
+            <td><span>Descripción larga</span></td>
+            <td><?php echo $articulo['Articulo']['descripcionLarga']; ?></td>
+        </tr>
     </table>
     <hr/>
     <table class="view">
@@ -37,17 +41,25 @@
             <th>PVP</th>
             <th>Stock Mínimo</th>
             <th>Stock Máximo</th>
+            <th>Peso (Kgs)</th>
+            <th>Largo (mm)</th>
+            <th>Ancho (mm)</th>
+            <th>Largo (mm)</th>
             <th class="actions">Acciones</th>
         </tr>
         <?php foreach ($articulos_misma_ref as $articuloref): ?>
             <tr>
-                <td><?php echo $articuloref['Almacene']['nombre'] ?></td>
+                <td><?php echo $articuloref['Almacene']['nombre'] ?></td>   
                 <td><?php echo $articuloref['Articulo']['existencias'] ?></td>
                 <td><?php echo $articuloref['Articulo']['localizacion'] ?></td>
                 <td><?php echo $articuloref['Articulo']['ultimopreciocompra'] ?></td>
                 <td><?php echo $articuloref['Articulo']['precio_sin_iva'] ?></td>
                 <td><?php echo $articuloref['Articulo']['stock_minimo'] ?></td>
                 <td><?php echo $articuloref['Articulo']['stock_maximo'] ?></td>
+                <td><?php echo $articuloref['Articulo']['peso'] ?></td>
+                <td><?php echo $articuloref['Articulo']['largo'] ?></td>
+                <td><?php echo $articuloref['Articulo']['ancho'] ?></td>
+                <td><?php echo $articuloref['Articulo']['alto'] ?></td>
                 <td class="actions"><?php echo $this->Html->link(_('Editar'), array('action' => 'edit', $articuloref['Articulo']['id'])); ?></td>
             </tr>
         <?php endforeach; ?>
@@ -73,7 +85,7 @@
             </tr>
             <?php foreach ($articulo['Referido'] as $referencia): ?>
                 <tr>
-                    <td><?php echo $this->Html->link($referencia['Articulo_referido']['ref'], array('action' => 'edit',$referencia['Articulo_referido']['id'])); ?></td>
+                    <td><?php echo $this->Html->link($referencia['Articulo_referido']['ref'], array('action' => 'edit', $referencia['Articulo_referido']['id'])); ?></td>
                     <td><?php echo $referencia['Articulo_referido']['nombre'] ?></td>
                     <td><?php echo $referencia['Articulo_referido']['existencias'] ?></td>
                     <td><?php echo $referencia['Articulo_referido']['ultimopreciocompra'] ?></td>
@@ -82,14 +94,14 @@
                     <td><?php echo $referencia['Articulo_referido']['Almacene']['nombre'] ?></td>
                     <td><?php echo!empty($referencia['Articulo_referido']['Proveedore']['nombre']) ? $referencia['Articulo_referido']['Proveedore']['nombre'] : '' ?></td>
                     <td class="actions"><?php echo $this->Html->link(_('Editar'), array('action' => 'edit', $referencia['Articulo_referido']['id'])); ?></td>
-                    <td class="actions"><?php echo $this->Html->link(_('Delete'), array('controller'=>'referenciasintercambiables','action' => 'delete', $referencia['id']), null, sprintf(__('Seguro que quieres borrar la Referencia Intercambiable ?', true))); ?></td>
+                    <td class="actions"><?php echo $this->Html->link(_('Delete'), array('controller' => 'referenciasintercambiables', 'action' => 'delete', $referencia['id']), null, sprintf(__('Seguro que quieres borrar la Referencia Intercambiable ?', true))); ?></td>
                 </tr>
             <?php endforeach; ?>
         </table>
     <?php endif; ?>
 </div>
 <script type="text/javascript">
-    $('#show-referencias').click(function(){
+    $('#show-referencias').click(function () {
         $('#referenciasintercambiables').fadeToggle("slow", "linear");
     });
 </script>

@@ -8,6 +8,8 @@ $pdf->SetAuthor('Talleres Dafer');
 $pdf->SetTitle('Factura de Cliente');
 $pdf->SetSubject('TCPDF Tutorial');
 $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+$ix=1;
+$fct_numero;
 foreach ($facturasClientes as $facturasCliente) {
     
 // set default monospaced font
@@ -31,19 +33,16 @@ foreach ($facturasClientes as $facturasCliente) {
 // ---------------------------------------------------------
 // set font
     $pdf->SetFont('dejavusans', '', 10);
-
-
-
-
-// add a page
+    
+    // Por cada factura un grupo de pagina 
+    // Start First Page Group
+    $pdf->startPageGroup();
+    
+    // add a page
     $pdf->AddPage('', 'A4');
-
 
     /*
      * SUBCABECERA
-     */
-
-    /*
      * Area de Tipo de Documento
      */
 
@@ -610,13 +609,12 @@ $pdf->SetX(6);
 $pdf->writeHTML($html, 1);
 $pdf->SetY(-10);
 $pdf->SetFont('helvetica', 'I', 7);
-$pdf->Cell('', '', '                                            ( Inscrita en el Registro Mercantil de Sevilla, Tomo 4225, Libro 0, Sección 8ª, Folio 1, Hoja SE 63.758, Inscripción 1ª, C.I.F.B-91475319 )' . '                  Pag. ' . $pdf->getAliasNumPage() . '/' . $pdf->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
-
+$pdf->Cell('', '', '                                            ( Inscrita en el Registro Mercantil de Sevilla, Tomo 4225, Libro 0, Sección 8ª, Folio 1, Hoja SE 63.758, Inscripción 1ª, C.I.F.B-91475319 )' . '  Pag. ' . $pdf->getAliasNumPage() . '/' . $pdf->getAliasNbPages() . ' Group' . $pdf->getPageGroupAlias() . '/' . $pdf->getPageNumGroupAlias(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
 
 
 
     $pdf->setPrintHeader(false);
-
+/* CONCATENA LOS ALBARANES, PARTES, ETC... 
     $files = array();
     foreach ($facturasCliente['Albaranescliente'] as $albaranescliente) {
         if (!empty($albaranescliente['albaranescaneado'])) {
@@ -648,6 +646,8 @@ $pdf->Cell('', '', '                                            ( Inscrita en el
         $pdf->setFiles($files);
         $pdf->concat();
     }
+ * 
+ */
 }
 
 $pdf->Output('facturacion.pdf', 'I');

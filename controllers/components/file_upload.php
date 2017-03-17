@@ -330,7 +330,7 @@ class FileUploadComponent extends Object {
      * @access protected 
      */
 
-    function _uploadedFileArray() {
+    function _uploadedFileArray() {   
         if ($this->fileModel) {
             $retval = isset($this->data[$this->fileModel][$this->fileVar]) ? $this->data[$this->fileModel][$this->fileVar] : false;
         } else {

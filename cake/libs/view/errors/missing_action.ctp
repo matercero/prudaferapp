@@ -17,7 +17,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 ?>
-<h2><?php printf(__('Missing Method in %s', true), $controller); ?></h2>
+<h2><?php printf(__('Metodo no definido en %s', true), $controller); ?></h2>
 <p class="error">
 	<strong><?php __('Error'); ?>: </strong>
 	<?php printf(__('The action %1$s is not defined in controller %2$s', true), '<em>' . $action . '</em>', '<em>' . $controller . '</em>'); ?>

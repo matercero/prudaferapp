@@ -237,7 +237,7 @@
     <p>
         <?php
         echo $this->Paginator->counter(array(
-            'format' => __('Página %page% de %pages%, mostrando %current% registros de un total de %count%, starting on record %start%, ending on %end%', true)
+            'format' => __('Página %page% de %pages%, mostrando %current% registros de un total de %count%, desde %start% hasta  %end%', true)
         ));
         ?>	</p>
 

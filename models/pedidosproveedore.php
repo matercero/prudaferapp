@@ -43,6 +43,20 @@ class Pedidosproveedore extends AppModel {
             'fields' => '',
             'order' => ''
         ),
+        'Centrosdecoste' => array(
+            'className' => 'Centrosdecoste',
+            'foreignKey' => 'centrosdecoste_id',
+            'conditions' => '',
+            'fields' => '',
+            'order' => ''
+        ),
+        'Comerciale' => array(
+            'className' => 'Comerciale',
+            'foreignKey' => 'comerciale_id',
+            'conditions' => '',
+            'fields' => '',
+            'order' => ''
+        ),
         'Transportista' => array(
             'className' => 'Transportista',
             'foreignKey' => 'transportista_id',

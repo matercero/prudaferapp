@@ -1,6 +1,6 @@
 <div class="albaranesclientes">
     <h2>
-        <?php __('Albaran a cliente Nº ' . $albaranescliente['Albaranescliente']['numero']); ?>        
+        <?php __('Albaran a cliente Nº ' . $albaranescliente['Albaranescliente']['numero']); ?>   
         <?php if ($albaranescliente['Estadosalbaranescliente']['id'] <> '3'): ?>
             <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $albaranescliente['Albaranescliente']['id']), array('class' => 'button_link')); ?>
         <?php endif; ?>

@@ -9,21 +9,25 @@ class Albaranescliente extends AppModel {
         'fecha' => array(
             'date' => array(
                 'rule' => array('date'),
-            //'message' => 'Your custom message here',
-            //'allowEmpty' => false,
-            //'required' => false,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
         ),
         'cliente_id' => array(
-            'notempty' => array(
-                'rule' => array('notempty'),
-            ),
+            'rule' => 'notEmpty',
+            'class' => 'hola',
+            'message' => 'Debes selecionar un Cliente'
+        ),
+        'centrostrabajo_id' => array(
+            'rule' => 'notEmpty',
+            'message' => 'Debes selecionar un Centro de Trabajo'
+        ),
+        'maquina_id' => array(
+            'rule' => 'notEmpty',
+            'message' => 'Debes selecionar una máquina'
         ),
     );
+    
+   
     //The Associations below have been created with all possible keys, those that are not needed can be removed
-
     var $belongsTo = array(
         'Avisosrepuesto' => array(
             'className' => 'Avisosrepuesto',
@@ -127,11 +131,12 @@ class Albaranescliente extends AppModel {
             $resultado = $this->query($query);
             $resultado2 = $this->query($query2);
             if (!empty($resultado[0][0]['numero']) && !empty($resultado2[0][0]['numero'])) {
-                if ($resultado[0][0]['numero'] > $resultado2[0][0]['numero'])
+                if ($resultado[0][0]['numero'] > $resultado2[0][0]['numero']) {
                     $this->data['Albaranescliente']['numero'] = $resultado[0][0]['numero'] + 1;
-                else
+                } else {
                     $this->data['Albaranescliente']['numero'] = $resultado2[0][0]['numero'] + 1;
-            }else {
+                }
+            } else {
                 $this->data['Albaranescliente']['numero'] = 1;
             }
         }
@@ -175,9 +180,10 @@ class Albaranescliente extends AppModel {
             $siguientenumero = $resultado2[0][0]['numero'] + 1;
         return $siguientenumero;
     }
+
     function dime_siguiente_numero_ajax($serie) {
         $config = ClassRegistry::init("Config")->findById(1);
-        $query = 'SELECT MAX(a.numero) as numero  FROM albaranesclientesreparaciones a WHERE a.serie = "' .$serie . '"';
+        $query = 'SELECT MAX(a.numero) as numero  FROM albaranesclientesreparaciones a WHERE a.serie = "' . $serie . '"';
         $query2 = 'SELECT MAX(a.numero) as numero  FROM albaranesclientes a WHERE a.serie = "' . $serie . '"';
         $resultado = $this->query($query);
         $resultado2 = $this->query($query2);
