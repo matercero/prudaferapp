@@ -42,7 +42,7 @@
                         'url' => array(
                             'controller' => 'centrostrabajos',
                             'action' => 'selectAlbaranesclientes'
-                            ))
+                        ))
                     );
                     ?>
                 </td>
@@ -62,7 +62,7 @@
                         'url' => array(
                             'controller' => 'maquinas',
                             'action' => 'selectAlbaranesclientes'
-                            ))
+                        ))
                     );
                     ?>
                 </td>
@@ -81,7 +81,7 @@
                 </td>
                 <td><span><?php __('Pedido de cliente'); ?></span></td>
                 <td>
-                   <?php echo $this->Form->input('pedidoscliente_id', array('type' => 'select','class'=>'select_basico' ,'label' => False,'empty'=>'---------')); ?>
+                    <?php echo $this->Form->input('pedidoscliente_id', array('type' => 'select', 'class' => 'select_basico', 'label' => False, 'empty' => '---------')); ?>
                 </td>
             </tr>
             <tr>
@@ -108,7 +108,15 @@
                     ?>
                 </td>
                 <td><span><?php __('Estado') ?></span></td>
-                <td><?php echo $this->Form->input('estadosalbaranescliente_id', array('label' => False)) ?></td>
+                <td>
+                    <!-- Si el estado es Facturado(3) y se quiere Reactivar el albaran 
+                         cargamos el estado a -->
+                    <?php if ($this->Form->value('Estadosalbaranescliente.id') == '3'): ?>
+                        <?php echo $this->Form->input('estadosalbaranescliente_id', array('label' => False, 'value' => 2)) ?>                   
+                    <?php else : ?>
+                        <?php echo $this->Form->input('estadosalbaranescliente_id', array('label' => False))  ?>
+                    <?php endif; ?>
+                </td>
             </tr>
             <tr>
                 <td><span><?php __('Observaciones'); ?></span></td>

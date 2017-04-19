@@ -65,7 +65,7 @@ class AlbaranesclientesController extends AppController {
 
 
         /* nombre de articulo */
-        if (!empty($this->params['url']['articulo_nombre'])){
+        if (!empty($this->params['url']['articulo_nombre'])) {
             $conditions [] = array('1' => "1 AND Albaranescliente.id IN (SELECT t.albaranescliente_id "
                 . 'FROM tareasalbaranesclientes t'
                 . ' WHERE t.id IN (SELECT m.tareasalbaranescliente_id '
@@ -279,7 +279,7 @@ class AlbaranesclientesController extends AppController {
         $clientes = $this->Albaranescliente->Cliente->find('list');
         $centrostrabajos = $this->Albaranescliente->Centrostrabajo->find('list', array('conditions' => array('Centrostrabajo.cliente_id' => $this->data['Albaranescliente']['cliente_id'])));
         $maquinas = $this->Albaranescliente->Maquina->find('list', array('conditions' => array('Maquina.centrostrabajo_id' => $this->data['Albaranescliente']['centrostrabajo_id'])));
-
+         
         $this->set(compact('series', 'avisosrepuestos', 'pedidosclientes', 'facturasClientes', 'tiposivas', 'centrosdecostes', 'almacenes', 'comerciales', 'estadosalbaranesclientes', 'clientes', 'centrostrabajos', 'maquinas'));
     }
 

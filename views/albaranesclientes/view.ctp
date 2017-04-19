@@ -4,6 +4,11 @@
         <?php if ($albaranescliente['Estadosalbaranescliente']['id'] <> '3'): ?>
             <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $albaranescliente['Albaranescliente']['id']), array('class' => 'button_link')); ?>
         <?php endif; ?>
+        <?php if ($albaranescliente['Estadosalbaranescliente']['id'] == '3'): ?>
+            <?php echo $this->Html->link(__('REACTIVAR Edición', true), 
+                            array('action' => 'edit', $albaranescliente['Albaranescliente']['id']), 
+                            array('class' => 'linkbutton' )); ?>
+        <?php endif; ?>
         <?php echo $this->Html->link(__('Nuevo Albarán Directo', true), array('action' => 'add'), array('class' => 'button_link')); ?> 
         <?php echo $this->Html->link(__('Listar Albaranes a Clientes', true), array('action' => 'index'), array('class' => 'button_link')); ?> 
     </h2>
@@ -52,7 +57,8 @@
         <tr>
             <td><span>Riesgo</span>	
             <td style="font-size: 120%;">
-                <span><?php echo $albaranescliente['Cliente']['riesgos'] == 0 ? '' : '<span style="color: red">RIESGO SUPERADO</span>'; ?></td>
+                <span><?php echo $albaranescliente['Cliente']['riesgos'] == 0 ? '' : '<span class="parpadea text"><strong>RIESGO SUPERADO</strong>'; ?>
+              </td>
             <td><span><?php __('Albarán Escaneado'); ?></span></td>
             <td colspan="3"><?php echo $this->Html->link(__($albaranescliente['Albaranescliente']['albaranescaneado'], true), '/files/albaranescliente/' . $albaranescliente['Albaranescliente']['albaranescaneado']); ?></td>
             <td><span><?php __('Estado') ?></span></td>

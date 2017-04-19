@@ -1,9 +1,18 @@
 <div class="albaranesclientesreparaciones">
-    <h2>
+    <h2> 
         <?php __('Albarán de Reparación Nº ' . $albaranesclientesreparacione['Albaranesclientesreparacione']['numero']); ?>
 
         <?php if ($albaranesclientesreparacione['Estadosalbaranesclientesreparacione']['id'] <> '3'): ?>
-            <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), array('class' => 'button_link')); ?> 
+            <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', 
+                $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), 
+                    array('class' => 'button_link')); ?> 
+        <?php endif; ?>
+        <?php if ($albaranesclientesreparacione['Estadosalbaranesclientesreparacione']['id'] == '3'): ?>
+            <?php
+            echo $this->Html->link(__('REACTIVAR Edición', true), 
+                    array('action' => 'edit', $albaranesclientesreparacione['Estadosalbaranesclientesreparacione']['id']),
+                    array('class' => 'linkbutton'));
+            ?>
         <?php endif; ?>
         <?php echo $this->Html->link(__('Eliminar', true), array('action' => 'delete', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), array('class' => 'button_link'), sprintf(__('¿Seguro que quieres borrar el Albaran de Reparación Nº # %s?', true), $albaranesclientesreparacione['Albaranesclientesreparacione']['numero'])); ?> 
         <?php echo $this->Html->link(__('Imprimir', true), array('action' => 'pdf', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), array('class' => 'button_link')); ?> 
