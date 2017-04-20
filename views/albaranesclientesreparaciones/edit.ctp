@@ -11,16 +11,24 @@
         <table class="view edit">
             <tr>
                 <td><span>Serie</span></td>
-                <td><?php echo $this->Form->input('serie', array('type'=>'select','options'=>$series, 'label' => false)); ?></td>
+                <td><?php echo $this->Form->input('serie', array('type' => 'select', 'options' => $series, 'label' => false)); ?></td>
                 <td colspan="4"></td>
                 <td><span>Estado</span></td>
-                <td><?php echo $this->Form->input('estadosalbaranesclientesreparacione_id', array('label' => false)); ?></td>
+                <td>
+                    <!-- Si el estado es Facturado(3) y se quiere Reactivar el albaran 
+                        cargamos el estado a Enviado pdte de firma o pedido (trello ID 5) -->
+                    <?php if ($this->Form->value('Estadosalbaranesclientesreparacione.id') == '3'): ?>
+                        <?php echo $this->Form->input('estadosalbaranesclientesreparacione_id', array('label' => False, 'value' => 1)) ?>                   
+                    <?php else : ?>
+                        <?php echo $this->Form->input('estadosalbaranesclientesreparacione_id', array('label' => False)) ?>
+                    <?php endif; ?>
+                </td>
             </tr>
             <tr>
                 <td><span><?php __('Número'); ?></span></td>
                 <td><?php echo $this->Form->input('numero', array('label' => false)); ?></td>
                 <td><span><?php __('Fecha'); ?></span></td>
-                <td><?php echo $this->Form->input('fecha', array('label' => false,'dateFormat'=>'DMY')); ?></td>
+                <td><?php echo $this->Form->input('fecha', array('label' => false, 'dateFormat' => 'DMY')); ?></td>
                 <td><span><?php __('Almacén de los Materiales'); ?></span></td>
                 <td><?php echo $this->Form->input('almacene_id', array('label' => false)); ?></td>
                 <td><span><?php __('Comercial'); ?></span></td>
@@ -37,15 +45,15 @@
                             'id' => 'ClienteSelectDiv'
                         ),
                         'empty' => '--- Seleccione un cliente ---'));
-                echo $ajax->observeField('AlbaranesclientesreparacioneClienteId', array(
-                    'frequency' => '1',
-                    'update' => 'CentrostrabajoSelectDiv',
-                    'url' => array(
-                        'controller' => 'centrostrabajos',
-                        'action' => 'selectAlbaranesclientesreparaciones'
+                    echo $ajax->observeField('AlbaranesclientesreparacioneClienteId', array(
+                        'frequency' => '1',
+                        'update' => 'CentrostrabajoSelectDiv',
+                        'url' => array(
+                            'controller' => 'centrostrabajos',
+                            'action' => 'selectAlbaranesclientesreparaciones'
                         ))
-                );
-                ?>
+                    );
+                    ?>
                 </td>
                 <td><span><?php __('Centro de Trabajo') ?></span></td>
                 <td>
@@ -63,7 +71,7 @@
                         'url' => array(
                             'controller' => 'maquinas',
                             'action' => 'selectAvisostalleres'
-                            ))
+                        ))
                     );
                     ?>
                 </td>

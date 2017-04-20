@@ -10,7 +10,7 @@
         <?php if ($albaranesclientesreparacione['Estadosalbaranesclientesreparacione']['id'] == '3'): ?>
             <?php
             echo $this->Html->link(__('REACTIVAR Edición', true), 
-                    array('action' => 'edit', $albaranesclientesreparacione['Estadosalbaranesclientesreparacione']['id']),
+                    array('action' => 'edit', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']),
                     array('class' => 'linkbutton'));
             ?>
         <?php endif; ?>

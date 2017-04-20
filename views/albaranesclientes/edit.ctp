@@ -110,9 +110,9 @@
                 <td><span><?php __('Estado') ?></span></td>
                 <td>
                     <!-- Si el estado es Facturado(3) y se quiere Reactivar el albaran 
-                         cargamos el estado a -->
+                         cargamos el estado a Enviado pdte de firma o pedido (trello ID 5) -->
                     <?php if ($this->Form->value('Estadosalbaranescliente.id') == '3'): ?>
-                        <?php echo $this->Form->input('estadosalbaranescliente_id', array('label' => False, 'value' => 2)) ?>                   
+                        <?php echo $this->Form->input('estadosalbaranescliente_id', array('label' => False, 'value' => 1)) ?>                   
                     <?php else : ?>
                         <?php echo $this->Form->input('estadosalbaranescliente_id', array('label' => False))  ?>
                     <?php endif; ?>
