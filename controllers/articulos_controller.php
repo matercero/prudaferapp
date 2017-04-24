@@ -108,7 +108,7 @@ class ArticulosController extends AppController {
                     $this->Session->setFlash(__('El artículo se ha guardado con éxito', true));
                     $this->redirect($this->referer());
                 } else {
-                    $this->flashWarnings(__('El artículo NO xxxse ha guardado. Por favor, inténtelo de nuevo.', true));
+                    $this->flashWarnings(__('El artículo NO se ha guardado. Por favor, inténtelo de nuevo.', true));
                     $this->redirect($this->referer());
                 }
             }
@@ -432,7 +432,6 @@ class ArticulosController extends AppController {
             $this->set('resultadoUpload', isset($resultadoUpload) ? $resultadoUpload : "No hay fichero a subir " );
         }
     }
-
 }
 
 ?>

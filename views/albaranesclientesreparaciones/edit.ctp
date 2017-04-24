@@ -54,6 +54,10 @@
                         ))
                     );
                     ?>
+                    Riesgo:
+                   <span><?php echo $albaranescliente['Cliente']['riesgos'] == 0 ? '' : '<span class="parpadea" style="font-size:30px;
+  								font-family:helvetica;  font-weight:bold;  color:red;">RIESGO SUPERADO</span>'; ?>
+             
                 </td>
                 <td><span><?php __('Centro de Trabajo') ?></span></td>
                 <td>
@@ -125,4 +129,4 @@
         </table>
     </fieldset>
     <?php echo $this->Form->end(__('Guardar', true)); ?>
-</div>
+</div>  

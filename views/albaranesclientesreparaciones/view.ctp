@@ -3,15 +3,14 @@
         <?php __('Albarán de Reparación Nº ' . $albaranesclientesreparacione['Albaranesclientesreparacione']['numero']); ?>
 
         <?php if ($albaranesclientesreparacione['Estadosalbaranesclientesreparacione']['id'] <> '3'): ?>
-            <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', 
-                $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), 
-                    array('class' => 'button_link')); ?> 
+            <?php
+            echo $this->Html->link(__('Editar', true), array('action' => 'edit',
+                $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), array('class' => 'button_link'));
+            ?> 
         <?php endif; ?>
         <?php if ($albaranesclientesreparacione['Estadosalbaranesclientesreparacione']['id'] == '3'): ?>
             <?php
-            echo $this->Html->link(__('REACTIVAR Edición', true), 
-                    array('action' => 'edit', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']),
-                    array('class' => 'linkbutton'));
+            echo $this->Html->link(__('REACTIVAR Edición', true), array('action' => 'edit', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), array('class' => 'linkbutton'));
             ?>
         <?php endif; ?>
         <?php echo $this->Html->link(__('Eliminar', true), array('action' => 'delete', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), array('class' => 'button_link'), sprintf(__('¿Seguro que quieres borrar el Albaran de Reparación Nº # %s?', true), $albaranesclientesreparacione['Albaranesclientesreparacione']['numero'])); ?> 
@@ -52,9 +51,13 @@
             <td><?php echo!empty($albaranesclientesreparacione['Cliente']['Formapago']) ? $albaranesclientesreparacione['Cliente']['Formapago']['nombre'] : 'El cliente no tiene forma de pago definida'; ?></td>
         </tr>
         <tr>
+            <td><span>Riesgo</span>	
+            <td style="font-size: 120%;">
+                <span><?php echo $albaranesclientesreparacione['Cliente']['riesgos'] == 0 ? '<span style="color:green">SIN RIESGO</span>' : '<span class="parpadea textoRiesgo">RIESGO SUPERADO</span>'; ?>
+            </td>
             <td><h4><?php __('Nº Orden'); ?></h4></td>
             <td><?php echo $this->Html->link($albaranesclientesreparacione['Ordene']['numero'], array('controller' => 'ordenes', 'action' => 'view', $albaranesclientesreparacione['Ordene']['id'])); ?></td>
-            <td colspan="3"><span><?php __('Número Aceptación Aportado por el Cliente') ?></span></td>
+            <td colspan="2"><span><?php __('Número Aceptación Aportado por el Cliente') ?></span></td>
             <td><?php echo $albaranesclientesreparacione['Albaranesclientesreparacione']['numero_aceptacion_aportado']; ?></td>
         </tr>
         <tr>
