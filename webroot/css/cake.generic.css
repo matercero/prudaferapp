@@ -1112,6 +1112,12 @@ table.rendimientos_tarea{
 .tabla_materiales_tarea tr:not(.tr_titulos) {
     cursor: move;
 }
+
+.tabla_articulo_tarea tr:not(.tr_titulos) {
+    cursor: move;
+}
+
+
 form .required span::after {
     color: #E32;
     content: '*';

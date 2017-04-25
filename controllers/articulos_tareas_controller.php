@@ -115,6 +115,15 @@ class ArticulosTareasController extends AppController {
         $this->Session->write('Visualizar.tarea_id',$tarea_id);
         $this->set('tarea_id', $tarea_id);
     }
+     /**
+     * Ajax
+     * @param int $id 
+     */
+    function update_tarea() {
+        $this->ArticulosTarea->id = $this->data['articulo_tarea_id'];
+        $this->ArticulosTarea->saveField('tarea_id', $this->data['tarea_id']);
+        $this->Session->setFlash(__('Articulo tarea Actualizado Correctamente', true));      
+    }
 
 }
 
