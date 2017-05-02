@@ -256,6 +256,8 @@
                 <?php endif; ?>
 
                 <td class="actions">
+                    <?php echo $this->Html->link(__('Prev.', true), 
+                            array('action' => 'view', $albaranescliente['Albaranescliente']['id']), array( 'target' => '_blank')); ?>
                     <?php if ($albaranescliente['Estadosalbaranescliente']['id'] <> '3'): ?>
                         <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $albaranescliente['Albaranescliente']['id'])); ?>
                     <?php else: ?>

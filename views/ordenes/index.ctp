@@ -231,7 +231,9 @@
             <td><?php echo!empty($ordene['Ordene']['urgente']) ? 'Sí' : 'No' ?></td>
             <td><?php echo $ordene['Ordene']['fecha_prevista_reparacion']; ?></td>
             <td class="actions">
-                <?php echo $this->Html->link(__('Ver', true), array('action' => 'view', $ordene['Ordene']['id'])); ?>
+ <?php echo $this->Html->link(__('Ver', true), array('action' => 'view', $ordene['Ordene']['id']), array( 'target' => '_blank')); ?>
+                              
+ <?php echo $this->Html->link(__('Ver', true), array('action' => 'view', $ordene['Ordene']['id'])); ?>
                 <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $ordene['Ordene']['id'])); ?>
                 <?php echo $this->Html->link(__('Pdf', true), array('action' => 'pdf', $ordene['Ordene']['id'])); ?>
             </td>

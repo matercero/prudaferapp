@@ -229,6 +229,8 @@
                     <?php echo $this->Html->link($albaranesclientesreparacione['Centrosdecoste']['denominacion'], array('controller' => 'centrosdecostes', 'action' => 'view', $albaranesclientesreparacione['Centrosdecoste']['id'])); ?>
                 </td>
                 <td class="actions">
+                     <?php echo $this->Html->link(__('Prev.', true), 
+                            array('action' => 'view', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), array( 'target' => '_blank')); ?>
                     <?php echo $this->Html->link(__('Ver', true), array('action' => 'view', $albaranesclientesreparacione['Albaranesclientesreparacione']['id'])); ?>
                     <?php echo $this->Html->link(__('PDF', true), array('action' => 'pdf', $albaranesclientesreparacione['Albaranesclientesreparacione']['id'])); ?>
                     <?php echo $this->Html->link(__('Eliminar', true), array('action' => 'delete', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), array('class' => 'button_link'), sprintf(__('¿Seguro que quieres borrar el Albaran de Reparación Nº # %s?', true), $albaranesclientesreparacione['Albaranesclientesreparacione']['numero'])); ?> 

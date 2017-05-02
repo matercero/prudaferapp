@@ -38,7 +38,7 @@ class ArticulosTareasController extends AppController {
         else
             $descuento = 0;
         $this->set(compact('tarea_id', 'tarea', 'descuento'));
-        $this->Session->write('Visualizar.tarea_id',$tarea_id);
+        $this->Session->write('Visualizar.tarea_id', $tarea_id);
     }
 
     function add_ajax($tarea_id) {
@@ -57,7 +57,7 @@ class ArticulosTareasController extends AppController {
         else
             $descuento = 0;
         $this->set(compact('tarea_id', 'tarea', 'descuento'));
-        $this->Session->write('Visualizar.tarea_id',$tarea_id);
+        $this->Session->write('Visualizar.tarea_id', $tarea_id);
         $this->render('add');
     }
 
@@ -81,7 +81,7 @@ class ArticulosTareasController extends AppController {
             $this->data = $this->ArticulosTarea->read(null, $id);
         }
         $this->set(compact('articulos'));
-        $this->Session->write('Visualizar.tarea_id',$this->data['ArticulosTarea']['tarea_id']);
+        $this->Session->write('Visualizar.tarea_id', $this->data['ArticulosTarea']['tarea_id']);
     }
 
     function delete($id = null, $tarea_id = null) {
@@ -112,17 +112,24 @@ class ArticulosTareasController extends AppController {
                 $this->ArticulosTarea->session_message = null;
             }
         }
-        $this->Session->write('Visualizar.tarea_id',$tarea_id);
+        $this->Session->write('Visualizar.tarea_id', $tarea_id);
         $this->set('tarea_id', $tarea_id);
     }
-     /**
+
+    /**
      * Ajax
      * @param int $id 
      */
     function update_tarea() {
         $this->ArticulosTarea->id = $this->data['articulo_tarea_id'];
         $this->ArticulosTarea->saveField('tarea_id', $this->data['tarea_id']);
-        $this->Session->setFlash(__('Articulo tarea Actualizado Correctamente', true));      
+        $this->Session->setFlash(__('Articulo tarea Actualizado Correctamente', true));
+        $this->layout = 'ajax';
+       
+        $this->redirect(array(
+            'controller' => 'ordenes',
+            'action' => 'view',$this->data['orden_id'])
+        );
     }
 
 }

@@ -5,7 +5,7 @@
         <?php echo $this->Html->link(__('Imprimir', true), array('action' => 'pdf', $ordene['Ordene']['id']), array('class' => 'button_link')); ?>
         <?php echo $this->Html->link(__('Eliminar', true), array('action' => 'delete', $ordene['Ordene']['id']), array('class' => 'button_link'), sprintf(__('¿Desea borrar la Orden Nº %s?', true), $ordene['Ordene']['numero'])); ?>
         <?php echo $this->Html->link(__('Listar Ordenes', true), array('action' => 'index'), array('class' => 'button_link')); ?>
-		<?php echo date("d-m-Y H:i:s");?> 
+        <?php echo date("d-m-Y H:i:s"); ?> 
     </h2>
     <table class="view">
         <tr>
@@ -98,7 +98,7 @@
                         </tr>
                         <tr>
                             <td style="font-size: 160%;">
-				<span><?php echo $ordene['Cliente']['riesgos']== 0 ? '' : '<span style="color: red">RIESGO SUPERADO</span>'; ?></td>
+                                <span><?php echo $ordene['Cliente']['riesgos'] == 0 ? '' : '<span style="color: red">RIESGO SUPERADO</span>'; ?></td>
                             <td><span><?php __('Orden Escaneada'); ?></span></td>
                             <td colspan="9"><?php echo $this->Html->link(__($ordene['Ordene']['ordenescaneada'], true), '/files/ordene/' . $ordene['Ordene']['ordenescaneada']); ?></td>
                         </tr>
@@ -136,7 +136,7 @@
                                         $total_cantidad_materiales_presupuestados = 0;
                                         ?>
                                         <tr<?php echo $class; ?>>
-                        <td style="background-color: #FACC2E">Tarea <?php echo empty($tarea['numero'])? $i : $tarea['numero'] ?> - <?php echo $tarea['tipo'] ?></td>
+                                            <td style="background-color: #FACC2E">Tarea <?php echo empty($tarea['numero']) ? $i : $tarea['numero'] ?> - <?php echo $tarea['tipo'] ?></td>
                                             <td style="background-color: #FACC2E"><?php echo $tarea['descripcion']; ?></td>
                                             <td class="actions" style="background-color: #FACC2E">
                                                 <?php echo $this->Html->link(__('+ Material', true), array('controller' => 'articulos_tareas', 'action' => 'add', $tarea['id']), array('class' => 'popup')); ?> 
@@ -431,6 +431,7 @@
                                                 <!-- DRAG AND DROP -->
                                                 <?php if (!empty($tarea['ArticulosTarea'])): ?>
                                                     <h4>Articulos de la Tarea - PRUEBA DRAG AND DROP</h4>
+                                                    <input type="hidden" id="ordenId" value="<?php echo $ordene['Ordene']['id'] ?>" />
                                                     <table class="tabla_articulo_tarea" id="tareaid-<?php echo $tarea['id'] ?>">                                                               
                                                         <tr class="tr_titulos">
                                                             <th>Nº Parte.</th>
@@ -455,12 +456,12 @@
                                                         $total_cantidad_material_imputable = 0;
                                                         ?>
                                                         <?php foreach ($tarea['ArticulosTarea'] as $articulo_tarea): ?>
-                                                           <tr id="articulo_tarea-<?php echo $articulo_tarea['id'] ?>">
+                                                            <tr id="articulo_tarea-<?php echo $articulo_tarea['id'] ?>">
                                                                 <td><?php echo $articulo_tarea['numero_tarea'] ?></td>
                                                                 <td><?php echo $this->Html->link(__($articulo_tarea['Articulo']['ref'], true), array('controller' => 'articulos', 'action' => 'view', $articulo_tarea['Articulo']['id'])); ?></td>
                                                                 <td><?php echo $articulo_tarea['Articulo']['nombre'] ?></td>
                                                                 <td><?php echo $articulo_tarea['Articulo']['localizacion'] ?></td>
-                                                               <td>
+                                                                <td>
                                                                     <?php
                                                                     echo $articulo_tarea['cantidadreal'];
                                                                     $total_cantidad_material_real += $articulo_tarea['cantidadreal'];
@@ -628,7 +629,7 @@
                             <?php echo $this->Html->link(__('Nuevo Presupuesto a cliente', true), array('controller' => 'presupuestosclientes', 'action' => 'add', 'ordene', $ordene['Ordene']['id']), array('class' => 'button_link')); ?>
                             <?php echo $this->Html->link(__('Nuevo Presupuesto de Proveedor', true), array('controller' => 'presupuestosproveedores', 'action' => 'add', -1, -1, $ordene['Ordene']['id']), array('class' => 'button_link')); ?>
                         </div>
-                        </div>
+</div>
                         <script>
                             $('.tarea-relations').hide();
                             $('.ver-relaciones').click(function () {
@@ -639,21 +640,19 @@
                                 $('.orden-relations').fadeToggle("slow", "linear");
                             });
                             $('.show-tarea').show();
-
                         </script>
-<script>
-    $(function() {
-        $( ".tabla_articulo_tarea" ).sortable({
-            connectWith: ".tabla_articulo_tarea",
-            items: "tr:not(.tr_titulos)",
-            receive: function(event, ui) {
-                tarea_id = event.target.id.substring(8); // cortamos por 'tareaid-'
-              
-                articulo_tarea_id = ui.item.context.id.substring(15); // cortamos por 'articulo_tarea-'
-               
-                $.post('<?php echo Configure::read('proyect_url') ?>articulosTareas/update_tarea/',{'data': {'articulo_tarea_id': articulo_tarea_id, 'tarea_id': tarea_id}});
-                window.location.reload()            
-            }
-        }).disableSelection();
-    });
-</script>
+                        <script>
+                            $(function () {
+                                $(".tabla_articulo_tarea").sortable({
+                                    connectWith: ".tabla_articulo_tarea",
+                                    items: "tr:not(.tr_titulos)",
+                                    receive: function (event, ui) {
+                                        tarea_id = event.target.id.substring(8); // cortamos por 'tareaid-'
+                                        articulo_tarea_id = ui.item.context.id.substring(15); // cortamos por 'articulo_tarea-'
+                                        ordenId = $('#ordenId').attr('value');
+                                        $.post('<?php echo Configure::read('proyect_url') ?>articulosTareas/update_tarea/', {'data': {'orden_id': ordenId, 'articulo_tarea_id': articulo_tarea_id, 'tarea_id': tarea_id}});
+                                        window.location.reload()
+                                    }
+                                }).disableSelection();
+                            });
+                        </script>
