@@ -53,7 +53,7 @@
         <tr>
             <td><span>Riesgo</span>	
             <td style="font-size: 120%;">
-                <span><?php echo $albaranesclientesreparacione['Cliente']['riesgos'] == 0 ? '<span style="color:green">SIN RIESGO</span>' : '<span class="parpadea textoRiesgo">RIESGO SUPERADO</span>'; ?>
+                <?php echo $albaranesclientesreparacione['Cliente']['riesgos'] == 0 ? '<span style="color:green">RIESGO NO SUPERADO</span>' : '<span class="parpadea textoRiesgo">RIESGO SUPERADO</span>'; ?>
             </td>
             <td><h4><?php __('Nº Orden'); ?></h4></td>
             <td><?php echo $this->Html->link($albaranesclientesreparacione['Ordene']['numero'], array('controller' => 'ordenes', 'action' => 'view', $albaranesclientesreparacione['Ordene']['id'])); ?></td>

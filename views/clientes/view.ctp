@@ -43,7 +43,8 @@
         <tr>
             <td><span>Riesgos</span></td>   
             <td style="font-size: 120%;">
-                <?php echo $cliente['Cliente']['riesgos'] == 0 ? 'No' : '<span style="color: red">RIESGO SUPERADO</span>'; ?></td>
+                <?php echo $cliente['Cliente']['riesgos'] == 0 ? '<span style="color:green">RIESGO NO SUPERADO</span>' : '<span class="parpadea textoRiesgo">RIESGO SUPERADO</span>'; ?>
+            </td>
             <td><span>Modo Facturación</span></td>
             <td><?php echo $cliente['Cliente']['modo_facturacion']; ?></td>
             <td><span>Comercial</span></td>

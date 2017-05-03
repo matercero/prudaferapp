@@ -17,7 +17,8 @@
         </div>
         <div class="botonera">
             <p style="font-size: 160%;">
-                <span><?php echo $avisostallere['Cliente']['riesgos']== 0 ? '' : '<span style="color: red">RIESGO SUPERADO</span>'; ?></p>
+                <?php echo $avisostallere['Cliente']['riesgos'] == 0 ? '<span style="color:green">RIESGO NO SUPERADO</span>' : '<span class="parpadea textoRiesgo">RIESGO SUPERADO</span>'; ?>
+             </p>
             <?php echo empty($avisostallere['Avisostallere']['fechaaceptacion']) ? $this->Html->link(__('Descartar', true), array('action' => 'descartar', $avisostallere['Avisostallere']['id']), array('class' => 'button_css_red')) : ''; ?>
             <?php if (empty($avisostallere['Avisostallere']['fechaaceptacion'])): ?>
                 <?php echo $this->Html->link(__('Aceptar', true), array('action' => 'aceptar', $avisostallere['Avisostallere']['id']), array('class' => 'button_css_green')); ?><br/>

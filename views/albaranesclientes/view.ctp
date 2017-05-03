@@ -57,7 +57,7 @@
         <tr>
             <td><span>Riesgo</span>	
             <td style="font-size: 120%;">
-                <span><?php echo $albaranescliente['Cliente']['riesgos'] == 0 ? '<span style="color:green">SIN RIESGO</span>' : '<span class="parpadea textoRiesgo">RIESGO SUPERADO</span>'; ?>
+                <?php echo $albaranescliente['Cliente']['riesgos'] == 0 ? '<span style="color:green">RIESGO NO SUPERADO</span>' : '<span class="parpadea textoRiesgo">RIESGO SUPERADO</span>'; ?>
             </td>
             <td><span><?php __('Albarán Escaneado'); ?></span></td>
             <td colspan="3"><?php echo $this->Html->link(__($albaranescliente['Albaranescliente']['albaranescaneado'], true), '/files/albaranescliente/' . $albaranescliente['Albaranescliente']['albaranescaneado']); ?></td>

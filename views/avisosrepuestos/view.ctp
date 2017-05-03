@@ -56,7 +56,7 @@
         <tr>
             <td>
                 <span>Riesgos</span>  
-                <?php echo $avisosrepuesto['Cliente']['riesgos'] == 0 ? '' : '<span style="color: red">RIESGO SUPERADO</span>' ?></td>
+                <?php echo $avisosrepuesto['Cliente']['riesgos'] == 0 ? '<span style="color:green">RIESGO NO SUPERADO</span>' : '<span class="parpadea textoRiesgo">RIESGO SUPERADO</span>'; ?>
             <td>
                 <span>Aviso:</span>
                 <?php echo!empty($avisosrepuesto['Avisosrepuesto']['avisotelefonico']) ? 'Aviso Telefónico' : ''; ?>

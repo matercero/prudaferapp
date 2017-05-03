@@ -62,6 +62,7 @@
                 <li><a href="<?php echo Configure::read('proyect_url') ?>transportistas" title="Transportistas" target="_self" >Transportistas</a></li>
             </ul>
         </li>
+       
         <li><span class="divider divider-vert" ></span></li>
         <li><a class="item-primary" href="#" target="_self">Opciones</a>
             <ul>
@@ -84,9 +85,17 @@
             </ul>
         </li>
         <li><span class="divider divider-vert" ></span></li>
+        <li><a class="item-primary" href="#" target="_self">Informes</a>
+            <ul>
+                <li><a href="<?php echo Configure::read('proyect_url') ?>informe_articuloVenta" title="Articulos venta" target="_self">Articulos venta</a></li>
+                <li><a href="<?php echo Configure::read('proyect_url') ?>informe_articuloReparacion" title="Articulos reparación" target="_self">Articulos reparación</a></li>
+                <li><a href="<?php echo Configure::read('proyect_url') ?>informe_articuloOrden" title="Articulos órdenes" target="_self">Articulos órdenes</a></li>
+            </ul>
+        </li>
+        <li><span class="divider divider-vert" ></span></li>
         <li><a class="item-primary" href="<?php echo Configure::read('proyect_url') ?>users/logout" target="_self">Cerrar Sesión</a>
         <li><span class="divider divider-vert" ></span></li>
         <li class="clear"> </li>
     </ul>
-<div><?php echo "Versión 1.0" ?></div>
+    <div><?php echo "Versión 1.0" ?></div>
 </div>

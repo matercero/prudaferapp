@@ -76,7 +76,8 @@
             <td><span>Riesgo</span></td>
             <td colspan="2">
             <td style="font-size: 120%;">
-                <span><?php echo $presupuestoscliente['Cliente']['riesgos']== 0 ? '' : '<span style="color: red">RIESGO SUPERADO</span>'; ?></td>
+                 <?php echo $presupuestoscliente['Cliente']['riesgos']  == 0 ? '<span style="color:green">RIESGO NO SUPERADO</span>' : '<span class="parpadea textoRiesgo">RIESGO SUPERADO</span>'; ?>                
+            </td>
             <td></td>
             <td></td>
             <td><span><?php __('Comercial'); ?></span></td>
