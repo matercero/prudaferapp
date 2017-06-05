@@ -1,14 +1,16 @@
 <div class="pedidosproveedores">
     <?php echo $this->Form->create('Pedidosproveedore', array('type' => 'file')); ?>
     <fieldset>
-        <legend><?php __('Añadir Pedido a proveedor al Presupuesto de Proveedor ' . $presupuestosproveedore['Presupuestosproveedore']['serie'].'-'.zerofill($presupuestosproveedore['Presupuestosproveedore']['numero'])); ?></legend>
+        <legend><?php __('Añadir Pedido a proveedor al Presupuesto de Proveedor ' . 
+                $presupuestosproveedore['Presupuestosproveedore']['serie'].'-'.zerofill($presupuestosproveedore['Presupuestosproveedore']['numero'])); ?></legend>
         <dl><?php
     $i = 0;
     $class = ' class="altrow"';
     ?>
-            <dt<?php if ($i % 2 == 0) echo $class; ?>><?php __('Presupuesto de Proveedor'); ?></dt>
-            <dd<?php if ($i++ % 2 == 0) echo $class; ?> style="margin-left: 18em;">
-                <?php echo $this->Html->link($presupuestosproveedore['Presupuestosproveedore']['serie'].'-'.zerofill($presupuestosproveedore['Presupuestosproveedore']['numero']), array('controller' => 'presupuestosproveedores', 'action' => 'view', $presupuestosproveedore['Presupuestosproveedore']['id'])); ?>
+            <dt<?php if ($i % 2 == 0) echo $class; ?>><?php __('Serie-Pres. Proveedor'); ?></dt>
+            <dd<?php if ($i++ % 2 == 0) echo $class; ?> style="margin-left: 14em;">
+                <?php echo $this->Html->link($presupuestosproveedore['Presupuestosproveedore']['serie'].'-'.zerofill($presupuestosproveedore['Presupuestosproveedore']['numero']), 
+                        array('controller' => 'presupuestosproveedores', 'action' => 'view', $presupuestosproveedore['Presupuestosproveedore']['id'])); ?>
             </dd>
             <?php if ($presupuestosproveedore['Avisosrepuesto']['id'] != null && $presupuestosproveedore['Avisosrepuesto']['id'] >= 0) { ?>
                 <dt<?php if ($i % 2 == 0) echo $class; ?>><?php __('Nº Aviso de repuesto'); ?></dt>
@@ -75,13 +77,15 @@
         echo $this->Form->input('albaranproveedoredevolucion_id', array('type' => 'hidden','value'=>$albaranesproveedore['Albaranesproveedore']['id']));
         echo $this->Form->input('proveedore_id', array('default' => @$presupuestosproveedore['Presupuestosproveedore']['proveedore_id'], 'label' => 'Proveedor', 'class' => 'chzn-select-required'));
         echo $this->Form->input('presupuestosproveedore_id', array('type' => 'hidden', 'value' => $presupuestosproveedore['Presupuestosproveedore']['id']));
+        // TODO 
+        echo $this->Form->input('presupuestosproveedore_serie', array('type' => 'hidden', 'value' => $presupuestosproveedore['Presupuestosproveedore']['serie']));
         echo $this->Form->input('observaciones', array('label' => 'Observaciones'));
         echo $this->Form->input('confirmado');
         echo $this->Form->input('fecharecepcion', array('label' => 'Fecha de recepción', 'dateFormat' => 'DMY'));
         echo $this->Form->input('transportista_id', array('label' => 'Transportista'));
         echo $this->Form->input('numero_expedicion', array('label' => 'Nº Expedición'));
         echo $this->Form->input('tipo_envio', array('label' => 'Tipo de Envio'));
-        echo $this->Form->input('estadospedidosproveedore_id', array('label' => 'Estado')); 
+        echo $this->Form->input('estadospedidosproveedore_id', array('label' => 'Estado', 'value' => 4)); 
         echo $this->Form->input('tiposiva_id', array('label' => 'Tipo de Iva', 'default' => @$presupuestosproveedore['Presupuestosproveedore']['tiposiva_id']));
         echo $this->Form->input('almacene_id', array('label' => 'Almacén','default'=>@$presupuestosproveedore['Almacene']['id'])); 
         ?>

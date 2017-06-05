@@ -131,7 +131,7 @@
                 <?php else: ?>
                     <td style="width: 250px"><?php echo $this->Form->input('Search.numero_ordene', array('label' => 'Nº Orden')) ?></td>
                 <?php endif; ?>
-                    
+
                 <td><?php echo $this->Form->input('Search.maquina_id', array('label' => 'Máquina', 'type' => 'text', 'class' => 'maquinas_select', 'style' => 'width: 300px;')) ?></td>
                 <?php if (!empty($this->params['named']['maquina_id'])): ?>
                 <script>
@@ -158,8 +158,8 @@
                             });
                 </script>
             <?php endif; ?>
-                
-                
+
+
             <?php if (!empty($this->params['named']['estadoProveedor_id'])): ?>
                 <td><?php echo $this->Form->input('Search.estadoProveedor_id', array('label' => 'Estado', 'type' => 'select', 'class' => 'select_basico', 'options' => $estadoProveedor, 'empty' => True, 'selected' => $this->params['named']['estadoProveedor_id'])) ?></td>
             <?php elseif (!empty($this->params['url']['estadoProveedor_id'])): ?>
@@ -226,7 +226,12 @@
                 <td><?php echo $pedidosproveedore['Pedidosproveedore']['observaciones']; ?>&nbsp;</td>
                 <td><?php echo!empty($pedidosproveedore['Pedidosproveedore']['confirmado']) ? 'Sí' : 'No'; ?></td>
                 <td><?php if (!empty($pedidosproveedore['Pedidosproveedore']['pedidoescaneado'])) echo $this->Html->image('clip.png', array('url' => '/files/pedidosproveedore/' . $pedidosproveedore['Pedidosproveedore']['pedidoescaneado'])); ?></td>
-                <td><?php echo $pedidosproveedore['Estadospedidosproveedore']['estado']; ?>&nbsp;</td>
+                <?php if ($pedidosproveedore['Estadospedidosproveedore']['id'] == 4): ?>
+                    <td  style="background-color: #FF0000; color: #ffffff"><?php echo $pedidosproveedore['Estadospedidosproveedore']['estado']; ?>&nbsp;</td>
+                <?php else: ?>
+                    <td><?php echo $pedidosproveedore['Estadospedidosproveedore']['estado']; ?>&nbsp;</td>
+                <?php endif; ?>
+
                 <td class="actions">
                     <?php echo $this->Html->link(__('Ver', true), array('action' => 'view', $pedidosproveedore['Pedidosproveedore']['id'])); ?>
                     <?php echo $this->Html->link(__('Pdf', true), array('action' => 'pdf', $pedidosproveedore['Pedidosproveedore']['id'])); ?>
