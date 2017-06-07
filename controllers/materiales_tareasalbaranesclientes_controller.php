@@ -60,12 +60,14 @@ class MaterialesTareasalbaranesclientesController extends AppController {
                 $this->Session->setFlash(__('The materiales tareasalbaranescliente has been saved', true));
                 $this->redirect($this->referer());
             } else {
-                $this->flashWarnings(__('El Material para el Albarán de Repuestos no ha podido ser guardado.'.$this->MaterialesTareasalbaranescliente->session_message, true));
+                $this->flashWarnings(__('El Material para el Albarán de Repuestos NO ha podido ser guardado.'.$this->MaterialesTareasalbaranescliente->session_message, true));
                 $this->MaterialesTareasalbaranescliente->session_message = null;
                 $this->redirect($this->referer());
             }
         }
         if (empty($this->data)) {
+            $utimaVenta = $this->ver_ultima_venta($id);
+            $this->set('ult_venta',$utimaVenta);
             $this->data = $this->MaterialesTareasalbaranescliente->read(null, $id);
             $this->set('articulo',$this->data['Articulo']);
         }

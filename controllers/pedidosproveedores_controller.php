@@ -322,10 +322,11 @@ class PedidosproveedoresController extends AppController {
 
     function devolucion($albaranesproveedore_id = null, $presupuestosproveedore_id = null) {
         if (!empty($this->data)) {
-            $presupuestosproveedore_id = $this->data['Pedidosproveedore']['presupuestosproveedore_id'];
+            $presupuestosproveedore_id = $this->data['Pedidosproveedore']['presupuestosproveedore_id'];         
+            $serie = $this->data['Pedidosproveedore']['serie']; 
             $this->Pedidosproveedore->create();
             if ($this->Pedidosproveedore->saveAll($this->data)) {
-                $id = $this->Pedidosproveedore->id;
+                $id = $this->Pedidosproveedore->id;      
                 $data = array();
                 foreach ($this->data['ArticulosAlbaranesproveedore'] as $articulo_albaranesproveedore) {
                     if ($articulo_albaranesproveedore['id'] != 0) {

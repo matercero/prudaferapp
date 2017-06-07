@@ -77,8 +77,7 @@
         echo $this->Form->input('albaranproveedoredevolucion_id', array('type' => 'hidden','value'=>$albaranesproveedore['Albaranesproveedore']['id']));
         echo $this->Form->input('proveedore_id', array('default' => @$presupuestosproveedore['Presupuestosproveedore']['proveedore_id'], 'label' => 'Proveedor', 'class' => 'chzn-select-required'));
         echo $this->Form->input('presupuestosproveedore_id', array('type' => 'hidden', 'value' => $presupuestosproveedore['Presupuestosproveedore']['id']));
-        // TODO 
-        echo $this->Form->input('presupuestosproveedore_serie', array('type' => 'hidden', 'value' => $presupuestosproveedore['Presupuestosproveedore']['serie']));
+        echo $this->Form->input('serie', array('type' => 'hidden', 'value' => $presupuestosproveedore['Presupuestosproveedore']['serie']));
         echo $this->Form->input('observaciones', array('label' => 'Observaciones'));
         echo $this->Form->input('confirmado');
         echo $this->Form->input('fecharecepcion', array('label' => 'Fecha de recepción', 'dateFormat' => 'DMY'));

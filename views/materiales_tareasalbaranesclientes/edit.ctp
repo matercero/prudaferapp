@@ -9,25 +9,32 @@
     echo $this->Form->input('tareasalbaranescliente_id', array('type' => 'hidden'));
     echo $this->Form->input('cantidad');
     echo $this->Form->input('descuento');
-    echo $this->Form->input('precio_unidad');
-    echo $this->Form->input('importe');
     ?>
+    <p style="font-size: 1.5em; text-align: center; color:green">Precio venta: 
+        <?php echo$materiale['MaterialesTareasalbaranescliente']['precio_unidad'] - ($materiale['MaterialesTareasalbaranescliente']['precio_unidad'] * $materiale['MaterialesTareasalbaranescliente']['descuento'] / 100) ?> &euro;
+    </p>
+    <p style="font-size: 1.5em; text-align: center; color: #3AA29C">Fecha: <?php echo $materiale['Tareasalbaranescliente']['Albaranescliente']['fecha'] ?>
+    </p>        
+    <?php
+        echo $this->Form->input('precio_unidad');
+        echo $this->Form->input('importe');
+        ?>
 </fieldset>
 <script type="text/javascript">
-     //Calculo automático
-    function calcular_materiale(){
-        var importe = $('#MaterialesTareasalbaranesclienteCantidad').val()*$('#MaterialesTareasalbaranesclientePrecioUnidad').val();
-        importe = importe - (importe * (parseFloat($('#MaterialesTareasalbaranesclienteDescuento').val())/100));
-        importe =Math.round(importe *100)/100 
+    //Calculo automático
+    function calcular_materiale() {
+        var importe = $('#MaterialesTareasalbaranesclienteCantidad').val() * $('#MaterialesTareasalbaranesclientePrecioUnidad').val();
+        importe = importe - (importe * (parseFloat($('#MaterialesTareasalbaranesclienteDescuento').val()) / 100));
+        importe = Math.round(importe * 100) / 100
         $('#MaterialesTareasalbaranesclienteImporte').val(importe);
     }
-    $('#MaterialesTareasalbaranesclienteCantidad').keyup(function(){
+    $('#MaterialesTareasalbaranesclienteCantidad').keyup(function () {
         calcular_materiale();
     });
-    $('#MaterialesTareasalbaranesclientePrecioUnidad').keyup(function(){
+    $('#MaterialesTareasalbaranesclientePrecioUnidad').keyup(function () {
         calcular_materiale();
     });
-    $('#MaterialesTareasalbaranesclienteDescuento').keyup(function(){
+    $('#MaterialesTareasalbaranesclienteDescuento').keyup(function () {
         calcular_materiale();
     });
 </script>
