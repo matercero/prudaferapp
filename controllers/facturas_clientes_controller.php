@@ -3,7 +3,7 @@
 class FacturasClientesController extends AppController {
 
     var $name = 'FacturasClientes';
-    var $components = array('FileUpload');
+    var $components = array('FileUpload', 'Email');
     var $helpers = array('Autocomplete', 'Time', 'Form');
 
     function beforeFilter() {
@@ -51,30 +51,35 @@ class FacturasClientesController extends AppController {
         if (!empty($this->params['named']['cliente_id']))
             $conditions [] = array('1' => '1 AND FacturasCliente.cliente_id = "' . $this->params['named']['cliente_id'] . '"');
 
+        if (!empty($this->params['url']['modoEnvFac']))
+            $conditions [] = array('1' => '1 AND Cliente.modoenviofactura = "' . $this->params['url']['modoEnvFac'] . '"');
+        if (!empty($this->params['named']['modoEnvFac']))
+            $conditions [] = array('1' => '1 AND Cliente.modoenviofactura = "' . $this->params['named']['modoEnvFac'] . '"');
+
         if (!empty($this->params['url']['numero_ordene'])) {
             $conditions [] = array('OR' => array(
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranescliente.facturas_cliente_id FROM albaranesclientes Albaranescliente WHERE Albaranescliente.ordene_id IN (SELECT Ordene.id FROM ordenes Ordene WHERE Ordene.numero = "' . $this->params['url']['numero_ordene'] . '"))'),
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranesclientesreparacione.facturas_cliente_id FROM albaranesclientesreparaciones Albaranesclientesreparacione WHERE Albaranesclientesreparacione.ordene_id IN (SELECT Ordene.id FROM ordenes Ordene WHERE Ordene.numero = "' . $this->params['url']['numero_ordene'] . '"))'),
-                    ));
+            ));
         }
         if (!empty($this->params['named']['numero_ordene'])) {
             $conditions [] = array('OR' => array(
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranescliente.facturas_cliente_id FROM albaranesclientes Albaranescliente WHERE Albaranescliente.ordene_id IN (SELECT Ordene.id FROM ordenes Ordene WHERE Ordene.numero = "' . $this->params['named']['numero_ordene'] . '"))'),
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranesclientesreparacione.facturas_cliente_id FROM albaranesclientesreparaciones Albaranesclientesreparacione WHERE Albaranesclientesreparacione.ordene_id IN (SELECT Ordene.id FROM ordenes Ordene WHERE Ordene.numero = "' . $this->params['named']['numero_ordene'] . '"))'),
-                    ));
+            ));
         }
 
         if (!empty($this->params['url']['numero_avisostallere'])) {
             $conditions [] = array('OR' => array(
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranescliente.facturas_cliente_id FROM albaranesclientes Albaranescliente WHERE Albaranescliente.avisostallere_id IN (SELECT Avisostallere.id FROM avisostalleres Avisostallere WHERE Avisostallere.numero = "' . $this->params['url']['numero_avisostallere'] . '"))'),
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranesclientesreparacione.facturas_cliente_id FROM albaranesclientesreparaciones Albaranesclientesreparacione WHERE Albaranesclientesreparacione.avisostallere_id IN (SELECT Avisostallere.id FROM avisostalleres Avisostallere WHERE Avisostallere.numero = "' . $this->params['url']['numero_avisostallere'] . '"))'),
-                    ));
+            ));
         }
         if (!empty($this->params['named']['numero_avisostallere'])) {
             $conditions [] = array('OR' => array(
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranescliente.facturas_cliente_id FROM albaranesclientes Albaranescliente WHERE Albaranescliente.avisostallere_id IN (SELECT Avisostallere.id FROM avisostalleres Avisostallere WHERE Avisostallere.numero = "' . $this->params['named']['numero_avisostallere'] . '"))'),
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranesclientesreparacione.facturas_cliente_id FROM albaranesclientesreparaciones Albaranesclientesreparacione WHERE Albaranesclientesreparacione.avisostallere_id IN (SELECT Avisostallere.id FROM avisostalleres Avisostallere WHERE Avisostallere.numero = "' . $this->params['named']['numero_avisostallere'] . '"))'),
-                    ));
+            ));
         }
 
 
@@ -82,13 +87,13 @@ class FacturasClientesController extends AppController {
             $conditions [] = array('OR' => array(
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranescliente.facturas_cliente_id FROM albaranesclientes Albaranescliente WHERE Albaranescliente.avisostallere_id IN (SELECT Avisostallere.id FROM avisostalleres Avisostallere WHERE Avisostallere.numero = "' . $this->params['url']['numero_avisostallere'] . '"))'),
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranesclientesreparacione.facturas_cliente_id FROM albaranesclientesreparaciones Albaranesclientesreparacione WHERE Albaranesclientesreparacione.avisostallere_id IN (SELECT Avisostallere.id FROM avisostalleres Avisostallere WHERE Avisostallere.numero = "' . $this->params['url']['numero_avisostallere'] . '"))'),
-                    ));
+            ));
         }
         if (!empty($this->params['named']['numero_avisosrepuesto'])) {
             $conditions [] = array('OR' => array(
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranescliente.facturas_cliente_id FROM albaranesclientes Albaranescliente WHERE Albaranescliente.avisosrepuesto_id IN (SELECT Avisosrepuesto.id FROM avisosrepuestos Avisosrepuesto WHERE Avisosrepuesto.numero = "' . $this->params['named']['numero_avisosrepuesto'] . '"))'),
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranesclientesreparacione.facturas_cliente_id FROM albaranesclientesreparaciones Albaranesclientesreparacione WHERE Albaranesclientesreparacione.avisosrepuesto_id IN (SELECT Avisosrepuesto.id FROM avisosrepuestos Avisosrepuesto WHERE Avisosrepuesto.numero = "' . $this->params['named']['numero_avisosrepuesto'] . '"))'),
-                    ));
+            ));
         }
 
         /* Albaranes buscador */
@@ -97,26 +102,26 @@ class FacturasClientesController extends AppController {
             $conditions [] = array('OR' => array(
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranescliente.facturas_cliente_id FROM albaranesclientes Albaranescliente WHERE Albaranescliente.serie =  "' . $this->params['url']['serie_albaran'] . '")'),
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranesclientesreparacione.facturas_cliente_id FROM albaranesclientesreparaciones Albaranesclientesreparacione WHERE Albaranesclientesreparacione.serie = "' . $this->params['url']['serie_albaran'] . '")'),
-                    ));
+            ));
         }
         if (!empty($this->params['named']['serie_albaran'])) {
             $conditions [] = array('OR' => array(
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranescliente.facturas_cliente_id FROM albaranesclientes Albaranescliente WHERE Albaranescliente.serie =  "' . $this->params['named']['serie_albaran'] . '")'),
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranesclientesreparacione.facturas_cliente_id FROM albaranesclientesreparaciones Albaranesclientesreparacione WHERE Albaranesclientesreparacione.serie = "' . $this->params['named']['serie_albaran'] . '")'),
-                    ));
+            ));
         }
 
         if (!empty($this->params['url']['numero_albaran'])) {
             $conditions [] = array('OR' => array(
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranescliente.facturas_cliente_id FROM albaranesclientes Albaranescliente WHERE Albaranescliente.numero =  "' . $this->params['url']['numero_albaran'] . '")'),
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranesclientesreparacione.facturas_cliente_id FROM albaranesclientesreparaciones Albaranesclientesreparacione WHERE Albaranesclientesreparacione.numero = "' . $this->params['url']['numero_albaran'] . '")'),
-                    ));
+            ));
         }
         if (!empty($this->params['named']['numero_albaran'])) {
             $conditions [] = array('OR' => array(
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranescliente.facturas_cliente_id FROM albaranesclientes Albaranescliente WHERE Albaranescliente.numero =  "' . $this->params['named']['numero_albaran'] . '")'),
                     array('1' => '1 AND FacturasCliente.id IN (SELECT Albaranesclientesreparacione.facturas_cliente_id FROM albaranesclientesreparaciones Albaranesclientesreparacione WHERE Albaranesclientesreparacione.numero = "' . $this->params['named']['numero_albaran'] . '")'),
-                    ));
+            ));
         }
 
         /*         * Fin albaranes buscador */
@@ -506,7 +511,7 @@ class FacturasClientesController extends AppController {
         $this->set('facturasCliente', $facturasCliente);
     }
 
-function imprimircarta($factura_id) {
+    function imprimircarta($factura_id) {
         Configure::write('debug', 0);
         $this->layout = 'pdf';
 
@@ -556,6 +561,168 @@ function imprimircarta($factura_id) {
         $this->set('config', $this->Config->read(null, 1));
         $this->set('facturasCliente', $facturasCliente);
     }
+
+    function enviarfacturasemail() {
+
+        Configure::write('debug', 0);
+        if (empty($this->data)) {
+            $this->flashWarnings(__('No has realizado la facturación', true));
+            $this->redirect($this->referer());
+        }
+
+
+
+        $this->Email->smtpOptions = array(
+            'port' => '25',
+            'timeout' => '30',
+            'host' => 'mail.talleresdafer.com',
+            'username' => 'prueba@talleresdafer.com',
+            'password' => 'Prueba.dafer*+');
+
+        // Configurar método de entrega
+        $this->Email->delivery = 'smtp';
+        $this->Email->from = 'prueba@talleresdafer.com';
+        $this->Email->to = 'matercero@gmail.com';
+       // $this->Email->replyTo = '';
+        $this->Email->subject = 'Asunto X ';
+        $this->Email->template = 'default'; // NOTAR QUE NO HAY '.ctp'
+        $this->Email->sendAs = 'both';
+
+
+        if (!empty($this->data)) {
+
+            $this->layout = 'pdf';
+            foreach ($this->data['FacturasCliente']['ids'] as $factura_id) {
+                //se gauardan los datos a facturar
+                $facturasClientes[] = $this->FacturasCliente->find(
+                        'first', array(
+                    'contain' => array(
+                        'Estadosfacturascliente',
+                        'Cliente' => array('Formapago', 'Cuentasbancaria'),
+                        'Albaranescliente' => array(
+                            'FacturasCliente' => 'Cliente',
+                            'Estadosalbaranescliente',
+                            'Maquina',
+                            'Tiposiva',
+                            'Comerciale',
+                            'Centrosdecoste',
+                            'Almacene',
+                            'Cliente' => 'Formapago',
+                            'Centrostrabajo',
+                            'Pedidoscliente' => array(
+                                'Presupuestoscliente' => 'Cliente'),
+                            'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina'),
+                            'Tareasalbaranescliente' => array('MaterialesTareasalbaranescliente' => 'Articulo', 'ManodeobrasTareasalbaranescliente', 'TareasalbaranesclientesOtrosservicio'), 'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina')),
+                        'Albaranesclientesreparacione' => array(
+                            'Estadosalbaranesclientesreparacione',
+                            'TareasAlbaranesclientesreparacione' => array(
+                                'TareasAlbaranesclientesreparacionesParte' => 'Mecanico',
+                                'TareasAlbaranesclientesreparacionesPartestallere' => 'Mecanico',
+                                'ArticulosTareasAlbaranesclientesreparacione' => 'Articulo'),
+                            'Ordene' => array(
+                                'Centrostrabajo',
+                                'Cliente',
+                                'Avisostallere' => array('Centrostrabajo', 'Cliente')),
+                            'Centrosdecoste',
+                            'Comerciale',
+                            'Almacene',
+                            'Maquina',
+                            'FacturasCliente' => 'Cliente',
+                            'Cliente' => 'Formapago',
+                            'Centrostrabajo',
+                            'Tiposiva'
+                        )
+                    ),
+                    'conditions' => array('FacturasCliente.id' => $factura_id)
+                        )
+                );
+            }
+            $this->set('facturasClientes', $facturasClientes);
+
+            foreach ($this->$facturasClientes as $key) {
+                
+            }
+        }
+
+        /*
+
+          $this->Email->smtpOptions = array(
+          'port' => '25',
+          'timeout' => '30',
+          'host' => 'mail.talleresdafer.com',
+          'username' => 'prueba@talleresdafer.com',
+          'password' => 'Prueba.dafer*+');
+
+          // Configurar método de entrega
+          $this->Email->delivery = 'smtp';
+          $this->Email->from = 'prueba@talleresdafer.com';
+          $this->Email->to = 'matercero@gmail.com';
+          $this->Email->replyTo = 'pepea23@yahoo.es';
+          $this->Email->subject = 'asunto PRUEBA ';
+          $this->Email->template = 'default'; // NOTAR QUE NO HAY '.ctp'
+          $this->Email->sendAs = 'both';
+
+          $this->Email->attachments = array(
+          'Factura.pdf' => $this->imprimircarta(1)
+          );
+
+          $this->Email->send();
+          $this->set('smtperrors', $this->Email->smtpError);
+         * 
+         */
+
+        $id = 35421;
+        $this->layout = 'pdf';
+        if (!$id) {
+            $this->flashWarnings(__('Factura Inválida', true));
+            $this->redirect($this->referer());
+        }
+        $this->set('facturasCliente', $this->FacturasCliente->find(
+                        'first', array(
+                    'contain' => array(
+                        'Estadosfacturascliente',
+                        'Cliente' => array('Formapago', 'Cuentasbancaria'),
+                        'Albaranescliente' => array(
+                            'FacturasCliente' => 'Cliente',
+                            'Estadosalbaranescliente',
+                            'Maquina',
+                            'Tiposiva',
+                            'Comerciale',
+                            'Centrosdecoste',
+                            'Almacene',
+                            'Cliente' => 'Formapago',
+                            'Centrostrabajo',
+                            'Pedidoscliente' => array(
+                                'Presupuestoscliente' => 'Cliente'),
+                            'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina'),
+                            'Tareasalbaranescliente' => array('MaterialesTareasalbaranescliente' => 'Articulo', 'ManodeobrasTareasalbaranescliente', 'TareasalbaranesclientesOtrosservicio'), 'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina')),
+                        'Albaranesclientesreparacione' => array(
+                            'Estadosalbaranesclientesreparacione',
+                            'TareasAlbaranesclientesreparacione' => array(
+                                'TareasAlbaranesclientesreparacionesParte' => 'Mecanico',
+                                'TareasAlbaranesclientesreparacionesPartestallere' => 'Mecanico',
+                                'ArticulosTareasAlbaranesclientesreparacione' => 'Articulo'),
+                            'Ordene' => array(
+                                'Centrostrabajo',
+                                'Cliente',
+                                'Avisostallere' => array('Centrostrabajo', 'Cliente')),
+                            'Centrosdecoste',
+                            'Comerciale',
+                            'Almacene',
+                            'Maquina',
+                            'FacturasCliente' => 'Cliente',
+                            'Cliente' => 'Formapago',
+                            'Centrostrabajo',
+                            'Tiposiva'
+                        )
+                    ),
+                    'conditions' => array('FacturasCliente.id' => $id)
+                        )
+                )
+        );
+        $this->render();
+    }
+
 }
 
 ?>

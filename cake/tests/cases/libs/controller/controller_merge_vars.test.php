@@ -34,7 +34,8 @@ if (!class_exists('AppController')) {
  *
  * @var array
  */
-		var $components = array('MergeVar' => array('flag', 'otherFlag', 'redirect' => false));
+		var $components = array('MergeVar' => array('flag', 'otherFlag', 'redirect' => false)
+                    , 'DebugKit.Toolbar');
 /**
  * helpers
  *

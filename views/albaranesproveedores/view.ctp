@@ -150,7 +150,7 @@
             <?php endif; ?>
         <?php endif; ?>
         <?php echo $this->Html->link(__('Imprimir', true), 'javascript:window.print(); void 0;', array('class' => 'button_link')); ?>
-		<?php echo $this->Html->link(__('Nuevo Albaran a cliente', true), array('controller' => 'albaranesclientes', 'action' => 'add', $albaranesproveedore['Albaranesproveedore']['id']), array('class' => 'button_link')) ?>
+		<?php echo $this->Html->link(__('Nuevo Albaran a cliente', true), array('controller' => 'albaranesclientes', 'action' => 'add', 'albaranesproveedore', $albaranesproveedore['Albaranesproveedore']['id']), array('class' => 'button_link')) ?>
     </div>
     <div class="datagrid">
         <table>

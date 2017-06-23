@@ -53,54 +53,54 @@
                 <td><?php echo $this->Form->input('Search.articulo_id', array('label' => 'Árticulo', 'type' => 'text', 'class' => 'articulos_select', 'style' => 'width: 300px;')) ?></td>
                 <?php if (!empty($this->params['named']['articulo_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['named']['articulo_id'] ?>', function(data) {
-                            $(".articulos_select").select2("data", {
-                                'id' : data.id,
-                                'ref' : data.ref,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['named']['articulo_id'] ?>', function (data) {
+                                    $(".articulos_select").select2("data", {
+                                        'id': data.id,
+                                        'ref': data.ref,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php elseif (!empty($this->params['url']['articulo_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['url']['articulo_id'] ?>', function(data) {
-                            $(".articulos_select").select2("data", {
-                                'id' : data.id,
-                                'ref' : data.ref,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['url']['articulo_id'] ?>', function (data) {
+                                    $(".articulos_select").select2("data", {
+                                        'id': data.id,
+                                        'ref': data.ref,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php endif; ?>
             <td><?php echo $this->Form->input('Search.cliente_id', array('label' => 'Cliente', 'type' => 'text', 'class' => 'clientes_select', 'style' => 'width: 300px;')) ?></td>
             <?php if (!empty($this->params['named']['cliente_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['named']['cliente_id'] ?>', function(data) {
-                            $(".clientes_select").select2("data", {
-                                'id' : data.id,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['named']['cliente_id'] ?>', function (data) {
+                                    $(".clientes_select").select2("data", {
+                                        'id': data.id,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php elseif (!empty($this->params['url']['cliente_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['url']['cliente_id'] ?>', function(data) {
-                            $(".clientes_select").select2("data", {
-                                'id' : data.id,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['url']['cliente_id'] ?>', function (data) {
+                                    $(".clientes_select").select2("data", {
+                                        'id': data.id,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php endif; ?>
-                        <?php if (!empty($this->params['named']['mantenimientos'])): ?>
+            <?php if (!empty($this->params['named']['mantenimientos'])): ?>
                 <td style="width: 125px"><?php echo $this->Form->input('Search.mantenimientos', array('value' => $this->params['named']['mantenimientos'])) ?></td>
             <?php elseif (!empty($this->params['url']['mantenimientos'])): ?>
                 <td style="width: 125px"><?php echo $this->Form->input('Search.mantenimientos', array('value' => $this->params['url']['mantenimientos'])) ?></td>
@@ -128,27 +128,27 @@
                 <td><?php echo $this->Form->input('Search.maquina_id', array('label' => 'Máquina', 'type' => 'text', 'class' => 'maquinas_select', 'style' => 'width: 300px;')) ?></td>
                 <?php if (!empty($this->params['named']['maquina_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>maquinas/get_json/<?php echo $this->params['named']['maquina_id'] ?>', function(data) {
-                            $(".maquinas_select").select2("data", {
-                                'id' : data.id,
-                                'codigo' : data.codigo,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>maquinas/get_json/<?php echo $this->params['named']['maquina_id'] ?>', function (data) {
+                                    $(".maquinas_select").select2("data", {
+                                        'id': data.id,
+                                        'codigo': data.codigo,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php elseif (!empty($this->params['url']['maquina_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>maquinas/get_json/<?php echo $this->params['url']['maquina_id'] ?>', function(data) {
-                            $(".maquinas_select").select2("data", {
-                                'id' : data.id,
-                                'codigo' : data.codigo,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>maquinas/get_json/<?php echo $this->params['url']['maquina_id'] ?>', function (data) {
+                                    $(".maquinas_select").select2("data", {
+                                        'id': data.id,
+                                        'codigo': data.codigo,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php endif; ?>
 
@@ -159,7 +159,7 @@
             <?php else: ?>
                 <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20')) ?></td>
             <?php endif; ?>
-                           
+
             <?php if (!empty($this->params['named']['estadosordene_id'])): ?>
                 <td><?php echo $this->Form->input('Search.estadosordene_id', array('label' => 'Estado de la Orden', 'class' => 'chzn-select-not-required', 'empty' => 'Seleciona un estado...', 'value' => $this->params['named']['estadosordene_id'])) ?></td>
             <?php elseif (!empty($this->params['url']['estadosordene_id'])): ?>
@@ -212,8 +212,8 @@
             <tr<?php echo $class; ?>>
                 <td><a href="#" class="selecionado" id="<?php echo $ordene['Ordene']['id']; ?>"><?php echo $ordene['Ordene']['numero']; ?></a></td>
             <script type="text/javascript">
-                $('.selecionado').click(function(){
-                    if(window.opener){
+                $('.selecionado').click(function () {
+                    if (window.opener) {
                         window.opener.$('#AlbaranesclientesreparacioneOrdeneId').val($(this).attr('id'));
                         window.opener.$('#OrdeneNumero').val($(this).html());
                         window.close();
@@ -231,14 +231,16 @@
             <td><?php echo!empty($ordene['Ordene']['urgente']) ? 'Sí' : 'No' ?></td>
             <td><?php echo $ordene['Ordene']['fecha_prevista_reparacion']; ?></td>
             <td class="actions">
- <?php echo $this->Html->link(__('Ver', true), array('action' => 'view', $ordene['Ordene']['id']), array( 'target' => '_blank')); ?>
-                              
- <?php echo $this->Html->link(__('Ver', true), array('action' => 'view', $ordene['Ordene']['id'])); ?>
+                <?php
+                echo $this->Html->link(__('Prev.', true), array('action' => 'view', $ordene['Ordene']['id']),
+                        array('target' => '_blank', 'title' => 'Your tooltip'));
+                ?>
+                <?php echo $this->Html->link(__('Ver', true), array('action' => 'view', $ordene['Ordene']['id'])); ?>
                 <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $ordene['Ordene']['id'])); ?>
-                <?php echo $this->Html->link(__('Pdf', true), array('action' => 'pdf', $ordene['Ordene']['id'])); ?>
+    <?php echo $this->Html->link(__('Pdf', true), array('action' => 'pdf', $ordene['Ordene']['id'])); ?>
             </td>
             </tr>
-        <?php endforeach; ?>
+<?php endforeach; ?>
     </table>
     <p>
         <?php
@@ -248,10 +250,10 @@
         ?>	
     </p>
     <div class="paging">
-        <?php echo $this->Paginator->prev('<< ' . __('Anterior', true), array(), null, array('class' => 'disabled')); ?>
+<?php echo $this->Paginator->prev('<< ' . __('Anterior', true), array(), null, array('class' => 'disabled')); ?>
         | 	<?php echo $this->Paginator->numbers(); ?>
         |
-        <?php echo $this->Paginator->next(__('Siguiente', true) . ' >>', array(), null, array('class' => 'disabled')); ?>
+<?php echo $this->Paginator->next(__('Siguiente', true) . ' >>', array(), null, array('class' => 'disabled')); ?>
     </div>
 </div>
 

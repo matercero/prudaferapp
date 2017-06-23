@@ -168,6 +168,7 @@ class AlbaranesclientesController extends AppController {
 
     function add($vienede = null, $iddedondeviene = null) {
         if (!empty($this->data)) {
+            echo 'HAY data';
             $this->Albaranescliente->create();
             if ($this->Albaranescliente->save($this->data, array('validate' => True))) {
                 if (!empty($this->data['Albaranescliente']['pedidoscliente_id'])) { // Si viene de Pedidoscliente 
@@ -177,7 +178,7 @@ class AlbaranesclientesController extends AppController {
                 } elseif (!empty($this->data['Albaranescliente']['avisosrepuesto_id'])) { // Si viene de Avisosrepuesto 
                     $this->__trapaso_from_avisosrepuesto($this->data);
                 } elseif (!empty($this->data['Albaranescliente']['albaranesproveedore_id'])) { // Si viene de Albaranesproveedore
-                    $this->__trapaso_from_albaranesproveedore($this->data);
+                    //  $this->__trapaso_from_albaranesproveedore($this->data);
                 } else {
                     $this->Albaranescliente->Tareasalbaranescliente->create();
                     $tareasalbaranescliente = array();
@@ -205,6 +206,8 @@ class AlbaranesclientesController extends AppController {
                 $this->flashWarnings(__('El Albarán de Venta no ha podido ser guardado. Por favor, prueba de nuevo.'), true);
                 $this->redirect($this->referer());
             }
+        } else {
+            //   echo 'NO HAY data';
         }
 
         if (!$this->Albaranescliente->save($this->data, array('validate' => True))) {
@@ -229,8 +232,86 @@ class AlbaranesclientesController extends AppController {
                 $this->set(compact('series', 'avisosrepuesto', 'tiposivas', 'numero', 'centrosdecostes', 'comerciales', 'estadosalbaranesclientes', 'almacenes', 'maquina'));
                 $this->render('add_from_avisosrepuesto');
             } elseif ($vienede == 'albaranesproveedore') {
-                $albaranesproveedore = $this->Albaranescliente->Albaranesproveedore->find('first', array('contain' => array('Cliente', 'Centrostrabajo', 'Maquina', 'MaterialeAlbaranesproveedore' => 'Articulo'), 'conditions' => array('Albaranesproveedore.id' => $iddedondeviene)));
-                $this->set(compact('series', 'tiposivas', 'numero', 'centrosdecostes', 'comerciales', 'estadosalbaranesclientes', 'almacenes', 'maquina'));
+                /*
+                 * Carga el model que no esta en este controller. 
+                 * Albaranescliente NO esta relacionado con Albaranesproveedores
+                 */
+
+                $this->loadModel('Albaranesproveedore');
+                $albaranesproveedore = $this->Albaranesproveedore->find('first', array('conditions' => array('Albaranesproveedore.id' => $iddedondeviene),
+                    'contain' => array(
+                        'Tiposiva',
+                        'Almacene',
+                        'Estadosalbaranesproveedore',
+                        'Centrosdecoste',
+                        'Proveedore' => array('Tiposiva', 'Formapago'),
+                        'Pedidosproveedore' => array(
+                            'Proveedore',
+                            'Presupuestosproveedore' => array(
+                                'Proveedore' => array('Tiposiva', 'Formapago'),
+                                'Almacene',
+                                'Avisostallere' => array('Cliente', 'Centrostrabajo', 'Maquina', 'Estadosavisostallere'),
+                                'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina', 'Estadosaviso'),
+                                'Ordene' => array('Avisostallere' => array('Cliente', 'Centrostrabajo', 'Maquina')))))));
+
+                $articulos_albaranesproveedore = $this->Albaranesproveedore->ArticulosAlbaranesproveedore->findAllByAlbaranesproveedoreId($iddedondeviene);
+
+
+                //Necesito saber si el albProveedor tiene o No aviso de repuesto 
+                // Tabla Presupuestoproveedores  campo avisosrepuesto_id 
+                $this->set('albaranesproveedore', $albaranesproveedore);
+                $this->set('articulos_albaranesproveedore', $articulos_albaranesproveedore);
+               
+                $idAviso = null;
+                if (!empty($albaranesproveedore['Pedidosproveedore']['Presupuestosproveedore']['Avisosrepuesto'])) {
+                    echo "SI aviso";
+                    $idAviso = $albaranesproveedore['Pedidosproveedore']['Presupuestosproveedore']['Avisosrepuesto']['id'];
+                    $idCliente = $albaranesproveedore['Pedidosproveedore']['Presupuestosproveedore']['Avisosrepuesto']['Cliente']['id'];
+                    $clienteAvisoRep = $albaranesproveedore['Pedidosproveedore']['Presupuestosproveedore']['Avisosrepuesto'];
+                    $centroTrabajoAvisoRep = $albaranesproveedore['Pedidosproveedore']['Presupuestosproveedore']['Avisosrepuesto']['Centrostrabajo'];
+                    $maquinaAvisoRep = $albaranesproveedore['Pedidosproveedore']['Presupuestosproveedore']['Avisosrepuesto']['Maquina'];
+                } else {
+                    echo "NO aviso";
+                    //No hay aviso de repuesto, seleccionamos cliente(contado), centro de trabajo(contado) y maquina por defecto(almacen)
+                    $this->loadModel('Clientes');
+                    $clienteAvisoRep = $this->Clientes->find('first', array('conditions' => ['nombre' => 'cliente contado']));
+
+                    $this->loadModel('Centrostrabajo');
+                    $centroTrabajoAvisoRep = $this->Centrostrabajo->find('first', array('conditions' => ['centrotrabajo' => 'contado']));
+
+                    $this->loadModel('Maquinas');
+                    $maquinaAvisoRep = $this->Maquinas->find('first', array('conditions' => ['nombre' => 'ALMACEN']));
+                }
+
+                // SAVE alb cliente               
+                $this->loadModel('Albaranescliente');
+                $this->Albaranescliente->create();
+                if ($this->Albaranescliente->save($this->data, array('validate' => TRUE))) {
+                    echo '  save !!!! ';
+                    $alb_cliente= $this->Albaranescliente->read(null,$this->Albaranescliente->id);
+                  //  $this->Albaranescliente->saveField('numero', $alb_cliente['Albaranescliente']['numero'] + 1);
+                    $this->Albaranescliente->saveField('cliente_id',$idCliente);
+                    $this->Albaranescliente->saveField('centrostrabajo_id', $centroTrabajoAvisoRep['id']);
+                    $this->Albaranescliente->saveField('maquina_id', $maquinaAvisoRep['id']);
+                    $this->Albaranescliente->saveField('fecha', date("Y-m-d"));
+                    $this->Albaranescliente->saveField('serie', $albaranesproveedore['Albaranesproveedore']['serie']);
+                } else {
+                    echo '  NO save';
+                }
+                
+                // Add la tarea y los materiales al alb cliente
+                $this->Albaranescliente->Tareasalbaranescliente->create();
+                $tareasalbaranescliente['Tareasalbaranescliente']['albaranescliente_id'] = $this->Albaranescliente->id;
+                $tareasalbaranescliente['Tareasalbaranescliente']['materiales'] = 0;
+                $tareasalbaranescliente['Tareasalbaranescliente']['mano_de_obra'] = 0;
+                $tareasalbaranescliente['Tareasalbaranescliente']['servicios'] = 0;
+               if ($this->Albaranescliente->Tareasalbaranescliente->save($tareasalbaranescliente)) {
+                   echo 'save tareas ';
+               }
+                
+
+                $this->set(compact('idAviso', 'clienteAvisoRep', 'centroTrabajoAvisoRep', 'maquinaAvisoRep'));
+                $this->set(compact('series', 'albaranesproveedore', 'albaranescliente', 'tiposivas', 'numero', 'centrosdecostes', 'comerciales', 'estadosalbaranesclientes', 'almacenes', 'maquina'));
                 $this->render('add_from_albaranesproveedore');
             } else {
                 $this->set(compact('clientes', 'series', 'tiposivas', 'almacenes', 'numero', 'comerciales', 'estadosalbaranesclientes', 'centrosdecostes', 'maquina'));
@@ -279,7 +360,7 @@ class AlbaranesclientesController extends AppController {
         $clientes = $this->Albaranescliente->Cliente->find('list');
         $centrostrabajos = $this->Albaranescliente->Centrostrabajo->find('list', array('conditions' => array('Centrostrabajo.cliente_id' => $this->data['Albaranescliente']['cliente_id'])));
         $maquinas = $this->Albaranescliente->Maquina->find('list', array('conditions' => array('Maquina.centrostrabajo_id' => $this->data['Albaranescliente']['centrostrabajo_id'])));
-         
+
         $this->set(compact('series', 'avisosrepuestos', 'pedidosclientes', 'facturasClientes', 'tiposivas', 'centrosdecostes', 'almacenes', 'comerciales', 'estadosalbaranesclientes', 'clientes', 'centrostrabajos', 'maquinas'));
     }
 
@@ -352,8 +433,42 @@ class AlbaranesclientesController extends AppController {
         }
     }
 
+    function __trapaso_from_albaranesproveedore($data) {
+
+
+        if (!empty($data['ArticulosAlbaranesproveedore'])) {
+            // Creamos la tarea para el alb. cliente
+            $this->Albaranescliente->Tareasalbaranescliente->create();
+            $tareasalbaranescliente['Tareasalbaranescliente'] = array();
+            $tareasalbaranescliente['Tareasalbaranescliente']['albaranescliente_id'] = $this->Albaranescliente->id;
+            $tareasalbaranescliente['Tareasalbaranescliente']['asunto'] = 'Material del Albaran de Proveedor';
+            $tareasalbaranescliente['Tareasalbaranescliente']['tipo'] = '';
+            $tareasalbaranescliente['Tareasalbaranescliente']['materiales'] = 0;
+            $tareasalbaranescliente['Tareasalbaranescliente']['mano_de_obra'] = 0;
+            $tareasalbaranescliente['Tareasalbaranescliente']['servicios'] = 0;
+            $this->Albaranescliente->Tareasalbaranescliente->save($tareasalbaranescliente);
+            // Recorremos los articulos para introducirlo en la tarea para el alb. cliente
+            foreach ($data['ArticulosAlbaranesproveedore'] as $articulo_albproveedore) {
+                if ($articulo_albproveedore['id'] != 0) {
+                    $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->create();
+                    // cogemos los valores del articulo del proveedor
+                    $this->loadModel('ArticulosAlbaranesproveedore');
+                    $articulos_alb_proveed_modelo = $this->ArticulosAlbaranesproveedore->
+                            find('first', array('conditions' => ['id' => $articulo_albproveedore['id']]));
+
+                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['articulo_id'] = 12;
+                    //relaciona el articulo con la tarea
+                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['tareasalbaranescliente_id'] = $this->Albaranescliente->Tareasalbaranescliente->id;
+
+                    $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->save($materialesalbaranescliente);
+                }
+            }
+        }
+    }
+
     function __trapaso_from_avisosrepuesto($data) {
-        $cliente = $this->Albaranescliente->Avisosrepuesto->Cliente->find('first', array('contain' => '', 'conditions' => array('Cliente.id' => $data['Albaranescliente']['cliente_id'])));
+        $cliente = $this->Albaranescliente->Avisosrepuesto->Cliente->find('first', array('contain' => '',
+            'conditions' => array('Cliente.id' => $data['Albaranescliente']['cliente_id'])));
         if (!empty($data['ArticulosAvisosrepuesto'])) {
             $this->Albaranescliente->Tareasalbaranescliente->create();
             $tareasalbaranescliente['Tareasalbaranescliente'] = array();

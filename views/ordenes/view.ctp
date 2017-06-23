@@ -12,7 +12,7 @@
             <td style="font-size: 120%;">
                 <span>Número</span>
                 <?php echo $ordene['Ordene']['numero']; ?>
-            </td>
+            </td>   
             <td colspan="2">
                 <span>Comercial</span>
                 <?php echo $ordene['Comerciale']['nombre'] . ' ' . $ordene['Comerciale']['apellidos']; ?>
@@ -98,9 +98,11 @@
                         </tr>
                         <tr>
                             <td style="font-size: 160%;">
-                                <span><?php echo $ordene['Cliente']['riesgos'] == 0 ? '' : '<span style="color: red">RIESGO SUPERADO</span>'; ?></td>
+                                <?php echo $ordene['Cliente']['riesgos'] == 0 ? '' : '<span style="color: red">RIESGO SUPERADO</span>'; ?></td>
                             <td><span><?php __('Orden Escaneada'); ?></span></td>
-                            <td colspan="9"><?php echo $this->Html->link(__($ordene['Ordene']['ordenescaneada'], true), '/files/ordene/' . $ordene['Ordene']['ordenescaneada']); ?></td>
+                            <td ><?php echo $this->Html->link(__($ordene['Ordene']['ordenescaneada'], true), '/files/ordene/' . $ordene['Ordene']['ordenescaneada']); ?></td>
+                            <td><?php __('Activar'); ?>                             
+                            </td>
                         </tr>
                         </table>
                         <div style="margin: 20px">
@@ -135,7 +137,7 @@
                                         $total_horas_trabajo_tarea_imputable = 0;
                                         $total_cantidad_materiales_presupuestados = 0;
                                         ?>
-                                        <tr<?php echo $class; ?>>
+                                        <tr <?php echo $class; ?> style="background-color: #79bbff" >
                                             <td style="background-color: #FACC2E">Tarea <?php echo empty($tarea['numero']) ? $i : $tarea['numero'] ?> - <?php echo $tarea['tipo'] ?></td>
                                             <td style="background-color: #FACC2E"><?php echo $tarea['descripcion']; ?></td>
                                             <td class="actions" style="background-color: #FACC2E">
@@ -533,6 +535,7 @@
                                                 </table>
                                             </td>
                                         </tr>
+                                        <tr>&bsp;</tr>
                                         <?php echo $this->Form->end(); ?>
                                     <?php endforeach; ?>
                                 </table>
@@ -629,18 +632,21 @@
                             <?php echo $this->Html->link(__('Nuevo Presupuesto a cliente', true), array('controller' => 'presupuestosclientes', 'action' => 'add', 'ordene', $ordene['Ordene']['id']), array('class' => 'button_link')); ?>
                             <?php echo $this->Html->link(__('Nuevo Presupuesto de Proveedor', true), array('controller' => 'presupuestosproveedores', 'action' => 'add', -1, -1, $ordene['Ordene']['id']), array('class' => 'button_link')); ?>
                         </div>
-</div>
-                        <script>
-                            $('.tarea-relations').hide();
-                            $('.ver-relaciones').click(function () {
-                                $(this).parent().parent().next('.tarea-relations').fadeToggle("slow", "linear");
-                            });
-                            $('.orden-relations').hide();
-                            $('.ver-relaciones-orden').click(function () {
-                                $('.orden-relations').fadeToggle("slow", "linear");
-                            });
-                            $('.show-tarea').show();
-                        </script>
+                        </div>
+      <script>
+                                $('.tarea-relations').hide();
+                                $('.ver-relaciones').click(function () {
+                                    $(this).parent().parent().next('.tarea-relations').fadeToggle("slow", "linear");
+                                });
+                                $('.orden-relations').hide();
+                                $('.ver-relaciones-orden').click(function () {
+                                    $('.orden-relations').fadeToggle("slow", "linear");
+                                });
+                                $('.show-tarea').show();
+                            </script>
+                       
+
+
                         <script>
                             $(function () {
                                 $(".tabla_articulo_tarea").sortable({
@@ -656,3 +662,5 @@
                                 }).disableSelection();
                             });
                         </script>
+
+                     

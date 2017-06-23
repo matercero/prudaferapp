@@ -2,9 +2,10 @@
 
 class Cliente extends AppModel {
 
-    var $name = 'Cliente';
-    var $displayField = 'nombre';
-    //The Associations below have been created with all possible keys, those that are not needed can be removed
+    var $name = 'Cliente';    
+    var $displayField = 'nombre'; // campo que se muestra en tablas relacionadas
+    //The Associations below have been created with all possible keys, 
+    // those that are not needed can be removed
 
 
     var $hasOne = array(
