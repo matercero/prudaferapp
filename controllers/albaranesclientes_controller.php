@@ -254,14 +254,10 @@ class AlbaranesclientesController extends AppController {
                                 'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina', 'Estadosaviso'),
                                 'Ordene' => array('Avisostallere' => array('Cliente', 'Centrostrabajo', 'Maquina')))))));
 
+                //recupero los articulos del proveedor 
                 $articulos_albaranesproveedore = $this->Albaranesproveedore->ArticulosAlbaranesproveedore->findAllByAlbaranesproveedoreId($iddedondeviene);
 
 
-                //Necesito saber si el albProveedor tiene o No aviso de repuesto 
-                // Tabla Presupuestoproveedores  campo avisosrepuesto_id 
-                $this->set('albaranesproveedore', $albaranesproveedore);
-                $this->set('articulos_albaranesproveedore', $articulos_albaranesproveedore);
-               
                 $idAviso = null;
                 if (!empty($albaranesproveedore['Pedidosproveedore']['Presupuestosproveedore']['Avisosrepuesto'])) {
                     echo "SI aviso";
@@ -287,10 +283,10 @@ class AlbaranesclientesController extends AppController {
                 $this->loadModel('Albaranescliente');
                 $this->Albaranescliente->create();
                 if ($this->Albaranescliente->save($this->data, array('validate' => TRUE))) {
-                    echo '  save !!!! ';
-                    $alb_cliente= $this->Albaranescliente->read(null,$this->Albaranescliente->id);
-                  //  $this->Albaranescliente->saveField('numero', $alb_cliente['Albaranescliente']['numero'] + 1);
-                    $this->Albaranescliente->saveField('cliente_id',$idCliente);
+                    //Leo el registro, para actualizar campos
+                    $albaranescliente = $this->Albaranescliente->read(null, $this->Albaranescliente->id);
+                    //  $this->Albaranescliente->saveField('numero', $alb_cliente['Albaranescliente']['numero'] + 1);
+                    $this->Albaranescliente->saveField('cliente_id', $idCliente);
                     $this->Albaranescliente->saveField('centrostrabajo_id', $centroTrabajoAvisoRep['id']);
                     $this->Albaranescliente->saveField('maquina_id', $maquinaAvisoRep['id']);
                     $this->Albaranescliente->saveField('fecha', date("Y-m-d"));
@@ -298,20 +294,65 @@ class AlbaranesclientesController extends AppController {
                 } else {
                     echo '  NO save';
                 }
-                
+
                 // Add la tarea y los materiales al alb cliente
                 $this->Albaranescliente->Tareasalbaranescliente->create();
+                $tareasalbaranescliente = array();
                 $tareasalbaranescliente['Tareasalbaranescliente']['albaranescliente_id'] = $this->Albaranescliente->id;
-                $tareasalbaranescliente['Tareasalbaranescliente']['materiales'] = 0;
-                $tareasalbaranescliente['Tareasalbaranescliente']['mano_de_obra'] = 0;
-                $tareasalbaranescliente['Tareasalbaranescliente']['servicios'] = 0;
-               if ($this->Albaranescliente->Tareasalbaranescliente->save($tareasalbaranescliente)) {
-                   echo 'save tareas ';
-               }
-                
+                $tareasalbaranescliente['Tareasalbaranescliente']['asunto'] = 'Material Venta de Alb. Proveedor';
+                $tareasalbaranescliente['Tareasalbaranescliente']['materiales'] = 1;
+//                $tareasalbaranescliente['Tareasalbaranescliente']['mano_de_obra'] = 0;
+//                $tareasalbaranescliente['Tareasalbaranescliente']['servicios'] = 0;
+                if ($this->Albaranescliente->Tareasalbaranescliente->save($tareasalbaranescliente)) {
+                    $idTarea = $this->Albaranescliente->Tareasalbaranescliente->id;
+                    $tarea_albcliente = $this->Albaranescliente->Tareasalbaranescliente->read(null, $this->Albaranescliente->Tareasalbaranescliente->id);
 
-                $this->set(compact('idAviso', 'clienteAvisoRep', 'centroTrabajoAvisoRep', 'maquinaAvisoRep'));
-                $this->set(compact('series', 'albaranesproveedore', 'albaranescliente', 'tiposivas', 'numero', 'centrosdecostes', 'comerciales', 'estadosalbaranesclientes', 'almacenes', 'maquina'));
+                    if (!empty($articulos_albaranesproveedore)) {
+
+                        foreach ($articulos_albaranesproveedore as $articulo) {
+                            $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->create();
+                            $articulo_id = $articulo['ArticulosAlbaranesproveedore']['articulo_id'];
+                            $cantidad = $articulo['ArticulosAlbaranesproveedore']['cantidad'];
+                            $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->query('INSERT INTO materiales_tareasalbaranesclientes '
+                                    . '(id, articulo_id, tareasalbaranescliente_id, cantidad) '
+                                    . 'VALUES (NULL, ' . $articulo_id . ', ' . $idTarea . ', ' . $cantidad . ')');
+
+                           // debug($this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->validationErrors); //show validationErrors
+                            // echo var_dump($this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->invalidFields());
+                        }
+                    }
+                }
+                $albaranescliente = $this->Albaranescliente->find('first', array(
+                    'contain' => array(
+                        'FacturasCliente' => 'Cliente',
+                        'Estadosalbaranescliente',
+                        'Maquina',
+                        'Tiposiva',
+                        'Comerciale',
+                        'Centrosdecoste',
+                        'Almacene',
+                        'Cliente',
+                        'Centrostrabajo',
+                        'Pedidoscliente' => array(
+                            'Presupuestoscliente' => 'Cliente'),
+                        'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina'),
+                        'Tareasalbaranescliente' => array('MaterialesTareasalbaranescliente' => 'Articulo', 
+                            'ManodeobrasTareasalbaranescliente', 'TareasalbaranesclientesOtrosservicio'),
+                        'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina')), 
+                    'conditions' => array('Albaranescliente.id' => $this->Albaranescliente->id)));
+                $totalmanoobrayservicios = 0;
+                $totalrepuestos = 0;
+                foreach ($albaranescliente['Tareasalbaranescliente'] as $tarea) {
+                    $totalmanoobrayservicios += $tarea['mano_de_obra'] + $tarea['servicios'];
+                    $totalrepuestos += $tarea['materiales'];
+                }
+                $this->set('totalrepuestos', $totalrepuestos);
+                $this->set('totalmanoobrayservicios', $totalmanoobrayservicios);
+                $this->set('albaranescliente', $albaranescliente);
+
+
+                $this->set(compact('idAviso', 'clienteAvisoRep', 'centroTrabajoAvisoRep', 'maquinaAvisoRep', 'albaranesproveedore'));
+                $this->set(compact('series', 'tiposivas', 'numero', 'centrosdecostes', 'comerciales', 'estadosalbaranesclientes', 'almacenes', 'maquina'));
                 $this->render('add_from_albaranesproveedore');
             } else {
                 $this->set(compact('clientes', 'series', 'tiposivas', 'almacenes', 'numero', 'comerciales', 'estadosalbaranesclientes', 'centrosdecostes', 'maquina'));
@@ -434,70 +475,72 @@ class AlbaranesclientesController extends AppController {
     }
 
     function __trapaso_from_albaranesproveedore($data) {
+        /*
 
+          if (!empty($data['ArticulosAlbaranesproveedore'])) {
+          // Creamos la tarea para el alb. cliente
+          $this->Albaranescliente->Tareasalbaranescliente->create();
+          $tareasalbaranescliente['Tareasalbaranescliente'] = array();
+          $tareasalbaranescliente['Tareasalbaranescliente']['albaranescliente_id'] = $this->Albaranescliente->id;
+          $tareasalbaranescliente['Tareasalbaranescliente']['asunto'] = 'Material del Albaran de Proveedor';
+          $tareasalbaranescliente['Tareasalbaranescliente']['tipo'] = '';
+          $tareasalbaranescliente['Tareasalbaranescliente']['materiales'] = 0;
+          $tareasalbaranescliente['Tareasalbaranescliente']['mano_de_obra'] = 0;
+          $tareasalbaranescliente['Tareasalbaranescliente']['servicios'] = 0;
+          $this->Albaranescliente->Tareasalbaranescliente->save($tareasalbaranescliente);
+          // Recorremos los articulos para introducirlo en la tarea para el alb. cliente
+          foreach ($data['ArticulosAlbaranesproveedore'] as $articulo_albproveedore) {
+          if ($articulo_albproveedore['id'] != 0) {
+          $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->create();
+          // cogemos los valores del articulo del proveedor
+          $this->loadModel('ArticulosAlbaranesproveedore');
+          $articulos_alb_proveed_modelo = $this->ArticulosAlbaranesproveedore->
+          find('first', array('conditions' => ['id' => $articulo_albproveedore['id']]));
 
-        if (!empty($data['ArticulosAlbaranesproveedore'])) {
-            // Creamos la tarea para el alb. cliente
-            $this->Albaranescliente->Tareasalbaranescliente->create();
-            $tareasalbaranescliente['Tareasalbaranescliente'] = array();
-            $tareasalbaranescliente['Tareasalbaranescliente']['albaranescliente_id'] = $this->Albaranescliente->id;
-            $tareasalbaranescliente['Tareasalbaranescliente']['asunto'] = 'Material del Albaran de Proveedor';
-            $tareasalbaranescliente['Tareasalbaranescliente']['tipo'] = '';
-            $tareasalbaranescliente['Tareasalbaranescliente']['materiales'] = 0;
-            $tareasalbaranescliente['Tareasalbaranescliente']['mano_de_obra'] = 0;
-            $tareasalbaranescliente['Tareasalbaranescliente']['servicios'] = 0;
-            $this->Albaranescliente->Tareasalbaranescliente->save($tareasalbaranescliente);
-            // Recorremos los articulos para introducirlo en la tarea para el alb. cliente
-            foreach ($data['ArticulosAlbaranesproveedore'] as $articulo_albproveedore) {
-                if ($articulo_albproveedore['id'] != 0) {
-                    $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->create();
-                    // cogemos los valores del articulo del proveedor
-                    $this->loadModel('ArticulosAlbaranesproveedore');
-                    $articulos_alb_proveed_modelo = $this->ArticulosAlbaranesproveedore->
-                            find('first', array('conditions' => ['id' => $articulo_albproveedore['id']]));
+          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['articulo_id'] = 12;
+          //relaciona el articulo con la tarea
+          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['tareasalbaranescliente_id'] = $this->Albaranescliente->Tareasalbaranescliente->id;
 
-                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['articulo_id'] = 12;
-                    //relaciona el articulo con la tarea
-                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['tareasalbaranescliente_id'] = $this->Albaranescliente->Tareasalbaranescliente->id;
+          $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->save($materialesalbaranescliente);
+          }
+          }
+          }
+          }
 
-                    $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->save($materialesalbaranescliente);
-                }
-            }
-        }
-    }
-
-    function __trapaso_from_avisosrepuesto($data) {
-        $cliente = $this->Albaranescliente->Avisosrepuesto->Cliente->find('first', array('contain' => '',
-            'conditions' => array('Cliente.id' => $data['Albaranescliente']['cliente_id'])));
-        if (!empty($data['ArticulosAvisosrepuesto'])) {
-            $this->Albaranescliente->Tareasalbaranescliente->create();
-            $tareasalbaranescliente['Tareasalbaranescliente'] = array();
-            $tareasalbaranescliente['Tareasalbaranescliente']['albaranescliente_id'] = $this->Albaranescliente->id;
-            $tareasalbaranescliente['Tareasalbaranescliente']['asunto'] = 'Material del Aviso de Repuestos';
-            $tareasalbaranescliente['Tareasalbaranescliente']['tipo'] = 'repuestos';
-            $tareasalbaranescliente['Tareasalbaranescliente']['materiales'] = 0;
-            $tareasalbaranescliente['Tareasalbaranescliente']['mano_de_obra'] = 0;
-            $tareasalbaranescliente['Tareasalbaranescliente']['servicios'] = 0;
-            $this->Albaranescliente->Tareasalbaranescliente->save($tareasalbaranescliente);
-            foreach ($data['ArticulosAvisosrepuesto'] as $articulosavisosrepuesto) {
-                if ($articulosavisosrepuesto['id'] != 0) {
-                    $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->create();
-                    $articulosavisosrepuesto_modelo = $this->Albaranescliente->Avisosrepuesto->ArticulosAvisosrepuesto->find('first', array('contain' => 'Articulo', 'conditions' => array('ArticulosAvisosrepuesto.id' => $articulosavisosrepuesto['id'])));
-                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['articulo_id'] = $articulosavisosrepuesto_modelo['ArticulosAvisosrepuesto']['articulo_id'];
-                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['cantidad'] = $articulosavisosrepuesto_modelo['ArticulosAvisosrepuesto']['cantidad'];
-                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['precio_unidad'] = $articulosavisosrepuesto_modelo['Articulo']['precio_sin_iva'];
-                    if (empty($cliente['Cliente']['descuentos_repuestos']))
-                        $materialesalbaranescliente['MaterialesTareasalbaranescliente']['descuento'] = 0;
-                    else
-                        $materialesalbaranescliente['MaterialesTareasalbaranescliente']['descuento'] = $cliente['Cliente']['descuentos_repuestos'];
-                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] = $materialesalbaranescliente['MaterialesTareasalbaranescliente']['cantidad'] * $materialesalbaranescliente['MaterialesTareasalbaranescliente']['precio_unidad'];
-                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] = $materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] - (($materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] * $materialesalbaranescliente['MaterialesTareasalbaranescliente']['descuento']) / 100);
-                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] = number_format($materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'], 5, '.', '');
-                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['tareasalbaranescliente_id'] = $this->Albaranescliente->Tareasalbaranescliente->id;
-                    $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->save($materialesalbaranescliente);
-                }
-            }
-        }
+          function __trapaso_from_avisosrepuesto($data) {
+          $cliente = $this->Albaranescliente->Avisosrepuesto->Cliente->find('first', array('contain' => '',
+          'conditions' => array('Cliente.id' => $data['Albaranescliente']['cliente_id'])));
+          if (!empty($data['ArticulosAvisosrepuesto'])) {
+          $this->Albaranescliente->Tareasalbaranescliente->create();
+          $tareasalbaranescliente['Tareasalbaranescliente'] = array();
+          $tareasalbaranescliente['Tareasalbaranescliente']['albaranescliente_id'] = $this->Albaranescliente->id;
+          $tareasalbaranescliente['Tareasalbaranescliente']['asunto'] = 'Material del Aviso de Repuestos';
+          $tareasalbaranescliente['Tareasalbaranescliente']['tipo'] = 'repuestos';
+          $tareasalbaranescliente['Tareasalbaranescliente']['materiales'] = 0;
+          $tareasalbaranescliente['Tareasalbaranescliente']['mano_de_obra'] = 0;
+          $tareasalbaranescliente['Tareasalbaranescliente']['servicios'] = 0;
+          $this->Albaranescliente->Tareasalbaranescliente->save($tareasalbaranescliente);
+          foreach ($data['ArticulosAvisosrepuesto'] as $articulosavisosrepuesto) {
+          if ($articulosavisosrepuesto['id'] != 0) {
+          $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->create();
+          $articulosavisosrepuesto_modelo = $this->Albaranescliente->Avisosrepuesto->ArticulosAvisosrepuesto->find('first', array('contain' => 'Articulo', 'conditions' => array('ArticulosAvisosrepuesto.id' => $articulosavisosrepuesto['id'])));
+          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['articulo_id'] = $articulosavisosrepuesto_modelo['ArticulosAvisosrepuesto']['articulo_id'];
+          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['cantidad'] = $articulosavisosrepuesto_modelo['ArticulosAvisosrepuesto']['cantidad'];
+          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['precio_unidad'] = $articulosavisosrepuesto_modelo['Articulo']['precio_sin_iva'];
+          if (empty($cliente['Cliente']['descuentos_repuestos']))
+          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['descuento'] = 0;
+          else
+          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['descuento'] = $cliente['Cliente']['descuentos_repuestos'];
+          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] = $materialesalbaranescliente['MaterialesTareasalbaranescliente']['cantidad'] * $materialesalbaranescliente['MaterialesTareasalbaranescliente']['precio_unidad'];
+          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] = $materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] - (($materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] * $materialesalbaranescliente['MaterialesTareasalbaranescliente']['descuento']) / 100);
+          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] = number_format($materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'], 5, '.', '');
+          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['tareasalbaranescliente_id'] = $this->Albaranescliente->Tareasalbaranescliente->id;
+          $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->save($materialesalbaranescliente);
+          }
+          }
+          }
+         * 
+         */
     }
 
     function facturacion() {
