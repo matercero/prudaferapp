@@ -10,7 +10,7 @@
             
                 <?php // print_r('aviso id=' . $idAviso) . '<br/>'; ?>
  
-                <?php //print_r ($centroTrabajoAvisoRep); ?>
+                <?php // print_r($clienteAvisoRep); ?>
                 <?php //print_r ($maquinaAvisoRep); ?>
 
                 <?php // print_r($albaranesproveedore); ?>
@@ -41,10 +41,15 @@
                 <td>
                     <?php if (empty($idAviso)): ?>
                         <?php
-                        echo $this->Form->input('cliente_id', array('type' => 'hidden', 'label' => False,
-                            'value' => $clienteAvisoRep['Clientes']['id']));
+                        echo $this->Form->input('cliente_id', array(
+                            'label' => False,
+                            'div' => array(
+                                'id' => 'ClienteSelectDiv',
+                            ),
+                            'class' => 'select_basico',
+                            'empty' => '--- Seleccione un cliente ---',
+                            'default'=> $idCliente ));
                         ?>
-                        <?php echo $clienteAvisoRep['Clientes']['nombre']; ?>
                     <?php else: ?>                    
                         <?php
                         echo $this->Form->input('cliente_id', array('type' => 'hidden', 'label' => False,
@@ -58,10 +63,15 @@
                 <td>
                     <?php if (empty($idAviso)): ?>
                         <?php
-                        echo $this->Form->input('centrostrabajo_id', array('type' => 'hidden',
-                            'label' => False, 'value' => $centroTrabajoAvisoRep['Centrostrabajo']['id']));
+                        echo $this->Form->input('centrostrabajo_id', array(
+                            'label' => False,
+                            'class' => 'select_basico',
+                            'div' => array(
+                                'id' => 'CentrostrabajoSelectDiv'
+                            ),
+                            'empty' => '--- Seleccione un centro de trabajo ---',
+                            'default'=> $idCentroTrabajoAvisoRep ));
                         ?>
-                        <?php echo $centroTrabajoAvisoRep['Centrostrabajo']['centrotrabajo']; ?>
                     <?php else: ?> 
                         <?php
                         echo $this->Form->input('centrostrabajo_id', array('type' => 'hidden',
@@ -75,10 +85,16 @@
                 <td>
                     <?php if (empty($idAviso)): ?>
                         <?php
-                        echo $this->Form->input('maquina_id', array('type' => 'hidden',
-                            'label' => False, 'value' => $maquinaAvisoRep['Maquinas']['id']));
+                        echo $this->Form->input('maquina_id', array(
+                            'label' => False,
+                            'class' => 'select_basico',
+                            'empty' => '--- Seleccione una máquina ---',
+                            'default'=> $idMaquinaAvisoRep,
+                            'div' => array(
+                                'id' => 'MaquinaSelectDiv'
+                            )
+                        ));
                         ?>
-                        <?php echo $maquinaAvisoRep['Maquinas']['nombre']; ?>
                     <?php else: ?> 
                         <?php
                         echo $this->Form->input('maquina_id', array('type' => 'hidden',
@@ -122,7 +138,7 @@
             </tr>
         </table>
     </fieldset>
-     <?php    $sumatorio_materiales_costo = 0;     ?>	
+    <?php $sumatorio_materiales_costo = 0; ?>	
     <div class="related">
         <h3>Tareas a realizar </h3>
         <div class="actions">
