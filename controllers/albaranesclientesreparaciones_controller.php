@@ -28,6 +28,9 @@ class AlbaranesclientesreparacionesController extends AppController {
             'Comerciale',
             'FacturasCliente',
             'Centrosdecoste',
+            'TareasAlbaranesclientesreparacione' => array(
+                'TareasAlbaranesclientesreparacionesParte' => 'Mecanico',
+                'TareasAlbaranesclientesreparacionesPartestallere' => 'Mecanico'),
         );
         $conditions = array();
 

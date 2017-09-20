@@ -60,51 +60,51 @@
                 <td><?php echo $this->Form->input('Search.articulo_id', array('label' => 'Árticulo', 'type' => 'text', 'class' => 'articulos_select', 'style' => 'width: 300px;')) ?></td>
                 <?php if (!empty($this->params['named']['articulo_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['named']['articulo_id'] ?>', function(data) {
-                            $(".articulos_select").select2("data", {
-                                'id' : data.id,
-                                'ref' : data.ref,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['named']['articulo_id'] ?>', function (data) {
+                                    $(".articulos_select").select2("data", {
+                                        'id': data.id,
+                                        'ref': data.ref,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php elseif (!empty($this->params['url']['articulo_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['url']['articulo_id'] ?>', function(data) {
-                            $(".articulos_select").select2("data", {
-                                'id' : data.id,
-                                'ref' : data.ref,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['url']['articulo_id'] ?>', function (data) {
+                                    $(".articulos_select").select2("data", {
+                                        'id': data.id,
+                                        'ref': data.ref,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php endif; ?>
             <td><?php echo $this->Form->input('Search.cliente_id', array('label' => 'Cliente', 'type' => 'text', 'class' => 'clientes_select', 'style' => 'width: 300px;')) ?></td>
             <?php if (!empty($this->params['named']['cliente_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['named']['cliente_id'] ?>', function(data) {
-                            $(".clientes_select").select2("data", {
-                                'id' : data.id,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['named']['cliente_id'] ?>', function (data) {
+                                    $(".clientes_select").select2("data", {
+                                        'id': data.id,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php elseif (!empty($this->params['url']['cliente_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['url']['cliente_id'] ?>', function(data) {
-                            $(".clientes_select").select2("data", {
-                                'id' : data.id,
-                                'nombre' : data.nombre
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['url']['cliente_id'] ?>', function (data) {
+                                    $(".clientes_select").select2("data", {
+                                        'id': data.id,
+                                        'nombre': data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php endif; ?>
             </tr>
@@ -132,7 +132,7 @@
                 <?php else: ?>
                     <td><?php echo $this->Form->input('Search.comerciale_id', array('label' => 'Comercial', 'type' => 'select', 'class' => 'select_basico', 'empty' => True, 'options' => $comerciales)) ?></td>
                 <?php endif; ?>
-                    
+
                 <?php if (!empty($this->params['named']['estadosalbaranesclientesreparacione_id'])): ?>
                     <td><?php echo $this->Form->input('Search.estadosalbaranesclientesreparacione_id', array('label' => 'Estado', 'type' => 'select', 'class' => 'select_basico', 'options' => $estadosalbaranesclientesreparaciones, 'empty' => True, 'selected' => $this->params['named']['estadosalbaranesclientesreparacione_id'])) ?></td>
                 <?php elseif (!empty($this->params['url']['estadosalbaranesclientesreparacione_id'])): ?>
@@ -169,9 +169,13 @@
     <?php
     $sumatorio_precio_mat = 0;
     $sumatorio_precio_obra = 0;
+    $sumatorio_totaldesplazamiento = 0;
+    $sumatorio_totaldietasimputables = 0;
+    $sumatorio_totalotroserviciosimputables = 0;
     $sumatorio_baseimponible = 0;
     $sumatorio_impuestos = 0;
     $sumatorio_total = 0;
+    $flagBlanco = true;
     ?>
     <table cellpadding="0" cellspacing="0">
         <tr>  
@@ -181,7 +185,10 @@
             <th><?php echo $this->Paginator->sort('cliente_id'); ?></th>
             <th><?php echo $this->Paginator->sort('observaciones'); ?></th>
             <th>Precio<br/>Mat.</th>
-            <th>Precio<br/>Obra.</th>
+            <th>Precio<br/>M.Obra</th>
+            <th>Dezplaz.</th>
+            <th>Dieta</th>
+            <th>Otros Servicios</th>            
             <th>Base<br/>Imp.</th>
             <th>Iva</th>
             <th>Total</th>
@@ -196,6 +203,10 @@
             <th class="actions"><?php __('Acciones'); ?></th>
         </tr>
         <?php
+//        echo('<pre>');
+//        var_dump($albaranesclientesreparaciones);
+//        echo('</pre>');
+
         $i = 0;
         foreach ($albaranesclientesreparaciones as $albaranesclientesreparacione):
             $class = null;
@@ -212,7 +223,62 @@
                 </td>
                 <td><span title="<?php echo $albaranesclientesreparacione['Albaranesclientesreparacione']['observaciones']; ?>"><?php echo substr($albaranesclientesreparacione['Albaranesclientesreparacione']['observaciones'], 0, 65); ?>...</span></td>
                 <td><?php echo $albaranesclientesreparacione['Albaranesclientesreparacione']['total_materiales']; ?>&nbsp;</td>
-                <td><?php echo $albaranesclientesreparacione['Albaranesclientesreparacione']['total_manoobra']; ?></td>
+
+                <?php if (!empty($albaranesclientesreparacione['TareasAlbaranesclientesreparacione'])): ?>
+                    <?php
+                    echo 'SIZE=' . sizeof($albaranesclientesreparacione['TareasAlbaranesclientesreparacione']);
+                    $sizeTareas = sizeof($albaranesclientesreparacione['TareasAlbaranesclientesreparacione']);
+                    $acumuladoHoras = 0;
+                    $acumuladoDezpl = 0;
+                    $acumuladoDieta = 0;
+                    $acumuladoServ = 0;
+                    ?>
+                    <?php foreach ($albaranesclientesreparacione['TareasAlbaranesclientesreparacione'] as $tarea): ?>
+                        <?php if ($sizeTareas >= 2) : ?>
+                            <?php
+                            $acumuladoHoras += $tarea['total_horastrabajoprecio_imputable'];
+                            if ($tarea['totaldesplazamientoimputado'] != 0) :
+                                $acumuladoDezpl += $tarea['totaldesplazamientoimputado'];
+                            else :
+                                $acumuladoDezpl += $tarea['totalpreciodesplazamiento'];
+                            endif;
+                            $acumuladoDieta += $tarea['totaldietasimputables'];
+                            $acumuladoServ += $tarea['totalotroserviciosimputables'];
+                            ?>
+                        <?php else : ?>
+                            <!-- SOLO ES DE UN TIPO. CENTRO O TALLER -->
+                            <?php if ($tarea['tipo'] == 'centro'): ?>
+                                <td><?php echo $tarea['total_horastrabajoprecio_imputable'] ?></td>
+                                <td><?php if ($tarea['totaldesplazamientoimputado'] != 0) : ?>
+                                        <?php echo $tarea['totaldesplazamientoimputado']; ?>
+                                    <?php else : ?>
+                                        <?php echo $tarea['totalpreciodesplazamiento']; ?>
+                                    <?php endif; ?>                        
+                                </td>
+                                <td><?php echo $tarea['totaldietasimputables'] ?> </td>
+                                <td><?php echo $tarea['totalotroserviciosimputables'] ?></td>
+                                <?php ?>
+                            <?php elseif ($tarea['tipo'] == 'taller'): ?>
+                                <td><?php echo $tarea['total_horastrabajoprecio_imputable'] ?></td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td><?php echo $tarea['totalotroserviciosimputables'] ?></td>
+                            <?php else : //no hace nada  ?>                            
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                                
+                    <?php if ($sizeTareas >= 2) : ?>
+                        <!-- IMPRIMIMOS POR PANTALLA  -->
+                        <td><?php echo $acumuladoHoras ?></td>
+                        <td><?php echo $acumuladoDezpl ?></td>
+                        <td><?php echo $acumuladoDieta ?></td>
+                        <td><?php echo $acumuladoServ ?></td>                            
+                    <?php endif; ?>
+                        
+                <?php endif; ?>
+
+
                 <td><?php echo $albaranesclientesreparacione['Albaranesclientesreparacione']['baseimponible']; ?></td>
                 <td><?php echo redondear_dos_decimal($albaranesclientesreparacione['Albaranesclientesreparacione']['baseimponible'] * $albaranesclientesreparacione['Tiposiva']['porcentaje_aplicable'] / 100); ?></td>
                 <td><?php echo redondear_dos_decimal($albaranesclientesreparacione['Albaranesclientesreparacione']['baseimponible'] + ($albaranesclientesreparacione['Albaranesclientesreparacione']['baseimponible'] * $albaranesclientesreparacione['Tiposiva']['porcentaje_aplicable'] / 100)); ?></td>
@@ -229,8 +295,8 @@
                     <?php echo $this->Html->link($albaranesclientesreparacione['Centrosdecoste']['denominacion'], array('controller' => 'centrosdecostes', 'action' => 'view', $albaranesclientesreparacione['Centrosdecoste']['id'])); ?>
                 </td>
                 <td class="actions">
-                     <?php echo $this->Html->link(__('Prev.', true), 
-                            array('action' => 'view', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), array( 'target' => '_blank')); ?>
+                    <?php echo $this->Html->link(__('Prev.', true), array('action' => 'view', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), array('target' => '_blank'));
+                    ?>
                     <?php echo $this->Html->link(__('Ver', true), array('action' => 'view', $albaranesclientesreparacione['Albaranesclientesreparacione']['id'])); ?>
                     <?php echo $this->Html->link(__('PDF', true), array('action' => 'pdf', $albaranesclientesreparacione['Albaranesclientesreparacione']['id'])); ?>
                     <?php echo $this->Html->link(__('Eliminar', true), array('action' => 'delete', $albaranesclientesreparacione['Albaranesclientesreparacione']['id']), array('class' => 'button_link'), sprintf(__('¿Seguro que quieres borrar el Albaran de Reparación Nº # %s?', true), $albaranesclientesreparacione['Albaranesclientesreparacione']['numero'])); ?> 
@@ -239,16 +305,26 @@
 
             <?php
             $sumatorio_precio_mat += $albaranesclientesreparacione['Albaranesclientesreparacione']['total_materiales'];
-            $sumatorio_precio_obra += $albaranesclientesreparacione['Albaranesclientesreparacione']['total_manoobra'];
+            $sumatorio_precio_obra += $tarea['total_horastrabajoprecio_imputable'];
+            if ($tarea['totaldesplazamientoimputado'] != 0) {
+                $sumatorio_totaldesplazamiento += $tarea['totaldesplazamientoimputado'];
+            } else {
+                $sumatorio_totaldesplazamiento += $tarea['totalpreciodesplazamiento'];
+            }
+            $sumatorio_totaldietasimputables += $tarea['totaldietasimputables'];
+            $sumatorio_totalotroserviciosimputables += $tarea['totalotroserviciosimputables'];
             $sumatorio_baseimponible += $albaranesclientesreparacione['Albaranesclientesreparacione']['baseimponible'];
             $sumatorio_impuestos += redondear_dos_decimal($albaranesclientesreparacione['Albaranesclientesreparacione']['baseimponible'] * $albaranesclientesreparacione['Tiposiva']['porcentaje_aplicable'] / 100);
             $sumatorio_total += redondear_dos_decimal($albaranesclientesreparacione['Albaranesclientesreparacione']['baseimponible'] + ($albaranesclientesreparacione['Albaranesclientesreparacione']['baseimponible'] * $albaranesclientesreparacione['Tiposiva']['porcentaje_aplicable'] / 100));
             ?>
-<?php endforeach; ?>
+        <?php endforeach; ?>
         <tr class="totales_pagina">
             <td colspan="5">TOTALES</td>
             <td><?php echo redondear_dos_decimal($sumatorio_precio_mat) ?></td>
             <td><?php echo redondear_dos_decimal($sumatorio_precio_obra) ?></td>
+            <td><?php echo redondear_dos_decimal($sumatorio_totaldesplazamiento) ?></td>
+            <td><?php echo redondear_dos_decimal($sumatorio_totaldietasimputables) ?></td>
+            <td><?php echo redondear_dos_decimal($sumatorio_totalotroserviciosimputables) ?></td>            
             <td><?php echo redondear_dos_decimal($sumatorio_baseimponible) ?></td>
             <td><?php echo redondear_dos_decimal($sumatorio_impuestos) ?></td>
             <td><?php echo redondear_dos_decimal($sumatorio_total) ?></td>
@@ -266,6 +342,6 @@
         <?php echo $this->Paginator->prev('<< ' . __('anterior', true), array(), null, array('class' => 'disabled')); ?>
         | 	<?php echo $this->Paginator->numbers(); ?>
         |
-<?php echo $this->Paginator->next(__('siguiente', true) . ' >>', array(), null, array('class' => 'disabled')); ?>
+        <?php echo $this->Paginator->next(__('siguiente', true) . ' >>', array(), null, array('class' => 'disabled')); ?>
     </div>
 </div>
