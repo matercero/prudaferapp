@@ -569,9 +569,8 @@ class FacturasClientesController extends AppController {
             $this->flashWarnings(__('No has realizado la facturación', true));
             $this->redirect($this->referer());
         }
-
-
-
+        
+        // Configuración del servidor de correo 
         $this->Email->smtpOptions = array(
             'port' => '25',
             'timeout' => '30',
@@ -582,19 +581,32 @@ class FacturasClientesController extends AppController {
         // Configurar método de entrega
         $this->Email->delivery = 'smtp';
         $this->Email->from = 'prueba@talleresdafer.com';
-        $this->Email->to = 'matercero@gmail.com';
-       // $this->Email->replyTo = '';
-        $this->Email->subject = 'Asunto X ';
+        // admin@talleresdafer.com Antonio
+        // $this->Email->to = array('matercero@gmail.com', 'repuesto2@talleresdafer.com');
+        //  $this->Email->to = 'matercero@gmail.com';
+        // $this->Email->replyTo = '';
+        $this->Email->subject = 'Prueba envio factura';
         $this->Email->template = 'default'; // NOTAR QUE NO HAY '.ctp'
         $this->Email->sendAs = 'both';
+        $mensajeBody = 'Prueba del cuerpo del mensaje.';
 
 
-        if (!empty($this->data)) {
+        $resumenResultado = '';        
+        $path = '../webroot/files/facturaEmails/' ;
+        
+        foreach ($this->data['FacturasCliente']['ids'] as $factura_id) {
+            // echo $factura_id . " | ";
 
-            $this->layout = 'pdf';
-            foreach ($this->data['FacturasCliente']['ids'] as $factura_id) {
-                //se gauardan los datos a facturar
-                $facturasClientes[] = $this->FacturasCliente->find(
+            $nombre_fichero = 'factura_' . $factura_id . '.pdf';
+            // Path de la factura a adjuntar
+            $pathFactura = $path . $nombre_fichero;
+
+            // echo $pathFactura . " | <br/>";
+            if (file_exists($pathFactura)) {
+                $resumenResultado .= "<h1 style='color:green'><br/>La factura $nombre_fichero EXISTE.</h1>";
+
+                // Recuperamos los datos de facturaCliente
+                $facturasCliente = $this->FacturasCliente->find(
                         'first', array(
                     'contain' => array(
                         'Estadosfacturascliente',
@@ -636,91 +648,97 @@ class FacturasClientesController extends AppController {
                     'conditions' => array('FacturasCliente.id' => $factura_id)
                         )
                 );
-            }
-            $this->set('facturasClientes', $facturasClientes);
 
-            foreach ($this->$facturasClientes as $key) {
+//               echo '<pre>';
+//                var_dump($facturasCliente['Cliente']['email']);
+//                echo '</pre>';
+//                
+                // PARA (a quien se envia).Dirección a la que se dirige el mensaje (string)          
+                //  $this->Email->to = $facturasCliente['Cliente']['email'];
+                // $resumenResultado .= "Enviado a = " . $facturasCliente['Cliente']['email'];
                 
+                /* Mas configuracion 
+                 * 
+                 * cc -> arreglo de direcciones a enviar copias del mensaje (CC)
+                 * bcc -> arreglo de direcciones a enviar las copias ocultas del mensaje (CCO)
+                 * replyTo -> dirección de respuesta(string)
+                 * from -> dirección remitente (string)
+                 * subject -> asunto del mensaje (string)
+                 */
+
+                $this->Email->to = 'matercero@gmail.com';
+                $resumenResultado .= "Enviado a = matercero@gmail.com ";
+
+                // Adjunto
+                $this->Email->attachments = array(
+                    'Factura.pdf' => $pathFactura);
+
+                $this->Email->send($mensajeBody);
+                $this->set('smtperrors', $this->Email->smtpError);
+
+                $resumenResultado .= " CON ÉXITO. ";
+                
+                //TODO actualizar el estado de la factura cliente 
+                
+            } else {
+                $resumenResultado .= "<h1 style='color:red'>No existe factura para enviar. La factura $nombre_fichero NO existe.</h1>";
             }
-        }
+        } // Foreach
+     
+        $this->set('resumenResultado', $resumenResultado);
+    }
+    
+      function facturaPdfDisco($factura_id) {
+        Configure::write('debug', 1);
+        $this->layout = 'factura_Pdf_Disco';
 
-        /*
+       // echo 'pdf_1 con id ' . $factura_id . '<br/>';
 
-          $this->Email->smtpOptions = array(
-          'port' => '25',
-          'timeout' => '30',
-          'host' => 'mail.talleresdafer.com',
-          'username' => 'prueba@talleresdafer.com',
-          'password' => 'Prueba.dafer*+');
-
-          // Configurar método de entrega
-          $this->Email->delivery = 'smtp';
-          $this->Email->from = 'prueba@talleresdafer.com';
-          $this->Email->to = 'matercero@gmail.com';
-          $this->Email->replyTo = 'pepea23@yahoo.es';
-          $this->Email->subject = 'asunto PRUEBA ';
-          $this->Email->template = 'default'; // NOTAR QUE NO HAY '.ctp'
-          $this->Email->sendAs = 'both';
-
-          $this->Email->attachments = array(
-          'Factura.pdf' => $this->imprimircarta(1)
-          );
-
-          $this->Email->send();
-          $this->set('smtperrors', $this->Email->smtpError);
-         * 
-         */
-
-        $id = 35421;
-        $this->layout = 'pdf';
-        if (!$id) {
-            $this->flashWarnings(__('Factura Inválida', true));
-            $this->redirect($this->referer());
-        }
-        $this->set('facturasCliente', $this->FacturasCliente->find(
-                        'first', array(
-                    'contain' => array(
-                        'Estadosfacturascliente',
-                        'Cliente' => array('Formapago', 'Cuentasbancaria'),
-                        'Albaranescliente' => array(
-                            'FacturasCliente' => 'Cliente',
-                            'Estadosalbaranescliente',
-                            'Maquina',
-                            'Tiposiva',
-                            'Comerciale',
-                            'Centrosdecoste',
-                            'Almacene',
-                            'Cliente' => 'Formapago',
-                            'Centrostrabajo',
-                            'Pedidoscliente' => array(
-                                'Presupuestoscliente' => 'Cliente'),
-                            'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina'),
-                            'Tareasalbaranescliente' => array('MaterialesTareasalbaranescliente' => 'Articulo', 'ManodeobrasTareasalbaranescliente', 'TareasalbaranesclientesOtrosservicio'), 'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina')),
-                        'Albaranesclientesreparacione' => array(
-                            'Estadosalbaranesclientesreparacione',
-                            'TareasAlbaranesclientesreparacione' => array(
-                                'TareasAlbaranesclientesreparacionesParte' => 'Mecanico',
-                                'TareasAlbaranesclientesreparacionesPartestallere' => 'Mecanico',
-                                'ArticulosTareasAlbaranesclientesreparacione' => 'Articulo'),
-                            'Ordene' => array(
-                                'Centrostrabajo',
-                                'Cliente',
-                                'Avisostallere' => array('Centrostrabajo', 'Cliente')),
-                            'Centrosdecoste',
-                            'Comerciale',
-                            'Almacene',
-                            'Maquina',
-                            'FacturasCliente' => 'Cliente',
-                            'Cliente' => 'Formapago',
-                            'Centrostrabajo',
-                            'Tiposiva'
-                        )
-                    ),
-                    'conditions' => array('FacturasCliente.id' => $id)
-                        )
+        $facturasCliente = $this->FacturasCliente->find(
+                'first', array(
+            'contain' => array(
+                'Estadosfacturascliente',
+                'Cliente' => array('Formapago', 'Cuentasbancaria'),
+                'Albaranescliente' => array(
+                    'FacturasCliente' => 'Cliente',
+                    'Estadosalbaranescliente',
+                    'Maquina',
+                    'Tiposiva',
+                    'Comerciale',
+                    'Centrosdecoste',
+                    'Almacene',
+                    'Cliente' => 'Formapago',
+                    'Centrostrabajo',
+                    'Pedidoscliente' => array(
+                        'Presupuestoscliente' => 'Cliente'),
+                    'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina'),
+                    'Tareasalbaranescliente' => array('MaterialesTareasalbaranescliente' => 'Articulo', 'ManodeobrasTareasalbaranescliente', 'TareasalbaranesclientesOtrosservicio'), 'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina')),
+                'Albaranesclientesreparacione' => array(
+                    'Estadosalbaranesclientesreparacione',
+                    'TareasAlbaranesclientesreparacione' => array(
+                        'TareasAlbaranesclientesreparacionesParte' => 'Mecanico',
+                        'TareasAlbaranesclientesreparacionesPartestallere' => 'Mecanico',
+                        'ArticulosTareasAlbaranesclientesreparacione' => 'Articulo'),
+                    'Ordene' => array(
+                        'Centrostrabajo',
+                        'Cliente',
+                        'Avisostallere' => array('Centrostrabajo', 'Cliente')),
+                    'Centrosdecoste',
+                    'Comerciale',
+                    'Almacene',
+                    'Maquina',
+                    'FacturasCliente' => 'Cliente',
+                    'Cliente' => 'Formapago',
+                    'Centrostrabajo',
+                    'Tiposiva'
+                )
+            ),
+            'conditions' => array('FacturasCliente.id' => $factura_id)
                 )
         );
-        $this->render();
+        $this->loadModel('Config');
+        $this->set('config', $this->Config->read(null, 1));
+        $this->set('facturasCliente', $facturasCliente);
     }
 
 }
