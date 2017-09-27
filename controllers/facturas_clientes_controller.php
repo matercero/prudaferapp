@@ -124,6 +124,13 @@ class FacturasClientesController extends AppController {
             ));
         }
 
+        if (!empty($this->params['url']['estadosfacturascliente_id']))
+            $conditions [] = array('1' => '1 AND FacturasCliente.estadosfacturascliente_id = "' . $this->params['url']['estadosfacturascliente_id'] . '"');
+        if (!empty($this->params['named']['estadosfacturascliente_id']))
+            $conditions [] = array('1' => '1 AND FacturasCliente.estadosfacturascliente_id = "' . $this->params['named']['estadosfacturascliente_id'] . '"');
+
+
+
         /*         * Fin albaranes buscador */
 
         $paginate_results_per_page = 20;
@@ -143,6 +150,8 @@ class FacturasClientesController extends AppController {
             $this->layout = 'pdf';
             $this->render('/facturas_clientes/pdfFilter');
         }
+
+        $this->set('estadosfacturasclientes', $this->FacturasCliente->Estadosfacturascliente->find('list'));
     }
 
     function view($id = null) {
@@ -569,7 +578,7 @@ class FacturasClientesController extends AppController {
             $this->flashWarnings(__('No has realizado la facturación', true));
             $this->redirect($this->referer());
         }
-        
+
         // Configuración del servidor de correo 
         $this->Email->smtpOptions = array(
             'port' => '25',
@@ -577,6 +586,15 @@ class FacturasClientesController extends AppController {
             'host' => 'mail.talleresdafer.com',
             'username' => 'prueba@talleresdafer.com',
             'password' => 'Prueba.dafer*+');
+
+        /* Mas configuracion 
+         * 
+         * cc -> arreglo de direcciones a enviar copias del mensaje (CC)
+         * bcc -> arreglo de direcciones a enviar las copias ocultas del mensaje (CCO)
+         * replyTo -> dirección de respuesta(string)
+         * from -> dirección remitente (string)
+         * subject -> asunto del mensaje (string)
+         */
 
         // Configurar método de entrega
         $this->Email->delivery = 'smtp';
@@ -591,9 +609,9 @@ class FacturasClientesController extends AppController {
         $mensajeBody = 'Prueba del cuerpo del mensaje.';
 
 
-        $resumenResultado = '';        
-        $path = '../webroot/files/facturaEmails/' ;
-        
+        $resumenResultado = '';
+        $path = '../webroot/files/facturaEmails/';
+
         foreach ($this->data['FacturasCliente']['ids'] as $factura_id) {
             // echo $factura_id . " | ";
 
@@ -656,15 +674,7 @@ class FacturasClientesController extends AppController {
                 // PARA (a quien se envia).Dirección a la que se dirige el mensaje (string)          
                 //  $this->Email->to = $facturasCliente['Cliente']['email'];
                 // $resumenResultado .= "Enviado a = " . $facturasCliente['Cliente']['email'];
-                
-                /* Mas configuracion 
-                 * 
-                 * cc -> arreglo de direcciones a enviar copias del mensaje (CC)
-                 * bcc -> arreglo de direcciones a enviar las copias ocultas del mensaje (CCO)
-                 * replyTo -> dirección de respuesta(string)
-                 * from -> dirección remitente (string)
-                 * subject -> asunto del mensaje (string)
-                 */
+
 
                 $this->Email->to = 'matercero@gmail.com';
                 $resumenResultado .= "Enviado a = matercero@gmail.com ";
@@ -677,22 +687,22 @@ class FacturasClientesController extends AppController {
                 $this->set('smtperrors', $this->Email->smtpError);
 
                 $resumenResultado .= " CON ÉXITO. ";
-                
+
                 //TODO actualizar el estado de la factura cliente 
                 
             } else {
                 $resumenResultado .= "<h1 style='color:red'>No existe factura para enviar. La factura $nombre_fichero NO existe.</h1>";
             }
         } // Foreach
-     
+
         $this->set('resumenResultado', $resumenResultado);
     }
-    
-      function facturaPdfDisco($factura_id) {
+
+    function facturaPdfDisco($factura_id) {
         Configure::write('debug', 1);
         $this->layout = 'factura_Pdf_Disco';
 
-       // echo 'pdf_1 con id ' . $factura_id . '<br/>';
+        // echo 'pdf_1 con id ' . $factura_id . '<br/>';
 
         $facturasCliente = $this->FacturasCliente->find(
                 'first', array(

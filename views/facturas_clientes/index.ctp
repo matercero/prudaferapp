@@ -43,22 +43,22 @@
                 <td><?php echo $this->Form->input('Search.cliente_id', array('label' => 'Cliente', 'type' => 'text', 'class' => 'clientes_select', 'style' => 'width:250px;')) ?></td>
                 <?php if (!empty($this->params['named']['cliente_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['named']['cliente_id'] ?>', function(data) {
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['named']['cliente_id'] ?>', function (data) {
                                     $(".clientes_select").select2("data", {
-                                'id' : data.id,
-                                'nombre' : data.nombre
+                                        'id': data.id,
+                                        'nombre': data.nombre
                                     });
                                 });
                             });
                 </script>
             <?php elseif (!empty($this->params['url']['cliente_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['url']['cliente_id'] ?>', function(data) {
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['url']['cliente_id'] ?>', function (data) {
                                     $(".clientes_select").select2("data", {
-                                'id' : data.id,
-                                'nombre' : data.nombre
+                                        'id': data.id,
+                                        'nombre': data.nombre
                                     });
                                 });
                             });
@@ -150,6 +150,10 @@
                 <?php else: ?>
                     <td><?php echo $this->Form->input('Search.modoEnvFac', array('label' => 'Modo envio Factura', 'options' => array('direccionpostal' => 'direccionpostal', 'direccionfiscal' => 'direccionfiscal', 'email' => 'email'), 'empty' => '')); ?></td>
                 <?php endif; ?>
+                    
+                <td>
+                    <?php echo $this->Form->input('estadosfacturascliente_id', array('label' => 'Estado Factura')); ?>
+                </td>
             </tr>
         </table>
         <?php echo $this->Form->button('Nueva Búsqueda', array('type' => 'reset', 'class' => 'button_css_green')); ?>
@@ -227,7 +231,7 @@
                     <?php elseif ($facturasCliente['Cliente']['modoenviofactura'] == 'email') : ?>
                         <?php echo '<span style="color: green;font-size:smaller">' . $facturasCliente['Cliente']['email'] . '</span>'; ?>
                         <?php
-                        $path = '../webroot/files/facturaEmails/factura_' . $facturasCliente['FacturasCliente']['id'] . '.pdf';                      
+                        $path = '../webroot/files/facturaEmails/factura_' . $facturasCliente['FacturasCliente']['id'] . '.pdf';
                         if (file_exists($path)) {
                             echo '<span style="color: orange;font-size:smaller">Existe Fcta. en disco</span>';
                         } endif;
@@ -238,7 +242,7 @@
                         <?php echo $this->Form->checkbox('FacturasClienteIds', array('name' => 'data[FacturasCliente][ids][]', 'value' => $facturasCliente['FacturasCliente']['id'], 'checked' => True, 'hiddenField' => False)); ?>
                     <?php else: ?>
                         <?php echo $this->Form->checkbox('FacturasClienteIds', array('name' => 'data[FacturasCliente][ids][]', 'value' => $facturasCliente['FacturasCliente']['id'], 'checked' => False, 'hiddenField' => False)); ?>
-    <?php endif; ?>
+                    <?php endif; ?>
                 </td>
                 <td><?php echo $facturasCliente['FacturasCliente']['pago'] == 0 ? '<span style="color: red">PENDIENTE</span>' : '<span style="color: green">PAGADA</span>'; ?>&nbsp;</td>
                 <td class="actions">
@@ -249,9 +253,9 @@
                     <?php echo $this->Html->link(__('Pdf.Compl', true), array('action' => 'imprimirtotal', $facturasCliente['FacturasCliente']['id'])); ?>
                     <?php echo $this->Html->link(__('Imp.carta', true), array('action' => 'imprimircarta', $facturasCliente['FacturasCliente']['id'])); ?>            
                     <?php if ($facturasCliente['Cliente']['modoenviofactura'] == 'email') : ?>
-                        <?php echo $this->Html->link(__('Generar Fact. Disco', true), 
-                                array('action' => 'facturaPdfDisco', $facturasCliente['FacturasCliente']['id']),
-                                array('style' => 'color:blue', 'target' => '_blank')); ?>
+                        <?php
+                        echo $this->Html->link(__('Generar Fact. Disco', true), array('action' => 'facturaPdfDisco', $facturasCliente['FacturasCliente']['id']), array('style' => 'color:blue', 'target' => '_blank'));
+                        ?>
                     <?php endif; ?>
                 </td>
             </tr>
@@ -262,7 +266,7 @@
             $sumatorio_Comp_21 += redondear_dos_decimal($facturasCliente['FacturasCliente']['baseimponible'] * 21 / 100);
             $sumatorio_total += redondear_dos_decimal($facturasCliente['FacturasCliente']['total']);
             ?>
-<?php endforeach; ?>
+        <?php endforeach; ?>
         <tr class="totales_pagina">
             <td colspan="5">TOTALES</td>
             <td><?php echo redondear_dos_decimal($sumatorio_baseimponible) ?></td>
@@ -277,7 +281,7 @@
         <?php echo $this->Form->end('Enviar Facturas por Email'); ?> 
     <?php else : ?>
         <?php echo $this->Form->end('Imprimir Facturación'); ?> 
-        <?php endif; ?>
+    <?php endif; ?>
     <p>
         <?php
         echo $this->Paginator->counter(array(
@@ -286,9 +290,9 @@
         ?>	</p>
 
     <div class="paging">
-<?php echo $this->Paginator->prev('<< ' . __('Anterior', true), array(), null, array('class' => 'disabled')); ?>
+        <?php echo $this->Paginator->prev('<< ' . __('Anterior', true), array(), null, array('class' => 'disabled')); ?>
         | 	<?php echo $this->Paginator->numbers(); ?>
         |
-<?php echo $this->Paginator->next(__('Siguiente', true) . ' >>', array(), null, array('class' => 'disabled')); ?>
+        <?php echo $this->Paginator->next(__('Siguiente', true) . ' >>', array(), null, array('class' => 'disabled')); ?>
     </div>
 </div>
