@@ -621,8 +621,7 @@ class FacturasClientesController extends AppController {
 
             // echo $pathFactura . " | <br/>";
             if (file_exists($pathFactura)) {
-                $resumenResultado .= "<h1 style='color:green'><br/>La factura $nombre_fichero EXISTE.</h1>";
-
+                //  $resumenResultado .= "<h1 style='color:green'><br/>La factura $nombre_fichero EXISTE.</h1>";
                 // Recuperamos los datos de facturaCliente
                 $facturasCliente = $this->FacturasCliente->find(
                         'first', array(
@@ -667,9 +666,9 @@ class FacturasClientesController extends AppController {
                         )
                 );
 
-//               echo '<pre>';
-//                var_dump($facturasCliente['Cliente']['email']);
-//                echo '</pre>';
+                echo '<pre>';
+                var_dump($facturasCliente);
+                echo '</pre>';
 //                
                 // PARA (a quien se envia).Dirección a la que se dirige el mensaje (string)          
                 //  $this->Email->to = $facturasCliente['Cliente']['email'];
@@ -689,6 +688,8 @@ class FacturasClientesController extends AppController {
                 $resumenResultado .= " CON ÉXITO. ";
 
                 //TODO actualizar el estado de la factura cliente 
+                $this->FacturasCliente->id = $factura_id;
+                $this->FacturasCliente->saveField('emailEnviado', 1);
                 
             } else {
                 $resumenResultado .= "<h1 style='color:red'>No existe factura para enviar. La factura $nombre_fichero NO existe.</h1>";

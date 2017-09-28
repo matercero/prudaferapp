@@ -150,7 +150,7 @@
                 <?php else: ?>
                     <td><?php echo $this->Form->input('Search.modoEnvFac', array('label' => 'Modo envio Factura', 'options' => array('direccionpostal' => 'direccionpostal', 'direccionfiscal' => 'direccionfiscal', 'email' => 'email'), 'empty' => '')); ?></td>
                 <?php endif; ?>
-                    
+
                 <td>
                     <?php echo $this->Form->input('estadosfacturascliente_id', array('label' => 'Estado Factura')); ?>
                 </td>
@@ -201,7 +201,10 @@
             <th><?php echo $this->Paginator->sort('Estado', 'estadosfacturascliente_id'); ?></th>
             <th><?php echo $this->Paginator->sort('Modo envío Fcta.', 'Cliente.modoenviofactura'); ?></th>
             <th><?php echo __('Imp.'); ?></th> 
-            <th><?php echo $this->Paginator->sort('Pago', 'pago'); ?></th>                 
+            <th><?php echo $this->Paginator->sort('Pago', 'pago'); ?></th>
+            <?php if ($is_email) : ?>
+                <th><?php echo __('Email enviado'); ?></th>                 
+            <?php endif; ?>
             <th class="actions"><div align="center"><?php __('Acciones'); ?></th>
         </tr>
         <?php
@@ -245,6 +248,10 @@
                     <?php endif; ?>
                 </td>
                 <td><?php echo $facturasCliente['FacturasCliente']['pago'] == 0 ? '<span style="color: red">PENDIENTE</span>' : '<span style="color: green">PAGADA</span>'; ?>&nbsp;</td>
+                <?php if ($is_email) : ?>
+                    <td><?php echo $facturasCliente['FacturasCliente']['emailEnviado'] == 0 ? '<span style="color: red">No</span>' : '<span style="color: green">Si</span>'; ?>&nbsp;</td>
+                <?php endif; ?>
+
                 <td class="actions">
                     <?php echo $html->link(__('Editar', true), array('action' => 'edit', $facturasCliente['FacturasCliente']['id'])); ?>
                     <?php echo $this->Html->link(__('Ver', true), array('action' => 'view', $facturasCliente['FacturasCliente']['id'])); ?>
