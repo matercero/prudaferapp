@@ -265,7 +265,9 @@ class AlbaranesclientesController extends AppController {
                     $idCliente = $albaranesproveedore['Pedidosproveedore']['Presupuestosproveedore']['Avisosrepuesto']['Cliente']['id'];
                     $clienteAvisoRep = $albaranesproveedore['Pedidosproveedore']['Presupuestosproveedore']['Avisosrepuesto'];
                     $centroTrabajoAvisoRep = $albaranesproveedore['Pedidosproveedore']['Presupuestosproveedore']['Avisosrepuesto']['Centrostrabajo'];
+                    $idCentroTrabajoAvisoRep = $centroTrabajoAvisoRep['id'];
                     $maquinaAvisoRep = $albaranesproveedore['Pedidosproveedore']['Presupuestosproveedore']['Avisosrepuesto']['Maquina'];
+                    $idMaquinaAvisoRep = $maquinaAvisoRep['id'];
                 } else {
                     echo "NO aviso";
                     //No hay aviso de repuesto, seleccionamos cliente(contado), centro de trabajo(contado) y maquina por defecto(almacen)
@@ -273,19 +275,18 @@ class AlbaranesclientesController extends AppController {
                     $clienteAvisoRep = $this->Clientes->find('first', array('conditions' => ['nombre' => 'cliente contado']));
                     $idCliente = $clienteAvisoRep['Clientes']['id'];
                     $clientes = $this->Albaranescliente->Cliente->find('list');
-                     
+
                     $this->loadModel('Centrostrabajo');
                     $centroTrabajoAvisoRep = $this->Centrostrabajo->find('first', array('conditions' => ['centrotrabajo' => 'contado']));
                     $idCentroTrabajoAvisoRep = $centroTrabajoAvisoRep['Centrostrabajo']['id'];
-                    $centrostrabajos = $this->Albaranescliente->Centrostrabajo->find('list', 
-                            array('conditions' => array('Centrostrabajo.cliente_id' => $idCliente)));
+                    $centrostrabajos = $this->Albaranescliente->Centrostrabajo->find('list', array('conditions' => array('Centrostrabajo.cliente_id' => $idCliente)));
 
                     $this->loadModel('Maquinas');
                     $maquinaAvisoRep = $this->Maquinas->find('first', array('conditions' => ['nombre' => 'ALMACEN']));
                     $idMaquinaAvisoRep = $maquinaAvisoRep['Maquinas']['id'];
-                    $maquinas = $this->Albaranescliente->Maquina->find('list',
-                            array('conditions' => array('Maquina.centrostrabajo_id' => $idCentroTrabajoAvisoRep)));
+                    $maquinas = $this->Albaranescliente->Maquina->find('list', array('conditions' => array('Maquina.centrostrabajo_id' => $idCentroTrabajoAvisoRep)));
                 }
+
 
                 // SAVE alb cliente               
                 $this->loadModel('Albaranescliente');
@@ -299,8 +300,12 @@ class AlbaranesclientesController extends AppController {
                     $this->Albaranescliente->saveField('maquina_id', $idMaquinaAvisoRep);
                     $this->Albaranescliente->saveField('fecha', date("Y-m-d"));
                     $this->Albaranescliente->saveField('serie', $albaranesproveedore['Albaranesproveedore']['serie']);
+                    
+                    $this->loadModel('Config');
+                    $config1 = $this->Config->data;
+                    $this->Albaranescliente->saveField('tiposiva_id', $config1['Config']['tiposiva_id'] );
                 } else {
-                    echo '  NO save';
+                    echo '  NO save ';   
                 }
 
                 // Add la tarea y los materiales al alb cliente
@@ -321,9 +326,10 @@ class AlbaranesclientesController extends AppController {
                             $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->create();
                             $articulo_id = $articulo['ArticulosAlbaranesproveedore']['articulo_id'];
                             $cantidad = $articulo['ArticulosAlbaranesproveedore']['cantidad'];
+                            $precio = $articulo['ArticulosAlbaranesproveedore']['precio_proveedor'];
                             $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->query('INSERT INTO materiales_tareasalbaranesclientes '
-                                    . '(id, articulo_id, tareasalbaranescliente_id, cantidad) '
-                                    . 'VALUES (NULL, ' . $articulo_id . ', ' . $idTarea . ', ' . $cantidad . ')');
+                                    . '(id, articulo_id, tareasalbaranescliente_id, cantidad, 	precio_unidad) '
+                                    . 'VALUES (NULL, ' . $articulo_id . ', ' . $idTarea . ', ' . $cantidad . ', ' . $precio. ')');
 
                             // debug($this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->validationErrors); //show validationErrors
                             // echo var_dump($this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->invalidFields());
@@ -348,8 +354,10 @@ class AlbaranesclientesController extends AppController {
                             'ManodeobrasTareasalbaranescliente', 'TareasalbaranesclientesOtrosservicio'),
                         'Avisosrepuesto' => array('Cliente', 'Centrostrabajo', 'Maquina')),
                     'conditions' => array('Albaranescliente.id' => $this->Albaranescliente->id)));
+
                 $totalmanoobrayservicios = 0;
                 $totalrepuestos = 0;
+
                 foreach ($albaranescliente['Tareasalbaranescliente'] as $tarea) {
                     $totalmanoobrayservicios += $tarea['mano_de_obra'] + $tarea['servicios'];
                     $totalrepuestos += $tarea['materiales'];
@@ -357,7 +365,6 @@ class AlbaranesclientesController extends AppController {
                 $this->set('totalrepuestos', $totalrepuestos);
                 $this->set('totalmanoobrayservicios', $totalmanoobrayservicios);
                 $this->set('albaranescliente', $albaranescliente);
-
 
                 $this->set(compact('centrostrabajos', 'maquinas'));
                 $this->set(compact('idCliente', 'idCentroTrabajoAvisoRep', 'idMaquinaAvisoRep'));

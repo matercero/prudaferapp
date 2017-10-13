@@ -121,7 +121,7 @@
                 <td><span><?php __('Centro de Coste') ?></span></td>
                 <td><?php echo $this->Form->input('centrosdecoste_id', array('label' => False)); ?></td>
                 <td><span><?php __('Tipo de IVA Aplicado') ?></span></td>
-                <td><?php echo $this->Form->input('tiposiva_id', array('label' => False)); ?></td>
+                <td><?php echo $this->Form->input('tiposiva_id', array('label' => False, 'selected' => $albaranescliente['Albaranescliente']['tiposiva_id'] )); ?></td>
                 <td><span><?php __('Facturable'); ?></span></td>
                 <td><?php echo $this->Form->input('facturable', array('label' => False, 'checked' => true)); ?></td>
             </tr>
