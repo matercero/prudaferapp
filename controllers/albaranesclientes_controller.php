@@ -300,12 +300,12 @@ class AlbaranesclientesController extends AppController {
                     $this->Albaranescliente->saveField('maquina_id', $idMaquinaAvisoRep);
                     $this->Albaranescliente->saveField('fecha', date("Y-m-d"));
                     $this->Albaranescliente->saveField('serie', $albaranesproveedore['Albaranesproveedore']['serie']);
-                    
+
                     $this->loadModel('Config');
-                    $config1 = $this->Config->data;
-                    $this->Albaranescliente->saveField('tiposiva_id', $config1['Config']['tiposiva_id'] );
+                    $conf = $this->Config->data;
+                    $this->Albaranescliente->saveField('tiposiva_id', $conf['Config']['tiposiva_id']);
                 } else {
-                    echo '  NO save ';   
+                    echo '  NO save ';
                 }
 
                 // Add la tarea y los materiales al alb cliente
@@ -324,18 +324,37 @@ class AlbaranesclientesController extends AppController {
 
                         foreach ($articulos_albaranesproveedore as $articulo) {
                             $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->create();
-                            $articulo_id = $articulo['ArticulosAlbaranesproveedore']['articulo_id'];
-                            $cantidad = $articulo['ArticulosAlbaranesproveedore']['cantidad'];
-                            $precio = $articulo['ArticulosAlbaranesproveedore']['precio_proveedor'];
-                            $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->query('INSERT INTO materiales_tareasalbaranesclientes '
-                                    . '(id, articulo_id, tareasalbaranescliente_id, cantidad, 	precio_unidad) '
-                                    . 'VALUES (NULL, ' . $articulo_id . ', ' . $idTarea . ', ' . $cantidad . ', ' . $precio. ')');
+                            $matTarAlbCli = array();
 
-                            // debug($this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->validationErrors); //show validationErrors
-                            // echo var_dump($this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->invalidFields());
+                            $articulo_id = $articulo['ArticulosAlbaranesproveedore']['articulo_id'];
+                            //echo '|artID=' . $articulo_id . '|';
+                            $matTarAlbCli['MaterialesTareasalbaranescliente']['articulo_id'] = $articulo_id;
+
+                            $matTarAlbCli['MaterialesTareasalbaranescliente']['tareasalbaranescliente_id'] = $idTarea;
+
+                            $cantidad = $articulo['ArticulosAlbaranesproveedore']['cantidad'];
+                            $matTarAlbCli['MaterialesTareasalbaranescliente']['cantidad'] = $cantidad;
+
+
+                            //Hay que obtener el PVP (precio_sin_iva) del articulo (tb articulo)
+                            $this->loadModel('Articulo');
+                            $articuloPvp = $this->Articulo->find('first', array('contain' =>
+                                array('Almacene', 'Familia', 'Proveedore',
+                                    'Referido' => array('Articulo_referido' =>
+                                        array('Proveedore', 'Almacene'))),
+                                'conditions' => array('Articulo.id' => $articulo_id)));
+
+                            $precio = $articuloPvp['Articulo']['precio_sin_iva'];
+                            $matTarAlbCli['MaterialesTareasalbaranescliente']['precio_unidad'] = $precio;
+                            $matTarAlbCli['MaterialesTareasalbaranescliente']['importe'] = $cantidad * $precio;
+
+                            if ($this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->save($matTarAlbCli, array('validate' => FALSE))) {
+                           //     echo"SAVE";
+                            } 
                         }
                     }
-                }
+                } 
+                
                 $albaranescliente = $this->Albaranescliente->find('first', array(
                     'contain' => array(
                         'FacturasCliente' => 'Cliente',

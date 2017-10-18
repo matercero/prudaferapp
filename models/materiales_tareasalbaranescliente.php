@@ -23,7 +23,7 @@ class MaterialesTareasalbaranescliente extends AppModel {
         )
     );
 
-   function afterSave($created) {
+    function afterSave($created) {
         $materiale = $this->findById($this->id);
         $tarea = $this->Tareasalbaranescliente->find('first', array('contain' => 'MaterialesTareasalbaranescliente', 'conditions' => array('Tareasalbaranescliente.id' => $materiale['MaterialesTareasalbaranescliente']['tareasalbaranescliente_id'])));
         $materiales_total = 0;
@@ -48,6 +48,12 @@ class MaterialesTareasalbaranescliente extends AppModel {
     }
 
     function beforeSave($options) {
+        //Si no queremos validar,
+        //Por ejemplo, cuando creamos materiales desde un alb. de proveedor a alb. cliente.
+        if (!$options['validate']) {
+            return TRUE;
+        }
+        
         /* Las existencias del Articulo original deben disminuir o aumentar */
         if (!empty($this->data['MaterialesTareasalbaranescliente']['id'])) {
             /* Estamos modificando */

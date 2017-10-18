@@ -2,22 +2,11 @@
     <?php echo $this->Form->create('Albaranescliente', array('type' => 'file')); ?>
     <fieldset>
         <legend><?php
-            __('Nuevo Albaran de Cliente proveniente del albaran de proveedor ' .
+            __('Nuevo Albaran de Cliente proveniente del Albaran de Proveedor ' .
                     $albaranesproveedore['Albaranesproveedore']['numero']);
             ?></legend>
         <table class="view">
-            <pre>
             
-                <?php // print_r('aviso id=' . $idAviso) . '<br/>'; ?>
- 
-                <?php // print_r($clienteAvisoRep); ?>
-                <?php //print_r ($maquinaAvisoRep); ?>
-
-                <?php // print_r($albaranesproveedore); ?>
-                <?php // print_r($albaranescliente); ?>
-               
-
-            </pre>
             <tr>
                 <td><span>Serie</span></td>
                 <td><?php
@@ -284,7 +273,11 @@
 
 
 </fieldset>
-<?php echo $this->Form->end(__('Guardar', true)); ?>
+<?php echo $this->Form->end(); ?>
+<?php echo $this->Html->link(__('Listar Albaranes de Clientes', true), array('action' => 'index'), array('class' => 'button_link')); ?>
+<?php echo $this->Html->link(__('Imprimir', true), array('action' => 'pdf', $albaranescliente['Albaranescliente']['id']), 
+        array('class' => 'button_link')); ?>
+           
 </div>
 
 <script type="text/javascript">
