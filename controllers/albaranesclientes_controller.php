@@ -349,12 +349,12 @@ class AlbaranesclientesController extends AppController {
                             $matTarAlbCli['MaterialesTareasalbaranescliente']['importe'] = $cantidad * $precio;
 
                             if ($this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->save($matTarAlbCli, array('validate' => FALSE))) {
-                           //     echo"SAVE";
-                            } 
+                                //     echo"SAVE";
+                            }
                         }
                     }
-                } 
-                
+                }
+
                 $albaranescliente = $this->Albaranescliente->find('first', array(
                     'contain' => array(
                         'FacturasCliente' => 'Cliente',
@@ -508,75 +508,6 @@ class AlbaranesclientesController extends AppController {
                 }
             }
         }
-    }
-
-    function __trapaso_from_albaranesproveedore($data) {
-        /*
-
-          if (!empty($data['ArticulosAlbaranesproveedore'])) {
-          // Creamos la tarea para el alb. cliente
-          $this->Albaranescliente->Tareasalbaranescliente->create();
-          $tareasalbaranescliente['Tareasalbaranescliente'] = array();
-          $tareasalbaranescliente['Tareasalbaranescliente']['albaranescliente_id'] = $this->Albaranescliente->id;
-          $tareasalbaranescliente['Tareasalbaranescliente']['asunto'] = 'Material del Albaran de Proveedor';
-          $tareasalbaranescliente['Tareasalbaranescliente']['tipo'] = '';
-          $tareasalbaranescliente['Tareasalbaranescliente']['materiales'] = 0;
-          $tareasalbaranescliente['Tareasalbaranescliente']['mano_de_obra'] = 0;
-          $tareasalbaranescliente['Tareasalbaranescliente']['servicios'] = 0;
-          $this->Albaranescliente->Tareasalbaranescliente->save($tareasalbaranescliente);
-          // Recorremos los articulos para introducirlo en la tarea para el alb. cliente
-          foreach ($data['ArticulosAlbaranesproveedore'] as $articulo_albproveedore) {
-          if ($articulo_albproveedore['id'] != 0) {
-          $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->create();
-          // cogemos los valores del articulo del proveedor
-          $this->loadModel('ArticulosAlbaranesproveedore');
-          $articulos_alb_proveed_modelo = $this->ArticulosAlbaranesproveedore->
-          find('first', array('conditions' => ['id' => $articulo_albproveedore['id']]));
-
-          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['articulo_id'] = 12;
-          //relaciona el articulo con la tarea
-          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['tareasalbaranescliente_id'] = $this->Albaranescliente->Tareasalbaranescliente->id;
-
-          $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->save($materialesalbaranescliente);
-          }
-          }
-          }
-          }
-
-          function __trapaso_from_avisosrepuesto($data) {
-          $cliente = $this->Albaranescliente->Avisosrepuesto->Cliente->find('first', array('contain' => '',
-          'conditions' => array('Cliente.id' => $data['Albaranescliente']['cliente_id'])));
-          if (!empty($data['ArticulosAvisosrepuesto'])) {
-          $this->Albaranescliente->Tareasalbaranescliente->create();
-          $tareasalbaranescliente['Tareasalbaranescliente'] = array();
-          $tareasalbaranescliente['Tareasalbaranescliente']['albaranescliente_id'] = $this->Albaranescliente->id;
-          $tareasalbaranescliente['Tareasalbaranescliente']['asunto'] = 'Material del Aviso de Repuestos';
-          $tareasalbaranescliente['Tareasalbaranescliente']['tipo'] = 'repuestos';
-          $tareasalbaranescliente['Tareasalbaranescliente']['materiales'] = 0;
-          $tareasalbaranescliente['Tareasalbaranescliente']['mano_de_obra'] = 0;
-          $tareasalbaranescliente['Tareasalbaranescliente']['servicios'] = 0;
-          $this->Albaranescliente->Tareasalbaranescliente->save($tareasalbaranescliente);
-          foreach ($data['ArticulosAvisosrepuesto'] as $articulosavisosrepuesto) {
-          if ($articulosavisosrepuesto['id'] != 0) {
-          $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->create();
-          $articulosavisosrepuesto_modelo = $this->Albaranescliente->Avisosrepuesto->ArticulosAvisosrepuesto->find('first', array('contain' => 'Articulo', 'conditions' => array('ArticulosAvisosrepuesto.id' => $articulosavisosrepuesto['id'])));
-          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['articulo_id'] = $articulosavisosrepuesto_modelo['ArticulosAvisosrepuesto']['articulo_id'];
-          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['cantidad'] = $articulosavisosrepuesto_modelo['ArticulosAvisosrepuesto']['cantidad'];
-          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['precio_unidad'] = $articulosavisosrepuesto_modelo['Articulo']['precio_sin_iva'];
-          if (empty($cliente['Cliente']['descuentos_repuestos']))
-          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['descuento'] = 0;
-          else
-          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['descuento'] = $cliente['Cliente']['descuentos_repuestos'];
-          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] = $materialesalbaranescliente['MaterialesTareasalbaranescliente']['cantidad'] * $materialesalbaranescliente['MaterialesTareasalbaranescliente']['precio_unidad'];
-          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] = $materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] - (($materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] * $materialesalbaranescliente['MaterialesTareasalbaranescliente']['descuento']) / 100);
-          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] = number_format($materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'], 5, '.', '');
-          $materialesalbaranescliente['MaterialesTareasalbaranescliente']['tareasalbaranescliente_id'] = $this->Albaranescliente->Tareasalbaranescliente->id;
-          $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->save($materialesalbaranescliente);
-          }
-          }
-          }
-         * 
-         */
     }
 
     function facturacion() {
@@ -848,6 +779,58 @@ class AlbaranesclientesController extends AppController {
         $numero = $this->Albaranescliente->dime_siguiente_numero_ajax($serie);
         $this->set(compact('numero'));
         $this->render();
+    }
+
+    /**
+     * Factura directa de albClienteRepuesto
+     * 
+     */
+    function facturar($id_albcliente) {
+        if (!empty($id_albcliente)) {
+
+            $albaranescliente = $this->Albaranescliente->find('first', array(
+                'contain' => array(
+                    'FacturasCliente' => 'Cliente',
+                    'Estadosalbaranescliente',
+                    'Cliente' => 'Formapago',
+                    'Centrostrabajo'
+                ),
+                'conditions' => array('Albaranescliente.id' => $id_albcliente)));
+
+            $this->loadModel('FacturasCliente');
+
+            $siguiente_numero = $this->FacturasCliente->dime_siguiente_numero($albaranescliente['Albaranescliente']['serie']);
+            $siguiente_numero++;
+           
+            $this->FacturasCliente->create();
+
+            $factura_cliente = array();
+            $factura_cliente['FacturasCliente']['serie'] = $albaranescliente['Albaranescliente']['serie'];
+            $factura_cliente['FacturasCliente']['numero'] = $siguiente_numero;
+            $factura_cliente['FacturasCliente']['cliente_id'] = $albaranescliente['Albaranescliente']['cliente_id'];
+            $factura_cliente['FacturasCliente']['pago'] = '1';
+
+            $fecha = date("Y-m-d");
+            $factura_cliente['FacturasCliente']['fecha'] = $fecha;
+            $factura_cliente['FacturasCliente']['baseimponible'] = redondear_dos_decimal($albaranescliente['Albaranescliente']['precio']);
+            $factura_cliente['FacturasCliente']['impuestos'] = redondear_dos_decimal($albaranescliente['Albaranescliente']['impuestos']);
+            $factura_cliente['FacturasCliente']['total'] = redondear_dos_decimal($albaranescliente['Albaranescliente']['precio'] + $albaranescliente['Albaranescliente']['impuestos']);
+
+            $this->FacturasCliente->save($factura_cliente); 
+            if ($this->FacturasCliente->save($factura_cliente)) {
+                
+               //Relacionar la factura con el cliente
+                $this->FacturasCliente->Albaranescliente->saveField('estadosalbaranescliente_id', 3);
+                $this->FacturasCliente->Albaranescliente->saveField('facturas_cliente_id', $this->FacturasCliente->id);
+                $this->set(compact('facturasCliente'));
+                $this->Session->setFlash(__('La Factura se ha creada con ÉXITO.', true));
+            } else {
+                $this->flashWarnings(__('La Factura NO ha sido creada.', true));
+            }
+            $this->redirect($this->referer());
+
+          
+        }
     }
 
 }

@@ -5,9 +5,9 @@
             <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $albaranescliente['Albaranescliente']['id']), array('class' => 'button_link')); ?>
         <?php endif; ?>
         <?php if ($albaranescliente['Estadosalbaranescliente']['id'] == '3'): ?>
-            <?php echo $this->Html->link(__('REACTIVAR Edición', true), 
-                            array('action' => 'edit', $albaranescliente['Albaranescliente']['id']), 
-                            array('class' => 'linkbutton' )); ?>
+            <?php
+            echo $this->Html->link(__('REACTIVAR Edición', true), array('action' => 'edit', $albaranescliente['Albaranescliente']['id']), array('class' => 'linkbutton'));
+            ?>
         <?php endif; ?>
         <?php echo $this->Html->link(__('Nuevo Albarán Directo', true), array('action' => 'add'), array('class' => 'button_link')); ?> 
         <?php echo $this->Html->link(__('Listar Albaranes a Clientes', true), array('action' => 'index'), array('class' => 'button_link')); ?> 
@@ -236,6 +236,19 @@
         <?php endif; ?>
         <?php echo $this->Html->link(__('Imprimir', true), array('action' => 'pdf', $albaranescliente['Albaranescliente']['id']), array('class' => 'button_link')); ?>
         <?php echo $this->Html->link(__('Imprimir-serie', true), array('action' => 'pdf_sin_cabecera', $albaranescliente['Albaranescliente']['id']), array('class' => 'button_link')); ?>
+
+        <?php if ($albaranescliente['Estadosalbaranescliente']['id'] == '2'): ?>
+            <?php
+            echo $this->Html->link(__('Facturar', true), array('action' => 'facturar', $albaranescliente['Albaranescliente']['id']), array('class' => 'button_css_green', 'style' => 'margin: 20px;'));
+            ?>
+        <?php endif; ?>
+        <?php if ($albaranescliente['Estadosalbaranescliente']['id'] == '3'): ?>
+            <?php
+            echo $this->Html->link(__('Imprimir Factura PDF', true), array('controller' => 'facturas_clientes', 'action' => 'pdf', 
+                $albaranescliente['Albaranescliente']['facturas_cliente_id']), array('class' => 'button_css_red', 'style' => 'margin: 20px;'));
+            ?>
+        <?php endif; ?>
+      
     </div>
     <div class="datagrid">
         <table>
