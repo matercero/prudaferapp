@@ -177,9 +177,7 @@ class AlbaranesclientesController extends AppController {
                     $this->__trapaso_from_ordene($this->data);
                 } elseif (!empty($this->data['Albaranescliente']['avisosrepuesto_id'])) { // Si viene de Avisosrepuesto 
                     $this->__trapaso_from_avisosrepuesto($this->data);
-                } elseif (!empty($this->data['Albaranescliente']['albaranesproveedore_id'])) { // Si viene de Albaranesproveedore
-                    //  $this->__trapaso_from_albaranesproveedore($this->data);
-                } else {
+                }  else {
                     $this->Albaranescliente->Tareasalbaranescliente->create();
                     $tareasalbaranescliente = array();
                     $tareasalbaranescliente['Tareasalbaranescliente']['tipo'] = 'repuestos';
@@ -509,6 +507,40 @@ class AlbaranesclientesController extends AppController {
             }
         }
     }
+
+    function __trapaso_from_avisosrepuesto($data) {
+        $cliente = $this->Albaranescliente->Avisosrepuesto->Cliente->find('first', array('contain' => '', 'conditions' => array('Cliente.id' => $data['Albaranescliente']['cliente_id'])));
+        if (!empty($data['ArticulosAvisosrepuesto'])) {
+            $this->Albaranescliente->Tareasalbaranescliente->create();
+            $tareasalbaranescliente['Tareasalbaranescliente'] = array();
+            $tareasalbaranescliente['Tareasalbaranescliente']['albaranescliente_id'] = $this->Albaranescliente->id;
+            $tareasalbaranescliente['Tareasalbaranescliente']['asunto'] = 'Material del Aviso de Repuestos';
+            $tareasalbaranescliente['Tareasalbaranescliente']['tipo'] = 'repuestos';
+            $tareasalbaranescliente['Tareasalbaranescliente']['materiales'] = 0;
+            $tareasalbaranescliente['Tareasalbaranescliente']['mano_de_obra'] = 0;
+            $tareasalbaranescliente['Tareasalbaranescliente']['servicios'] = 0;
+            $this->Albaranescliente->Tareasalbaranescliente->save($tareasalbaranescliente);
+            foreach ($data['ArticulosAvisosrepuesto'] as $articulosavisosrepuesto) {
+                if ($articulosavisosrepuesto['id'] != 0) {
+                    $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->create();
+                    $articulosavisosrepuesto_modelo = $this->Albaranescliente->Avisosrepuesto->ArticulosAvisosrepuesto->find('first', array('contain' => 'Articulo', 'conditions' => array('ArticulosAvisosrepuesto.id' => $articulosavisosrepuesto['id'])));
+                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['articulo_id'] = $articulosavisosrepuesto_modelo['ArticulosAvisosrepuesto']['articulo_id'];
+                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['cantidad'] = $articulosavisosrepuesto_modelo['ArticulosAvisosrepuesto']['cantidad'];
+                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['precio_unidad'] = $articulosavisosrepuesto_modelo['Articulo']['precio_sin_iva'];
+                    if (empty($cliente['Cliente']['descuentos_repuestos']))
+                        $materialesalbaranescliente['MaterialesTareasalbaranescliente']['descuento'] = 0;
+                    else
+                        $materialesalbaranescliente['MaterialesTareasalbaranescliente']['descuento'] = $cliente['Cliente']['descuentos_repuestos'];
+                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] = $materialesalbaranescliente['MaterialesTareasalbaranescliente']['cantidad'] * $materialesalbaranescliente['MaterialesTareasalbaranescliente']['precio_unidad'];
+                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] = $materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] - (($materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] * $materialesalbaranescliente['MaterialesTareasalbaranescliente']['descuento']) / 100);
+                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'] = number_format($materialesalbaranescliente['MaterialesTareasalbaranescliente']['importe'], 5, '.', '');
+                    $materialesalbaranescliente['MaterialesTareasalbaranescliente']['tareasalbaranescliente_id'] = $this->Albaranescliente->Tareasalbaranescliente->id;
+                    $this->Albaranescliente->Tareasalbaranescliente->MaterialesTareasalbaranescliente->save($materialesalbaranescliente);
+                }
+            }
+        }
+    }
+
 
     function facturacion() {
         if (!empty($this->data)) {
