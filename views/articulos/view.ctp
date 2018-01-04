@@ -1,3 +1,25 @@
+
+<style>
+
+    .inner {
+        height: auto;
+        width: auto;
+        z-index: 2;
+    }
+    img {
+        height: 300px;
+        width: 300px;
+        display: none;
+        float: outside;
+
+    }
+    .inner:hover img {
+        display: block;
+    }
+
+
+
+</style>
 <div class="articulos">
     <h2>
         <?php __('Ficha de Artículo Ref. ' . $articulo['Articulo']['ref']); ?>
@@ -18,7 +40,17 @@
             <td colspan="2"><span>Familia</span></td>
             <td><?php echo $this->Html->link($articulo['Familia']['nombre'], array('controller' => 'familias', 'action' => 'view', $articulo['Familia']['id'])); ?></td>
             <td><span>Imágen</span></td>
-            <td colspan="2"><?php echo $this->Html->link(__($articulo['Articulo']['articuloescaneado'], true), '/files/articulo/' . $articulo['Articulo']['articuloescaneado']); ?></td>
+            <td colspan="2">
+                <?php echo $this->Html->link(__($articulo['Articulo']['articuloescaneado'], true), '/files/articulo/' . $articulo['Articulo']['articuloescaneado']); ?>            
+
+                <?php if (!empty($articulo['Articulo']['articuloescaneado'])): ?>
+                    <div class="inner">
+                        Ver imagen
+                        <?php echo $this->Html->image('/files/articulo/' . $articulo['Articulo']['articuloescaneado']); ?>                
+                    </div>
+                <?php endif; ?>
+            </td>
+
         </tr>
         <tr>
             <td><span>Observaciones</span></td>
