@@ -22,6 +22,19 @@
                 $this->params['url']['fecha_fin[year]'] = $this->params['url']['fecha_fin']['year'];
                 unset($this->params['url']['fecha_fin']);
             }
+
+            if (!empty($this->params['url']['fecha_inicio_entrega'])) {
+                $this->params['url']['fecha_inicio_entrega[day]'] = $this->params['url']['fecha_inicio_entrega']['day'];
+                $this->params['url']['fecha_inicio_entrega[month]'] = $this->params['url']['fecha_inicio_entrega']['month'];
+                $this->params['url']['fecha_inicio_entrega[year]'] = $this->params['url']['fecha_inicio_entrega']['year'];
+                unset($this->params['url']['fecha_inicio_entrega']);
+            }
+            if (!empty($this->params['url']['fecha_fin_entrega'])) {
+                $this->params['url']['fecha_fin_entrega[day]'] = $this->params['url']['fecha_fin_entrega']['day'];
+                $this->params['url']['fecha_fin_entrega[month]'] = $this->params['url']['fecha_fin_entrega']['month'];
+                $this->params['url']['fecha_fin_entrega[year]'] = $this->params['url']['fecha_fin_entrega']['year'];
+                unset($this->params['url']['fecha_fin_entrega']);
+            }
             $this->Paginator->options(array('url' => $this->params['url']));
         }
         ?>
@@ -175,14 +188,32 @@
             <?php else: ?>
                 <td><?php echo $this->Form->input('Search.comerciale_id', array('label' => 'Comercial', 'type' => 'select', 'class' => 'select_basico', 'empty' => True, 'options' => $comerciales)) ?></td>
             <?php endif; ?>
+            </tr>
+            <tr>
 
-            <?php if (!empty($this->params['named']['resultados_por_pagina'])): ?>
-                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20', 'selected' => $this->params['named']['resultados_por_pagina'])) ?></td>
-            <?php elseif (!empty($this->params['url']['resultados_por_pagina'])): ?>
-                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20', 'selected' => $this->params['url']['resultados_por_pagina'])) ?></td>
-            <?php else: ?>
-                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20')) ?></td>
-            <?php endif; ?>
+                <?php if (!empty($this->params['named']['fecha_inicio_entrega[day]'])): ?>
+                    <td style="width: 300px"><?php echo $this->Form->input('Search.fecha_inicio_entrega', array('type' => 'date', 'dateFormat' => 'DMY', 'selected' => array('day' => $this->params['named']['fecha_inicio_entrega[day]'], 'month' => $this->params['named']['fecha_inicio_entrega[month]'], 'year' => $this->params['named']['fecha_inicio_entrega[year]']))) ?></td>
+                <?php elseif (!empty($this->params['url']['fecha_inicio_entrega[day]'])): ?>
+                    <td style="width: 300px"><?php echo $this->Form->input('Search.fecha_inicio_entrega', array('type' => 'date', 'dateFormat' => 'DMY', 'selected' => array('day' => $this->params['url']['fecha_inicio_entrega[day]'], 'month' => $this->params['url']['fecha_inicio_entrega[month]'], 'year' => $this->params['url']['fecha_inicio_entrega[year]']))) ?></td>
+                <?php else: ?>
+                    <td style="width: 300px"><?php echo $this->Form->input('Search.fecha_inicio_entrega', array('type' => 'date', 'dateFormat' => 'DMY', 'selected' => array('day' => 1, 'month' => 1, 'year' => 1998))) ?></td>
+                <?php endif; ?>
+
+                <?php if (!empty($this->params['named']['fecha_fin_entrega[day]'])): ?>
+                    <td><?php echo $this->Form->input('Search.fecha_fin_entrega', array('type' => 'date', 'dateFormat' => 'DMY', 'selected' => array('day' => $this->params['named']['fecha_fin_entrega[day]'], 'month' => $this->params['named']['fecha_fin_entrega[month]'], 'year' => $this->params['named']['fecha_fin_entrega[year]']))) ?></td>
+                <?php elseif (!empty($this->params['url']['fecha_fin_entrega[day]'])): ?>
+                    <td><?php echo $this->Form->input('Search.fecha_fin_entrega', array('type' => 'date', 'dateFormat' => 'DMY', 'selected' => array('day' => $this->params['url']['fecha_fin_entrega[day]'], 'month' => $this->params['url']['fecha_fin_entrega[month]'], 'year' => $this->params['url']['fecha_fin_entrega[year]']))) ?></td>
+                <?php else: ?>
+                    <td><?php echo $this->Form->input('Search.fecha_fin_entrega', array('type' => 'date', 'dateFormat' => 'DMY')) ?></td>
+                <?php endif; ?>
+
+                <?php if (!empty($this->params['named']['resultados_por_pagina'])): ?>
+                    <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20', 'selected' => $this->params['named']['resultados_por_pagina'])) ?></td>
+                <?php elseif (!empty($this->params['url']['resultados_por_pagina'])): ?>
+                    <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20', 'selected' => $this->params['url']['resultados_por_pagina'])) ?></td>
+                <?php else: ?>
+                    <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20')) ?></td>
+                <?php endif; ?>
             </tr>
         </table>
         <?php echo $this->Form->button('Nueva Búsqueda', array('type' => 'reset', 'class' => 'button_css_green')); ?>
