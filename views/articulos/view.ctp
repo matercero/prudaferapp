@@ -17,6 +17,20 @@
         display: block;
     }
 
+    @keyframes blink {  
+        0% { color: red; }
+        100% { color: white; }
+    }
+    @-webkit-keyframes blink {
+        0% { color: red; }
+        100% { color: white; }
+    }
+    .blink {
+        -webkit-animation: blink 1.5s linear infinite;
+        -moz-animation: blink 1.5s linear infinite;
+        animation: blink 1.5s linear infinite;
+        font-size: medium;
+    }
 
 
 </style>
@@ -42,10 +56,9 @@
             <td><span>Imágen</span></td>
             <td colspan="2">
                 <?php echo $this->Html->link(__($articulo['Articulo']['articuloescaneado'], true), '/files/articulo/' . $articulo['Articulo']['articuloescaneado']); ?>            
-
                 <?php if (!empty($articulo['Articulo']['articuloescaneado'])): ?>
-                    <div class="inner">
-                        Ver imagen
+                    <div class="inner">                        
+                        <span class="blink">VER IMAGEN</span>
                         <?php echo $this->Html->image('/files/articulo/' . $articulo['Articulo']['articuloescaneado']); ?>                
                     </div>
                 <?php endif; ?>

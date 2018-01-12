@@ -5,7 +5,7 @@
         <meta http-equiv="Pragma" content="no-store, no-cache" />
         <meta http-equiv="Expires" content="0" />
         <script type="text/javascript">
-            function proyect_url(){
+            function proyect_url() {
                 return "<?php echo Configure::read('proyect_url') ?>";
             }
         </script>
@@ -35,9 +35,15 @@
         echo $this->Javascript->link('dafer-script');
         echo $this->Javascript->link('chosen.jquery');
         echo $this->Javascript->link('select2.min');
-        echo $this->Javascript->link('autocompletes_dafer');        
+        echo $this->Javascript->link('autocompletes_dafer');
         echo $javascript->link('jquery.form.js');
         ?>
+
+        <link rel="stylesheet" href="http://cdn.dhtmlx.com/edge/dhtmlx.css" 
+              type="text/css"> 
+        <script src="http://cdn.dhtmlx.com/edge/dhtmlx.js" 
+        type="text/javascript"></script>
+
     </head>
     <body>
         <div id="container">
@@ -51,15 +57,15 @@
 
                 <?php echo $content_for_layout; ?>
 
-                </div>
-                <div id="footer">
-                        <?php echo 'Desarrollo Eme3 ® 2015' ?>
-                </div>
             </div>
-        </div>        
-        <div id="dialog-modal" title="Dafer"/>        
-        <div id="loading_background">
-            <div id="loading_animation"></div>
+            <div id="footer">
+                <?php echo 'Desarrollo Eme3 ® 2015' ?>
+            </div>
         </div>
-    </body>
+    </div>        
+    <div id="dialog-modal" title="Dafer"/>        
+    <div id="loading_background">
+        <div id="loading_animation"></div>
+    </div>
+</body>
 </html>

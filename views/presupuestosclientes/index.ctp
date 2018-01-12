@@ -24,6 +24,14 @@
             }
             $this->Paginator->options(array('url' => $this->params['url']));
         }
+        // Inicializa fechas inicio Fin
+        if (empty($this->params['url']['FechaInicio2'])) {
+            $this->params['url']['FechaInicio2'] = '1998-01-01';
+        }
+        if (empty($this->params['url']['FechaFin2'])) {
+            $this->params['url']['FechaFin2'] = date("Y-m-d");
+            ;
+        }
         ?>
         <?php echo $this->Form->create('Presupuestoscliente', array('type' => 'get')) ?>
         <table class="view">
@@ -43,46 +51,47 @@
                     <td style="width: 250px"><?php echo $this->Form->input('Search.numero') ?></td>
                 <?php endif; ?>
 
-                <?php if (!empty($this->params['named']['fecha_inicio[day]'])): ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.fecha_inicio', array('type' => 'date', 'dateFormat' => 'DMY', 'selected' => array('day' => $this->params['named']['fecha_inicio[day]'], 'month' => $this->params['named']['fecha_inicio[month]'], 'year' => $this->params['named']['fecha_inicio[year]']))) ?></td>
-                <?php elseif (!empty($this->params['url']['fecha_inicio[day]'])): ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.fecha_inicio', array('type' => 'date', 'dateFormat' => 'DMY', 'selected' => array('day' => $this->params['url']['fecha_inicio[day]'], 'month' => $this->params['url']['fecha_inicio[month]'], 'year' => $this->params['url']['fecha_inicio[year]']))) ?></td>
-                <?php else: ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.fecha_inicio', array('type' => 'date', 'dateFormat' => 'DMY', 'selected' => array('day' => 1, 'month' => 1, 'year' => 1998))) ?></td>
-                <?php endif; ?>
 
-                <?php if (!empty($this->params['named']['fecha_fin[day]'])): ?>
-                    <td><?php echo $this->Form->input('Search.fecha_fin', array('type' => 'date', 'dateFormat' => 'DMY', 'selected' => array('day' => $this->params['named']['fecha_fin[day]'], 'month' => $this->params['named']['fecha_fin[month]'], 'year' => $this->params['named']['fecha_fin[year]']))) ?></td>
-                <?php elseif (!empty($this->params['url']['fecha_fin[day]'])): ?>
-                    <td><?php echo $this->Form->input('Search.fecha_fin', array('type' => 'date', 'dateFormat' => 'DMY', 'selected' => array('day' => $this->params['url']['fecha_fin[day]'], 'month' => $this->params['url']['fecha_fin[month]'], 'year' => $this->params['url']['fecha_fin[year]']))) ?></td>
-                <?php else: ?>
-                    <td><?php echo $this->Form->input('Search.fecha_fin', array('type' => 'date', 'dateFormat' => 'DMY')) ?></td>
-                <?php endif; ?>
+                <!-- Fecha inicio NUEVA -->
+                <td style="width: 250px">
+                    <?php
+                    echo $this->Form->input('FechaInicio2', array('type' => 'text', 'id' => 'calendar_inputEnt2',
+                        'value' => $this->params['url']['FechaInicio2'], 'style' => 'width: 100px;'))
+                    ?>
+                </td>
+
+                <!-- Fecha Fin NUEVA -->
+                <td style="width: 250px">
+                    <?php
+                    echo $this->Form->input('FechaFin2', array('type' => 'text', 'id' => 'calendar_inputFin2',
+                        'value' => $this->params['url']['FechaFin2'], 'style' => 'width: 100px;'))
+                    ?>
+                </td>
 
                 <td><?php echo $this->Form->input('Search.articulo_id', array('label' => 'Árticulo', 'type' => 'text', 'class' => 'articulos_select', 'style' => 'width: 300px;')) ?></td>
                 <?php if (!empty($this->params['named']['articulo_id'])): ?>
                 <script>
                     $(document).ready(function() {
                         $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['named']['articulo_id'] ?>', function(data) {
-                            $(".articulos_select").select2("data", {
+                                    $(".articulos_select").select2("data", {
                                 'id' : data.id,
                                 'ref' : data.ref,
                                 'nombre' : data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php elseif (!empty($this->params['url']['articulo_id'])): ?>
                 <script>
                     $(document).ready(function() {
                         $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['url']['articulo_id'] ?>', function(data) {
-                            $(".articulos_select").select2("data", {
+                                    $(".articulos_select").select2("data", {
                                 'id' : data.id,
                                 'ref' : data.ref,
                                 'nombre' : data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php endif; ?>
             <td><?php echo $this->Form->input('Search.cliente_id', array('label' => 'Cliente', 'type' => 'text', 'class' => 'clientes_select', 'style' => 'width: 300px;')) ?></td>
@@ -90,23 +99,23 @@
                 <script>
                     $(document).ready(function() {
                         $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['named']['cliente_id'] ?>', function(data) {
-                            $(".clientes_select").select2("data", {
+                                    $(".clientes_select").select2("data", {
                                 'id' : data.id,
                                 'nombre' : data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php elseif (!empty($this->params['url']['cliente_id'])): ?>
                 <script>
                     $(document).ready(function() {
                         $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['url']['cliente_id'] ?>', function(data) {
-                            $(".clientes_select").select2("data", {
+                                    $(".clientes_select").select2("data", {
                                 'id' : data.id,
                                 'nombre' : data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php endif; ?>
             </tr>
@@ -140,35 +149,35 @@
                 <script>
                     $(document).ready(function() {
                         $.getJSON('<?php echo Configure::read('proyect_url') ?>maquinas/get_json/<?php echo $this->params['named']['maquina_id'] ?>', function(data) {
-                            $(".maquinas_select").select2("data", {
+                                    $(".maquinas_select").select2("data", {
                                 'id' : data.id,
                                 'codigo' : data.codigo,
                                 'nombre' : data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php elseif (!empty($this->params['url']['maquina_id'])): ?>
                 <script>
                     $(document).ready(function() {
                         $.getJSON('<?php echo Configure::read('proyect_url') ?>maquinas/get_json/<?php echo $this->params['url']['maquina_id'] ?>', function(data) {
-                            $(".maquinas_select").select2("data", {
+                                    $(".maquinas_select").select2("data", {
                                 'id' : data.id,
                                 'codigo' : data.codigo,
                                 'nombre' : data.nombre
+                                    });
+                                });
                             });
-                        });
-                    });
                 </script>
             <?php endif; ?>
-                
-                <?php if (!empty($this->params['named']['resultados_por_pagina'])): ?>
-                    <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20', 'selected' => $this->params['named']['resultados_por_pagina'])) ?></td>
-                <?php elseif (!empty($this->params['url']['resultados_por_pagina'])): ?>
-                    <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20', 'selected' => $this->params['url']['resultados_por_pagina'])) ?></td>
-                <?php else: ?>
-                    <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20')) ?></td>
-                <?php endif; ?>
+
+            <?php if (!empty($this->params['named']['resultados_por_pagina'])): ?>
+                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20', 'selected' => $this->params['named']['resultados_por_pagina'])) ?></td>
+            <?php elseif (!empty($this->params['url']['resultados_por_pagina'])): ?>
+                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20', 'selected' => $this->params['url']['resultados_por_pagina'])) ?></td>
+            <?php else: ?>
+                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20')) ?></td>
+            <?php endif; ?>
             </tr>
         </table>
         <?php echo $this->Form->button('Nueva Búsqueda', array('type' => 'reset', 'class' => 'button_css_green')); ?>
@@ -280,3 +289,18 @@
         <?php echo $this->Paginator->next(__('next', true) . ' >>', array(), null, array('class' => 'disabled')); ?>
     </div>
 </div>
+<script>
+    dhtmlXCalendarObject.prototype.langData["es"] = {
+        dateformat: '%d-%m-%Y',
+        monthesFNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+        monthesSNames: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+        daysFNames: ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado", "Domingo"],
+        daysSNames: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+        weekstart: 1,
+        weekname: "S",
+        today: "Hoy",
+        clear: "Limpiar"
+    }
+    var myCalendar = new dhtmlXCalendarObject(["calendar_inputEnt2", "calendar_inputFin2"]);
+    myCalendar.loadUserLanguage("es");
+</script>

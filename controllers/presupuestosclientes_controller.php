@@ -34,17 +34,26 @@ class PresupuestosclientesController extends AppController {
         if (!empty($this->params['named']['numero']))
             $conditions [] = array('Presupuestoscliente.numero' => $this->params['named']['numero']);
 
+        if (!empty($this->params['url']['FechaInicio2']) && !empty($this->params['url']['FechaFin2'])) {
+            $data1 = $this->params['url']['FechaInicio2'];
+            $data2 = $this->params['url']['FechaFin2'];
+            echo '$data1=' . $data1 . ' $data2=' . $data2  ;
+            $conditions[] = array("Presupuestoscliente.fecha BETWEEN '$data1' AND '$data2'");       
+        }
+        
+//        if (!empty($this->params['url']['fecha_inicio']) && !empty($this->params['url']['fecha_fin'])) {
+//            $data1 = implode('-', array_reverse($this->params['url']['fecha_inicio']));
+//            $data2 = implode('-', array_reverse($this->params['url']['fecha_fin']));        
+//            $conditions[] = array("Presupuestoscliente.fecha BETWEEN '$data1' AND '$data2'");        
+//            
+//        }
 
-        if (!empty($this->params['url']['fecha_inicio']) && !empty($this->params['url']['fecha_fin'])) {
-            $data1 = implode('-', array_reverse($this->params['url']['fecha_inicio']));
-            $data2 = implode('-', array_reverse($this->params['url']['fecha_fin']));
-            $conditions[] = array("Presupuestoscliente.fecha BETWEEN '$data1' AND '$data2'");
-        }
-        if (!empty($this->params['named']['fecha_inicio[year]']) && !empty($this->params['named']['fecha_fin[year]'])) {
-            $data1 = $this->params['named']['fecha_inicio[year]'] . '-' . $this->params['named']['fecha_inicio[month]'] . '-' . $this->params['named']['fecha_inicio[day]'];
-            $data2 = $this->params['named']['fecha_fin[year]'] . '-' . $this->params['named']['fecha_fin[month]'] . '-' . $this->params['named']['fecha_fin[day]'];
-            $conditions[] = array("Presupuestoscliente.fecha BETWEEN '$data1' AND '$data2'");
-        }
+
+//        if (!empty($this->params['named']['fecha_inicio[year]']) && !empty($this->params['named']['fecha_fin[year]'])) {
+//            $data1 = $this->params['named']['fecha_inicio[year]'] . '-' . $this->params['named']['fecha_inicio[month]'] . '-' . $this->params['named']['fecha_inicio[day]'];
+//            $data2 = $this->params['named']['fecha_fin[year]'] . '-' . $this->params['named']['fecha_fin[month]'] . '-' . $this->params['named']['fecha_fin[day]'];
+//            $conditions[] = array("Presupuestoscliente.fecha BETWEEN '$data1' AND '$data2'");
+//        }
 
 
         if (!empty($this->params['url']['articulo_id']))
@@ -177,7 +186,7 @@ class PresupuestosclientesController extends AppController {
         $this->render();
     }
 
-	function pdf_facturapro($id) {
+    function pdf_facturapro($id) {
         Configure::write('debug', 0);
         $this->layout = 'pdf';
         if (!$id) {
@@ -218,7 +227,7 @@ class PresupuestosclientesController extends AppController {
         $this->set('totalmanoobrayservicios', $totalmanoobrayservicios);
         $this->render();
     }
-    
+
     function add($vienede = null, $iddedondeviene = null, $cliente_id = null) {
         $this->loadModel('Config');
         $config = $this->Config->read(null, 1);
@@ -314,7 +323,7 @@ class PresupuestosclientesController extends AppController {
                             'Presupuestoscliente',
                         ),
                         'conditions' => array('Presupuestosproveedore.id' => $this->data['Presupuestoscliente']['presupuestosproveedore_id'])
-                            ));
+                    ));
                     if (!empty($presupuestosproveedore['Presupuestosproveedore']['avisosrepuesto_id'])) {
                         $this->Presupuestoscliente->Avisosrepuesto->id = $presupuestosproveedore['Presupuestosproveedore']['avisosrepuesto_id'];
                         $this->Presupuestoscliente->Avisosrepuesto->saveField('estadosaviso_id', 8);
