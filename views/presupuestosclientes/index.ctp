@@ -25,11 +25,11 @@
             $this->Paginator->options(array('url' => $this->params['url']));
         }
         // Inicializa fechas inicio Fin
-        if (empty($this->params['url']['FechaInicio2'])) {
-            $this->params['url']['FechaInicio2'] = '1998-01-01';
+        if (empty($this->params['url']['FechaInicio'])) {
+            $this->params['url']['FechaInicio'] = '1998-01-01';
         }
-        if (empty($this->params['url']['FechaFin2'])) {
-            $this->params['url']['FechaFin2'] = date("Y-m-d");
+        if (empty($this->params['url']['FechaFin'])) {
+            $this->params['url']['FechaFin'] = date("Y-m-d");
             ;
         }
         ?>
@@ -55,16 +55,16 @@
                 <!-- Fecha inicio NUEVA -->
                 <td style="width: 250px">
                     <?php
-                    echo $this->Form->input('FechaInicio2', array('type' => 'text', 'id' => 'calendar_inputEnt2',
-                        'value' => $this->params['url']['FechaInicio2'], 'style' => 'width: 100px;'))
+                    echo $this->Form->input('FechaInicio', array('type' => 'text', 'id' => 'calendar_inputEnt2',
+                        'value' => $this->params['url']['FechaInicio'], 'style' => 'width: 100px;'))
                     ?>
                 </td>
 
                 <!-- Fecha Fin NUEVA -->
                 <td style="width: 250px">
                     <?php
-                    echo $this->Form->input('FechaFin2', array('type' => 'text', 'id' => 'calendar_inputFin2',
-                        'value' => $this->params['url']['FechaFin2'], 'style' => 'width: 100px;'))
+                    echo $this->Form->input('FechaFin', array('type' => 'text', 'id' => 'calendar_inputFin2',
+                        'value' => $this->params['url']['FechaFin'], 'style' => 'width: 100px;'))
                     ?>
                 </td>
 
@@ -300,7 +300,8 @@
         weekname: "S",
         today: "Hoy",
         clear: "Limpiar"
-    }
+    };
     var myCalendar = new dhtmlXCalendarObject(["calendar_inputEnt2", "calendar_inputFin2"]);
     myCalendar.loadUserLanguage("es");
+    myCalendar.hideTime();
 </script>

@@ -34,9 +34,9 @@ class PresupuestosclientesController extends AppController {
         if (!empty($this->params['named']['numero']))
             $conditions [] = array('Presupuestoscliente.numero' => $this->params['named']['numero']);
 
-        if (!empty($this->params['url']['FechaInicio2']) && !empty($this->params['url']['FechaFin2'])) {
-            $data1 = $this->params['url']['FechaInicio2'];
-            $data2 = $this->params['url']['FechaFin2'];
+        if (!empty($this->params['url']['FechaInicio2']) && !empty($this->params['url']['FechaFin'])) {
+            $data1 = date("Y-m-d", strtotime( $this->params['url']['FechaInicio']));
+            $data2 = date("Y-m-d", strtotime( $this->params['url']['FechaFin']));
             echo '$data1=' . $data1 . ' $data2=' . $data2  ;
             $conditions[] = array("Presupuestoscliente.fecha BETWEEN '$data1' AND '$data2'");       
         }
