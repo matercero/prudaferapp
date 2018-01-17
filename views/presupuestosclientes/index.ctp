@@ -43,7 +43,7 @@
                 <td style="width: 250px">
                     <?php
                     echo $this->Form->input('FechaInicio', array('type' => 'text', 'id' => 'calendar_inputEnt2',
-                        'value' => $this->params['url']['FechaInicio'], 'style' => 'width: 100px;'))
+                        'value' => $this->params['url']['FechaInicio'], 'style' => 'width: 100px;'));
                     ?>
                 </td>
 
@@ -51,7 +51,7 @@
                 <td style="width: 250px">
                     <?php
                     echo $this->Form->input('FechaFin', array('type' => 'text', 'id' => 'calendar_inputFin2',
-                        'value' => $this->params['url']['FechaFin'], 'style' => 'width: 100px;'))
+                        'value' => $this->params['url']['FechaFin'], 'style' => 'width: 100px;'));
                     ?>
                 </td>
 
