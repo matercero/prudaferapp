@@ -34,27 +34,12 @@ class PresupuestosclientesController extends AppController {
         if (!empty($this->params['named']['numero']))
             $conditions [] = array('Presupuestoscliente.numero' => $this->params['named']['numero']);
 
-        if (!empty($this->params['url']['FechaInicio2']) && !empty($this->params['url']['FechaFin'])) {
+        if (!empty($this->params['url']['FechaInicio']) && !empty($this->params['url']['FechaFin'])) {
             $data1 = date("Y-m-d", strtotime( $this->params['url']['FechaInicio']));
             $data2 = date("Y-m-d", strtotime( $this->params['url']['FechaFin']));
-            echo '$data1=' . $data1 . ' $data2=' . $data2  ;
+        //    echo '$data1=' . $data1 . ' $data2=' . $data2  ;
             $conditions[] = array("Presupuestoscliente.fecha BETWEEN '$data1' AND '$data2'");       
         }
-        
-//        if (!empty($this->params['url']['fecha_inicio']) && !empty($this->params['url']['fecha_fin'])) {
-//            $data1 = implode('-', array_reverse($this->params['url']['fecha_inicio']));
-//            $data2 = implode('-', array_reverse($this->params['url']['fecha_fin']));        
-//            $conditions[] = array("Presupuestoscliente.fecha BETWEEN '$data1' AND '$data2'");        
-//            
-//        }
-
-
-//        if (!empty($this->params['named']['fecha_inicio[year]']) && !empty($this->params['named']['fecha_fin[year]'])) {
-//            $data1 = $this->params['named']['fecha_inicio[year]'] . '-' . $this->params['named']['fecha_inicio[month]'] . '-' . $this->params['named']['fecha_inicio[day]'];
-//            $data2 = $this->params['named']['fecha_fin[year]'] . '-' . $this->params['named']['fecha_fin[month]'] . '-' . $this->params['named']['fecha_fin[day]'];
-//            $conditions[] = array("Presupuestoscliente.fecha BETWEEN '$data1' AND '$data2'");
-//        }
-
 
         if (!empty($this->params['url']['articulo_id']))
             $conditions [] = array('1' => '1 AND Presupuestoscliente.id IN (SELECT Tareaspresupuestocliente.presupuestoscliente_id FROM tareaspresupuestoclientes Tareaspresupuestocliente WHERE Tareaspresupuestocliente.id IN (SELECT Materiale.tareaspresupuestocliente_id FROM materiales Materiale WHERE Materiale.articulo_id = ' . $this->params['url']['articulo_id'] . '))');
@@ -99,7 +84,7 @@ class PresupuestosclientesController extends AppController {
             $paginate_results_per_page = intval($this->params['url']['resultados_por_pagina']);
         if (!empty($this->params['named']['resultados_por_pagina']))
             $paginate_results_per_page = intval($this->params['named']['resultados_por_pagina']);
-
+        
         $this->paginate = array('limit' => $paginate_results_per_page, 'conditions' => $conditions, 'url' => $this->params['pass']);
         $this->Presupuestoscliente->recursive = 0;
         $this->set('presupuestosclientes', $this->paginate());

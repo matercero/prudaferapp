@@ -35,9 +35,10 @@ class FacturasClientesController extends AppController {
             $conditions [] = array('FacturasCliente.numero' => $this->params['named']['numero']);
 
 
-        if (!empty($this->params['url']['fecha_inicio']) && !empty($this->params['url']['fecha_fin'])) {
-            $data1 = implode('-', array_reverse($this->params['url']['fecha_inicio']));
-            $data2 = implode('-', array_reverse($this->params['url']['fecha_fin']));
+        if (!empty($this->params['url']['FechaInicio']) && !empty($this->params['url']['FechaFin'])) {
+            $data1 = date("Y-m-d", strtotime($this->params['url']['FechaInicio']));
+            $data2 = date("Y-m-d", strtotime($this->params['url']['FechaFin']));
+            //    echo '$data1=' . $data1 . ' $data2=' . $data2  ;
             $conditions[] = array("FacturasCliente.fecha BETWEEN '$data1' AND '$data2'");
         }
         if (!empty($this->params['named']['fecha_inicio[year]']) && !empty($this->params['named']['fecha_fin[year]'])) {
@@ -690,7 +691,6 @@ class FacturasClientesController extends AppController {
                 //TODO actualizar el estado de la factura cliente 
                 $this->FacturasCliente->id = $factura_id;
                 $this->FacturasCliente->saveField('emailEnviado', 1);
-                
             } else {
                 $resumenResultado .= "<h1 style='color:red'>No existe factura para enviar. La factura $nombre_fichero NO existe.</h1>";
             }

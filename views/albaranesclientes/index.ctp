@@ -9,19 +9,15 @@
         array_shift($this->params['url']);
         array_shift($this->params['url']);
         if (!empty($this->params['url'])) {
-            if (!empty($this->params['url']['fecha_inicio'])) {
-                $this->params['url']['fecha_inicio[day]'] = $this->params['url']['fecha_inicio']['day'];
-                $this->params['url']['fecha_inicio[month]'] = $this->params['url']['fecha_inicio']['month'];
-                $this->params['url']['fecha_inicio[year]'] = $this->params['url']['fecha_inicio']['year'];
-                unset($this->params['url']['fecha_inicio']);
-            }
-            if (!empty($this->params['url']['fecha_fin'])) {
-                $this->params['url']['fecha_fin[day]'] = $this->params['url']['fecha_fin']['day'];
-                $this->params['url']['fecha_fin[month]'] = $this->params['url']['fecha_fin']['month'];
-                $this->params['url']['fecha_fin[year]'] = $this->params['url']['fecha_fin']['year'];
-                unset($this->params['url']['fecha_fin']);
-            }
             $this->Paginator->options(array('url' => $this->params['url']));
+        }
+        // Inicializa fechas Inicio y  Fin
+        if (empty($this->params['url']['FechaInicio'])) {
+            $this->params['url']['FechaInicio'] = '1998-01-01';
+        }
+        if (empty($this->params['url']['FechaFin'])) {
+            $this->params['url']['FechaFin'] = date("d-m-Y");
+            ;
         }
         ?>
         <?php echo $this->Form->create('Albaranescliente', array('type' => 'get')) ?>
@@ -42,22 +38,21 @@
                 <?php else: ?>
                     <td style="width: 250px"><?php echo $this->Form->input('Search.numero') ?></td>
                 <?php endif; ?>
+                <!-- Fecha inicio NUEVA -->
+                <td style="width: 250px">
+                    <?php
+                    echo $this->Form->input('FechaInicio', array('type' => 'text', 'id' => 'calendar_inputEnt',
+                        'value' => $this->params['url']['FechaInicio'], 'style' => 'width: 100px;'))
+                    ?>
+                </td>
 
-                <?php if (!empty($this->params['named']['fecha_inicio[day]'])): ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.fecha_inicio', array('type' => 'date', 'dateFormat' => 'DMY', 'selected' => array('day' => $this->params['named']['fecha_inicio[day]'], 'month' => $this->params['named']['fecha_inicio[month]'], 'year' => $this->params['named']['fecha_inicio[year]']))) ?></td>
-                <?php elseif (!empty($this->params['url']['fecha_inicio[day]'])): ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.fecha_inicio', array('type' => 'date', 'dateFormat' => 'DMY', 'selected' => array('day' => $this->params['url']['fecha_inicio[day]'], 'month' => $this->params['url']['fecha_inicio[month]'], 'year' => $this->params['url']['fecha_inicio[year]']))) ?></td>
-                <?php else: ?>
-                    <td style="width: 250px"><?php echo $this->Form->input('Search.fecha_inicio', array('type' => 'date', 'dateFormat' => 'DMY', 'selected' => array('day' => 1, 'month' => 1, 'year' => 1998))) ?></td>
-                <?php endif; ?>
-
-                <?php if (!empty($this->params['named']['fecha_fin[day]'])): ?>
-                    <td><?php echo $this->Form->input('Search.fecha_fin', array('type' => 'date', 'dateFormat' => 'DMY', 'selected' => array('day' => $this->params['named']['fecha_fin[day]'], 'month' => $this->params['named']['fecha_fin[month]'], 'year' => $this->params['named']['fecha_fin[year]']))) ?></td>
-                <?php elseif (!empty($this->params['url']['fecha_fin[day]'])): ?>
-                    <td><?php echo $this->Form->input('Search.fecha_fin', array('type' => 'date', 'dateFormat' => 'DMY', 'selected' => array('day' => $this->params['url']['fecha_fin[day]'], 'month' => $this->params['url']['fecha_fin[month]'], 'year' => $this->params['url']['fecha_fin[year]']))) ?></td>
-                <?php else: ?>
-                    <td><?php echo $this->Form->input('Search.fecha_fin', array('type' => 'date', 'dateFormat' => 'DMY')) ?></td>
-                <?php endif; ?>
+                <!-- Fecha Fin NUEVA -->
+                <td style="width: 250px">
+                    <?php
+                    echo $this->Form->input('FechaFin', array('type' => 'text', 'id' => 'calendar_inputFin',
+                        'value' => $this->params['url']['FechaFin'], 'style' => 'width: 100px;'))
+                    ?>
+                </td>
 
                 <td><?php echo $this->Form->input('Search.articulo_id', array('label' => 'Artículo', 'type' => 'text', 'class' => 'articulos_select', 'style' => 'width: 300px;')) ?></td>
                 <?php if (!empty($this->params['named']['articulo_id'])): ?>
@@ -156,7 +151,7 @@
                     <td style="width: 250px"><?php echo $this->Form->input('Search.articulo_nombre', array('label' => 'Descripción de artículo',)) ?></td>
                 <?php endif; ?>
 
-                    
+
                 <?php if (!empty($this->params['named']['resultados_por_pagina'])): ?>
                     <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000, '2000' => 2000, '3000' => 3000), 'default' => '20', 'selected' => $this->params['named']['resultados_por_pagina'])) ?></td>
                 <?php elseif (!empty($this->params['url']['resultados_por_pagina'])): ?>
@@ -256,8 +251,8 @@
                 <?php endif; ?>
 
                 <td class="actions">
-                    <?php echo $this->Html->link(__('Prev.', true), 
-                            array('action' => 'view', $albaranescliente['Albaranescliente']['id']), array( 'target' => '_blank')); ?>
+                    <?php echo $this->Html->link(__('Prev.', true), array('action' => 'view', $albaranescliente['Albaranescliente']['id']), array('target' => '_blank'));
+                    ?>
                     <?php if ($albaranescliente['Estadosalbaranescliente']['id'] <> '3'): ?>
                         <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $albaranescliente['Albaranescliente']['id'])); ?>
                     <?php else: ?>
@@ -304,3 +299,19 @@
         <?php echo $this->Paginator->next(__('siguiente', true) . ' >>', array(), null, array('class' => 'disabled')); ?>
     </div>
 </div>
+<script>
+    dhtmlXCalendarObject.prototype.langData["es"] = {
+        dateformat: '%d-%m-%Y',
+        monthesFNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+        monthesSNames: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+        daysFNames: ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado", "Domingo"],
+        daysSNames: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+        weekstart: 1,
+        weekname: "S",
+        today: "Hoy",
+        clear: "Limpiar"
+    };
+    var myCalendar = new dhtmlXCalendarObject(["calendar_inputEnt", "calendar_inputFin"]);
+    myCalendar.loadUserLanguage("es");
+    myCalendar.hideTime();
+</script>

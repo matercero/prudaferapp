@@ -9,19 +9,7 @@
         <?php
         array_shift($this->params['url']);
         array_shift($this->params['url']);
-        if (!empty($this->params['url'])) {
-            if (!empty($this->params['url']['fecha_inicio'])) {
-                $this->params['url']['fecha_inicio[day]'] = $this->params['url']['fecha_inicio']['day'];
-                $this->params['url']['fecha_inicio[month]'] = $this->params['url']['fecha_inicio']['month'];
-                $this->params['url']['fecha_inicio[year]'] = $this->params['url']['fecha_inicio']['year'];
-                unset($this->params['url']['fecha_inicio']);
-            }
-            if (!empty($this->params['url']['fecha_fin'])) {
-                $this->params['url']['fecha_fin[day]'] = $this->params['url']['fecha_fin']['day'];
-                $this->params['url']['fecha_fin[month]'] = $this->params['url']['fecha_fin']['month'];
-                $this->params['url']['fecha_fin[year]'] = $this->params['url']['fecha_fin']['year'];
-                unset($this->params['url']['fecha_fin']);
-            }
+        if (!empty($this->params['url'])) {         
             $this->Paginator->options(array('url' => $this->params['url']));
         }
         // Inicializa fechas inicio Fin
@@ -30,7 +18,6 @@
         }
         if (empty($this->params['url']['FechaFin'])) {
             $this->params['url']['FechaFin'] = date("Y-m-d");
-            ;
         }
         ?>
         <?php echo $this->Form->create('Presupuestoscliente', array('type' => 'get')) ?>

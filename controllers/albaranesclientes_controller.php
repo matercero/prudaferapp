@@ -36,16 +36,13 @@ class AlbaranesclientesController extends AppController {
             $conditions [] = array('Albaranescliente.numero' => $this->params['named']['numero']);
 
 
-        if (!empty($this->params['url']['fecha_inicio']) && !empty($this->params['url']['fecha_fin'])) {
-            $data1 = implode('-', array_reverse($this->params['url']['fecha_inicio']));
-            $data2 = implode('-', array_reverse($this->params['url']['fecha_fin']));
+        if (!empty($this->params['url']['FechaInicio']) && !empty($this->params['url']['FechaFin'])) {
+            $data1 = date("Y-m-d", strtotime($this->params['url']['FechaInicio']));
+            $data2 = date("Y-m-d", strtotime($this->params['url']['FechaFin']));
+            //  echo '$data1=' . $data1 . ' $data2=' . $data2  ;
             $conditions[] = array("Albaranescliente.fecha BETWEEN '$data1' AND '$data2'");
         }
-        if (!empty($this->params['named']['fecha_inicio[year]']) && !empty($this->params['named']['fecha_fin[year]'])) {
-            $data1 = $this->params['named']['fecha_inicio[year]'] . '-' . $this->params['named']['fecha_inicio[month]'] . '-' . $this->params['named']['fecha_inicio[day]'];
-            $data2 = $this->params['named']['fecha_fin[year]'] . '-' . $this->params['named']['fecha_fin[month]'] . '-' . $this->params['named']['fecha_fin[day]'];
-            $conditions[] = array("Albaranescliente.fecha BETWEEN '$data1' AND '$data2'");
-        }
+
 
         /* Articulos */
         if (!empty($this->params['url']['articulo_id'])) {
@@ -177,7 +174,7 @@ class AlbaranesclientesController extends AppController {
                     $this->__trapaso_from_ordene($this->data);
                 } elseif (!empty($this->data['Albaranescliente']['avisosrepuesto_id'])) { // Si viene de Avisosrepuesto 
                     $this->__trapaso_from_avisosrepuesto($this->data);
-                }  else {
+                } else {
                     $this->Albaranescliente->Tareasalbaranescliente->create();
                     $tareasalbaranescliente = array();
                     $tareasalbaranescliente['Tareasalbaranescliente']['tipo'] = 'repuestos';
@@ -290,6 +287,7 @@ class AlbaranesclientesController extends AppController {
                 $this->loadModel('Albaranescliente');
                 $this->Albaranescliente->create();
                 if ($this->Albaranescliente->save($this->data, array('validate' => TRUE))) {
+                    echo '  >> SAve ';
                     //Leo el registro, para actualizar campos
                     $albaranescliente = $this->Albaranescliente->read(null, $this->Albaranescliente->id);
                     //  $this->Albaranescliente->saveField('numero', $alb_cliente['Albaranescliente']['numero'] + 1);
@@ -540,7 +538,6 @@ class AlbaranesclientesController extends AppController {
             }
         }
     }
-
 
     function facturacion() {
         if (!empty($this->data)) {
@@ -833,7 +830,7 @@ class AlbaranesclientesController extends AppController {
 
             $siguiente_numero = $this->FacturasCliente->dime_siguiente_numero($albaranescliente['Albaranescliente']['serie']);
             $siguiente_numero++;
-           
+
             $this->FacturasCliente->create();
 
             $factura_cliente = array();
@@ -848,10 +845,10 @@ class AlbaranesclientesController extends AppController {
             $factura_cliente['FacturasCliente']['impuestos'] = redondear_dos_decimal($albaranescliente['Albaranescliente']['impuestos']);
             $factura_cliente['FacturasCliente']['total'] = redondear_dos_decimal($albaranescliente['Albaranescliente']['precio'] + $albaranescliente['Albaranescliente']['impuestos']);
 
-            $this->FacturasCliente->save($factura_cliente); 
+            $this->FacturasCliente->save($factura_cliente);
             if ($this->FacturasCliente->save($factura_cliente)) {
-                
-               //Relacionar la factura con el cliente
+
+                //Relacionar la factura con el cliente
                 $this->FacturasCliente->Albaranescliente->saveField('estadosalbaranescliente_id', 3);
                 $this->FacturasCliente->Albaranescliente->saveField('facturas_cliente_id', $this->FacturasCliente->id);
                 $this->set(compact('facturasCliente'));
@@ -860,8 +857,6 @@ class AlbaranesclientesController extends AppController {
                 $this->flashWarnings(__('La Factura NO ha sido creada.', true));
             }
             $this->redirect($this->referer());
-
-          
         }
     }
 
