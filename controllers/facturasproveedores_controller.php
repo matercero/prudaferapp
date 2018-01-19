@@ -38,16 +38,13 @@ class FacturasproveedoresController extends AppController {
             $conditions [] = array('Facturasproveedore.numero' => $this->params['named']['numero']);
 
 
-        if (!empty($this->params['url']['fecha_inicio']) && !empty($this->params['url']['fecha_fin'])) {
-            $data1 = implode('-', array_reverse($this->params['url']['fecha_inicio']));
-            $data2 = implode('-', array_reverse($this->params['url']['fecha_fin']));
-            $conditions[] = array("Facturasproveedore.fechafactura BETWEEN '$data1' AND '$data2'");
+        if (!empty($this->params['url']['FechaInicio']) && !empty($this->params['url']['FechaFin'])) {
+            $data1 = date("Y-m-d", strtotime($this->params['url']['FechaInicio']));
+            $data2 = date("Y-m-d", strtotime($this->params['url']['FechaFin']));
+            //    echo '$data1=' . $data1 . ' $data2=' . $data2  ;
+            $conditions[] = array("Facturasproveedore.fechafactura  BETWEEN '$data1' AND '$data2'");
         }
-        if (!empty($this->params['named']['fecha_inicio[year]']) && !empty($this->params['named']['fecha_fin[year]'])) {
-            $data1 = $this->params['named']['fecha_inicio[year]'] . '-' . $this->params['named']['fecha_inicio[month]'] . '-' . $this->params['named']['fecha_inicio[day]'];
-            $data2 = $this->params['named']['fecha_fin[year]'] . '-' . $this->params['named']['fecha_fin[month]'] . '-' . $this->params['named']['fecha_fin[day]'];
-            $conditions[] = array("Facturasproveedore.fechafactura BETWEEN '$data1' AND '$data2'");
-        }
+
 
         if (!empty($this->params['url']['proveedore_id']))
             $conditions [] = array('1' => '1 AND Facturasproveedore.proveedore_id = "' . $this->params['url']['proveedore_id'] . '"');
@@ -103,7 +100,7 @@ class FacturasproveedoresController extends AppController {
                 'Tiposiva',
                 'Albaranesproveedore' => 'Centrosdecoste',
             ),
-                ));
+        ));
         $this->set('facturasproveedore', $facturasproveedore);
     }
 
@@ -299,7 +296,7 @@ class FacturasproveedoresController extends AppController {
                 $this->Facturasproveedore->create();
                 $facturasproveedore = array();
                 $proveedore_id = null;
-                $fecha = $posible_factura['fechafactura'][2] . '-' .$posible_factura['fechafactura'][1]. '-' . $posible_factura['fechafactura'][0];
+                $fecha = $posible_factura['fechafactura'][2] . '-' . $posible_factura['fechafactura'][1] . '-' . $posible_factura['fechafactura'][0];
                 $baseimponible = 0;
                 $this->loadModel('Config');
                 $config = $this->Config->read(null, 1);

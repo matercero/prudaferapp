@@ -35,18 +35,13 @@ class AlbaranesproveedoresController extends AppController {
             $conditions [] = array('Albaranesproveedore.numero' => $this->params['named']['numero']);
 
 
-        if (!empty($this->params['url']['fecha_inicio']) && !empty($this->params['url']['fecha_fin'])) {
-            $data1 = implode('-', array_reverse($this->params['url']['fecha_inicio']));
-            $data2 = implode('-', array_reverse($this->params['url']['fecha_fin']));
-            $conditions[] = array("Albaranesproveedore.fecha BETWEEN '$data1' AND '$data2'");
+       if (!empty($this->params['url']['FechaInicio']) && !empty($this->params['url']['FechaFin'])) {
+            $data1 = date("Y-m-d", strtotime( $this->params['url']['FechaInicio']));
+            $data2 = date("Y-m-d", strtotime( $this->params['url']['FechaFin']));
+        //    echo '$data1=' . $data1 . ' $data2=' . $data2  ;
+            $conditions[] = array("Albaranesproveedore.fecha BETWEEN '$data1' AND '$data2'");       
         }
-        if (!empty($this->params['named']['fecha_inicio[year]']) && !empty($this->params['named']['fecha_fin[year]'])) {
-            $data1 = $this->params['named']['fecha_inicio[year]'] . '-' . $this->params['named']['fecha_inicio[month]'] . '-' . $this->params['named']['fecha_inicio[day]'];
-            $data2 = $this->params['named']['fecha_fin[year]'] . '-' . $this->params['named']['fecha_fin[month]'] . '-' . $this->params['named']['fecha_fin[day]'];
-            $conditions[] = array("Albaranesproveedore.fecha BETWEEN '$data1' AND '$data2'");
-        }
-
-
+        
         if (!empty($this->params['url']['proveedore_id']))
             $conditions [] = array('1' => '1 AND Albaranesproveedore.proveedore_id = ' . $this->params['url']['proveedore_id']);
         if (!empty($this->params['named']['proveedore_id']))
