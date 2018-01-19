@@ -297,8 +297,10 @@ class FacturasClientesController extends AppController {
 
     function facturacion() {
         if (!empty($this->data)) {
-            $fecha_inicio = date('Y-m-d', strtotime($this->data['Filtro']['fecha_inicio']['year'] . '-' . $this->data['Filtro']['fecha_inicio']['month'] . '-' . $this->data['Filtro']['fecha_inicio']['day']));
-            $fecha_fin = date('Y-m-d', strtotime($this->data['Filtro']['fecha_fin']['year'] . '-' . $this->data['Filtro']['fecha_fin']['month'] . '-' . $this->data['Filtro']['fecha_fin']['day']));
+            $fecha_inicio = date("Y-m-d", strtotime($this->data['Filtro']['FechaInicio']));
+            $fecha_fin = date("Y-m-d", strtotime($this->data['Filtro']['FechaFin']));
+            echo '$data1=' . $fecha_inicio . ' $data2=' . $fecha_fin;
+            
             $cliente_facturable_list = array();
             if (!empty($this->data['Filtro']['todos'])) {
                 $conditions = array();

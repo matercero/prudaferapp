@@ -22,26 +22,39 @@
         <?php
         // Inicializa fechas inicio Fin
         if (empty($this->params['url']['FechaInicio'])) {
-            $this->params['url']['FechaInicio'] = '1998-01-01';
+            $this->params['url']['FechaInicio'] =  date("Y-m-d");
         }
         if (empty($this->params['url']['FechaFin'])) {
             $this->params['url']['FechaFin'] = date("Y-m-d");
         }
         ?>
-        <label>Fecha de Inicio</label>
-        <?php echo $this->Form->day('Filtro.fecha_inicio', date('d'), array('empty' => false)); ?> 
-        <?php echo $this->Form->month('Filtro.fecha_inicio', date('m'), array('empty' => false)); ?> 
-        <?php echo $this->Form->year('Filtro.fecha_inicio', 1994, date('Y'), null, array('empty' => false)); ?> 
-        <label>Fecha de Fin</label>
-        <?php echo $this->Form->day('Filtro.fecha_fin', date('d'), array('empty' => false)); ?> 
-        <?php echo $this->Form->month('Filtro.fecha_fin', date('m'), array('empty' => false)); ?> 
-        <?php echo $this->Form->year('Filtro.fecha_fin', 1994, date('Y'), null, array('empty' => false)); ?> 
-        <label>Serie de los Albaranes de Venta</label>
-    <?php echo $this->Form->input('Filtro.seriesAlbaranesventa', array('multiple' => true, 'style' => 'width: 60%;', 'options' => $seriesAlbaranesventas, 'label' => false)) ?>
+        <table id="intervalo">
+            <tr>
+
+                <!-- Fecha inicio NUEVA -->
+                <td style="width: 250px">
+                    <?php
+                    echo $this->Form->input('Filtro.FechaInicio', array('type' => 'text', 'id' => 'calendar_inputEnt',
+                        'value' => $this->params['url']['FechaInicio'], 'style' => 'width: 120px;'))
+                    ?>
+                </td>
+                <!-- Fecha Fin NUEVA -->
+                <td style="width: 250px">
+                    <?php
+                    echo $this->Form->input('Filtro.FechaFin', array('type' => 'text', 'id' => 'calendar_inputFin',
+                        'value' => $this->params['url']['FechaFin'], 'style' => 'width: 120px;'))
+                    ?>
+                </td>
+                <td>
+                    <label>Serie de los Albaranes de Venta</label>
+                    <?php echo $this->Form->input('Filtro.seriesAlbaranesventa', array('multiple' => true, 'style' => 'width: 60%;', 'options' => $seriesAlbaranesventas, 'label' => false)) ?>
+                </td>
+            </tr>
+        </table>
     </fieldset>
-        <?php echo $this->Form->end(__('Albaranes Posibles de Facturar', true)); ?>
+    <?php echo $this->Form->end(__('Albaranes Posibles de Facturar', true)); ?>
     <div id="add-cliente-popup"  title="Añadir Cliente al Filtro">
-<?php echo $this->Autocomplete->replace_select('Cliente', 'Cliente', true, null); ?>
+        <?php echo $this->Autocomplete->replace_select('Cliente', 'Cliente', true, null); ?>
     </div>
 </div>
 <script type="text/javascript">
@@ -81,4 +94,20 @@
             }
         });
     });
+</script>
+<script>
+    dhtmlXCalendarObject.prototype.langData["es"] = {
+        dateformat: '%d-%m-%Y',
+        monthesFNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+        monthesSNames: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+        daysFNames: ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado", "Domingo"],
+        daysSNames: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+        weekstart: 1,
+        weekname: "S",
+        today: "Hoy",
+        clear: "Limpiar"
+    };
+    var myCalendar = new dhtmlXCalendarObject(["calendar_inputEnt", "calendar_inputFin"]);
+    myCalendar.loadUserLanguage("es");
+    myCalendar.hideTime();
 </script>
