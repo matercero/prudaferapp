@@ -1,4 +1,4 @@
-    <?php
+<?php
 
 class AlbaranesproveedoresController extends AppController {
 
@@ -35,13 +35,13 @@ class AlbaranesproveedoresController extends AppController {
             $conditions [] = array('Albaranesproveedore.numero' => $this->params['named']['numero']);
 
 
-       if (!empty($this->params['url']['FechaInicio']) && !empty($this->params['url']['FechaFin'])) {
-            $data1 = date("Y-m-d", strtotime( $this->params['url']['FechaInicio']));
-            $data2 = date("Y-m-d", strtotime( $this->params['url']['FechaFin']));
-        //    echo '$data1=' . $data1 . ' $data2=' . $data2  ;
-            $conditions[] = array("Albaranesproveedore.fecha BETWEEN '$data1' AND '$data2'");       
+        if (!empty($this->params['url']['FechaInicio']) && !empty($this->params['url']['FechaFin'])) {
+            $data1 = date("Y-m-d", strtotime($this->params['url']['FechaInicio']));
+            $data2 = date("Y-m-d", strtotime($this->params['url']['FechaFin']));
+            //    echo '$data1=' . $data1 . ' $data2=' . $data2  ;
+            $conditions[] = array("Albaranesproveedore.fecha BETWEEN '$data1' AND '$data2'");
         }
-        
+
         if (!empty($this->params['url']['proveedore_id']))
             $conditions [] = array('1' => '1 AND Albaranesproveedore.proveedore_id = ' . $this->params['url']['proveedore_id']);
         if (!empty($this->params['named']['proveedore_id']))
@@ -72,6 +72,16 @@ class AlbaranesproveedoresController extends AppController {
         if (!empty($this->params['named']['numero_ordene']))
             $conditions [] = array('1' => '1 AND Albaranesproveedore.pedidosproveedore_id IN (SELECT Pedidosproveedore.id FROM pedidosproveedores Pedidosproveedore WHERE Pedidosproveedore.presupuestosproveedore_id IN (SELECT Presupuestosproveedore.id FROM presupuestosproveedores Presupuestosproveedore WHERE Presupuestosproveedore.ordene_id IN (SELECT Ordene.id FROM ordenes Ordene WHERE Ordene.numero = "' . $this->params['named']['numero_ordene'] . '")))');
 
+        if (!empty($this->params['url']['estadosalbaranesproveedore_id']))
+            $conditions [] = array('1' => '1 AND Albaranesproveedore.estadosalbaranesproveedore_id = ' . $this->params['url']['estadosalbaranesproveedore_id']);
+        if (!empty($this->params['named']['estadosalbaranesproveedore_id']))
+            $conditions [] = array('1' => '1 AND Albaranesproveedore.estadosalbaranesproveedore_id = ' . $this->params['named']['estadosalbaranesproveedore_id']);
+
+        if (!empty($this->params['url']['centrosdecoste_id']))
+            $conditions [] = array('1' => '1 AND Albaranesproveedore.centrosdecoste_id = ' . $this->params['url']['centrosdecoste_id']);
+        if (!empty($this->params['named']['centrosdecoste_id']))
+            $conditions [] = array('1' => '1 AND Albaranesproveedore.centrosdecoste_id = ' . $this->params['named']['centrosdecoste_id']);
+
         $paginate_results_per_page = 20;
         if (!empty($this->params['url']['resultados_por_pagina']))
             $paginate_results_per_page = intval($this->params['url']['resultados_por_pagina']);
@@ -81,7 +91,9 @@ class AlbaranesproveedoresController extends AppController {
         $this->paginate = array('limit' => $paginate_results_per_page, 'contain' => $contain, 'conditions' => $conditions, 'url' => $this->params['pass']);
         $albaranesproveedores = $this->paginate();
         $this->set('albaranesproveedores', $albaranesproveedores);
-
+        $this->set('estadosalbaranesprove', $this->Albaranesproveedore->Estadosalbaranesproveedore->find('list'));
+        $this->set('centrocoste', $this->Albaranesproveedore->Centrosdecoste->find('list'));
+     
         if (!empty($this->params['url']['pdf'])) {
             $this->layout = 'pdf';
             $this->render('/albaranesproveedores/pdfFilter');
@@ -152,7 +164,7 @@ class AlbaranesproveedoresController extends AppController {
                         $articulo_albaranesproveedore['ArticulosAlbaranesproveedore']['precio_proveedor'] = $articulo_pedidosproveedore['ArticulosPedidosproveedore']['precio_proveedor'];
                         $articulo_albaranesproveedore['ArticulosAlbaranesproveedore']['descuento'] = $articulo_pedidosproveedore['ArticulosPedidosproveedore']['descuento'];
                         $articulo_albaranesproveedore['ArticulosAlbaranesproveedore']['neto'] = $articulo_pedidosproveedore['ArticulosPedidosproveedore']['neto'];
-                        $articulo_albaranesproveedore['ArticulosAlbaranesproveedore']['total'] = $cantidad_servida *$articulo_pedidosproveedore['ArticulosPedidosproveedore']['neto'];
+                        $articulo_albaranesproveedore['ArticulosAlbaranesproveedore']['total'] = $cantidad_servida * $articulo_pedidosproveedore['ArticulosPedidosproveedore']['neto'];
                         $data[] = $articulo_albaranesproveedore;
                     }
                 }
@@ -253,7 +265,7 @@ class AlbaranesproveedoresController extends AppController {
                 /* Obtenemos los alabranes de todos los proveedores comprendidos en el rango de fecha
                  * y que se PUEDAN FACTURAR 
                  */
-                $albaranesproveedores = $this->Albaranesproveedore->find('all', array('conditions' => array('Albaranesproveedore.confirmado' => 1,'Albaranesproveedore.estadosalbaranesproveedore_id' =>1, 'Albaranesproveedore.fecha BETWEEN ? AND ?' => array($fecha_inicio, $fecha_fin), 'Albaranesproveedore.facturasproveedore_id' => NULL), 'contain' => array('Proveedore','Centrosdecoste','Tiposiva'), 'order' => 'Albaranesproveedore.proveedore_id'));
+                $albaranesproveedores = $this->Albaranesproveedore->find('all', array('conditions' => array('Albaranesproveedore.confirmado' => 1, 'Albaranesproveedore.estadosalbaranesproveedore_id' => 1, 'Albaranesproveedore.fecha BETWEEN ? AND ?' => array($fecha_inicio, $fecha_fin), 'Albaranesproveedore.facturasproveedore_id' => NULL), 'contain' => array('Proveedore', 'Centrosdecoste', 'Tiposiva'), 'order' => 'Albaranesproveedore.proveedore_id'));
                 $proveedore_list = array();
                 foreach ($albaranesproveedores as $albaranesproveedore) {
                     $proveedore_list[$albaranesproveedore['Proveedore']['nombre']][] = $albaranesproveedore;
@@ -262,7 +274,7 @@ class AlbaranesproveedoresController extends AppController {
                 /* Obtenemos los alabranes de los proveedore comprendidos en el rango de fecha
                  * y que se PUEDAN FACTURAR 
                  */
-                $albaranesproveedores = $this->Albaranesproveedore->find('all', array('conditions' => array('Albaranesproveedore.confirmado' => 1, 'Albaranesproveedore.estadosalbaranesproveedore_id' =>1,'Albaranesproveedore.fecha BETWEEN ? AND ?' => array($fecha_inicio, $fecha_fin), 'Albaranesproveedore.proveedore_id' => $this->data['Filtro']['Proveedore']), 'contain' => array('Proveedore','Centrosdecoste','Tiposiva'), 'order' => 'Albaranesproveedore.proveedore_id'));
+                $albaranesproveedores = $this->Albaranesproveedore->find('all', array('conditions' => array('Albaranesproveedore.confirmado' => 1, 'Albaranesproveedore.estadosalbaranesproveedore_id' => 1, 'Albaranesproveedore.fecha BETWEEN ? AND ?' => array($fecha_inicio, $fecha_fin), 'Albaranesproveedore.proveedore_id' => $this->data['Filtro']['Proveedore']), 'contain' => array('Proveedore', 'Centrosdecoste', 'Tiposiva'), 'order' => 'Albaranesproveedore.proveedore_id'));
                 $proveedore_list = array();
                 foreach ($albaranesproveedores as $albaranesproveedore) {
                     $proveedore_list[$albaranesproveedore['Proveedore']['nombre']][] = $albaranesproveedore;

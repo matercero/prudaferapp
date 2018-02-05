@@ -11,7 +11,7 @@
         if (!empty($this->params['url'])) {
             $this->Paginator->options(array('url' => $this->params['url']));
         }
-// Inicializa fechas inicio Fin
+        // Inicializa fechas inicio Fin
         if (empty($this->params['url']['FechaInicio'])) {
             $this->params['url']['FechaInicio'] = '1998-01-01';
         }
@@ -35,7 +35,7 @@
                 <?php else: ?>
                     <td style="width: 250px"><?php echo $this->Form->input('Search.numero') ?></td>
                 <?php endif; ?>
-                    
+
                 <!-- Fecha inicio NUEVA -->
                 <td style="width: 250px">
                     <?php
@@ -101,6 +101,13 @@
                             });
                 </script>            
             <?php endif; ?>
+            <?php if (!empty($this->params['named']['estadosalbaranesproveedore_id'])): ?>
+                <td><?php echo $this->Form->input('Search.estadosalbaranesproveedore_id', array('label' => 'Estado', 'type' => 'select', 'options' => $estadosalbaranesprove, 'empty' => True, 'selected' => $this->params['named']['estadosalbaranesproveedore_id'])) ?></td>
+            <?php elseif (!empty($this->params['url']['estadosalbaranesproveedore_id'])): ?>
+                <td><?php echo $this->Form->input('Search.estadosalbaranesproveedore_id', array('label' => 'Estado', 'type' => 'select', 'options' => $estadosalbaranesprove, 'empty' => True, 'selected' => $this->params['url']['estadosalbaranesproveedore_id'])) ?></td>
+            <?php else: ?>
+                <td><?php echo $this->Form->input('Search.estadosalbaranesproveedore_id', array('label' => 'Estado', 'type' => 'select', 'empty' => True, 'options' => $estadosalbaranesprove)) ?></td>
+            <?php endif; ?>
             </tr>
             <tr>
                 <?php if (!empty($this->params['named']['numero_avisostallere'])): ?>
@@ -150,13 +157,7 @@
                             });
                 </script>
             <?php endif; ?>
-            <?php if (!empty($this->params['named']['resultados_por_pagina'])): ?>
-                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20', 'selected' => $this->params['named']['resultados_por_pagina'])) ?></td>
-            <?php elseif (!empty($this->params['url']['resultados_por_pagina'])): ?>
-                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20', 'selected' => $this->params['url']['resultados_por_pagina'])) ?></td>
-            <?php else: ?>
-                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20')) ?></td>
-            <?php endif; ?>
+
             <td><?php echo $this->Form->input('Search.almacene_id', array('label' => 'Almacén 1,2,3', 'type' => 'text', 'class' => 'almacenes_select', 'style' => 'width: 300px;')) ?></td>
             <?php if (!empty($this->params['named']['almacene_id'])): ?>
                 <script>
@@ -180,6 +181,21 @@
                                 });
                             });
                 </script>    
+            <?php endif; ?>
+            <?php if (!empty($this->params['named']['centrosdecoste_id'])): ?>
+                <td><?php echo $this->Form->input('Search.centrosdecoste_id', array('label' => 'Centro de coste', 'type' => 'select', 'options' => $centrocoste, 'empty' => True, 'selected' => $this->params['named']['centrosdecoste_id'])) ?></td>
+            <?php elseif (!empty($this->params['url']['centrosdecoste_id'])): ?>
+                <td><?php echo $this->Form->input('Search.centrosdecoste_id', array('label' => 'Centro de coste', 'type' => 'select', 'options' => $centrocoste, 'empty' => True, 'selected' => $this->params['url']['centrosdecoste_id'])) ?></td>
+            <?php else: ?>
+                <td><?php echo $this->Form->input('Search.centrosdecoste_id', array('label' => 'Centro de coste', 'type' => 'select', 'empty' => True, 'options' => $centrocoste)) ?></td>
+            <?php endif; ?>
+
+            <?php if (!empty($this->params['named']['resultados_por_pagina'])): ?>
+                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20', 'selected' => $this->params['named']['resultados_por_pagina'])) ?></td>
+            <?php elseif (!empty($this->params['url']['resultados_por_pagina'])): ?>
+                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20', 'selected' => $this->params['url']['resultados_por_pagina'])) ?></td>
+            <?php else: ?>
+                <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20')) ?></td>
             <?php endif; ?>
             </tr>
         </table>
