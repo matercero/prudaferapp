@@ -37,7 +37,7 @@
                     <td style="width: 250px"><?php echo $this->Form->input('Search.numero') ?></td>
                 <?php endif; ?>
 
-               <!-- Fecha inicio NUEVA -->
+                <!-- Fecha inicio NUEVA -->
                 <td style="width: 250px">
                     <?php
                     echo $this->Form->input('FechaInicio', array('type' => 'text', 'id' => 'calendar_inputEnt',
@@ -147,14 +147,21 @@
             </tr>
         </table>
         <?php echo $this->Form->button('Nueva Búsqueda', array('type' => 'reset', 'class' => 'button_css_green')); ?>
-        <?php echo $this->Form->end(array('label' => 'Buscar', 'div' => True, 'class' => 'button_css_blue')) ?>
+       
+        <!-- Se muestra boton de Exportar si se ha seleccionado cliente -->
+        <?php if (!empty($this->params['named']['cliente_id']) || !empty($this->params['url']['cliente_id'])): ?>
+            <?php echo $this->Html->link('Exportar CSV', array('controller' => 'Albaranesclientesreparaciones', 'action' => 'download'), array('target' => '_blank')); ?>
+        <?php endif; ?>
+       
+         <?php echo $this->Form->end(array('label' => 'Buscar', 'div' => True, 'class' => 'button_css_blue')) ?>
     </div>
     <p>
         <?php
         echo $this->Paginator->counter(array(
-            'format' => __('Page %page% of %pages%, showing %current% records out of %count% total, starting on record %start%, ending on %end%', true)
+            'format' => __('Pag %page% de %pages%, mostrando %current% registros de %count% total, desde registro %start%, hasta %end%', true)
         ));
-        ?>	</p>
+        ?>	
+    </p>
 
     <div class="paging">
         <?php echo $this->Paginator->prev('<< ' . __('anterior', true), array(), null, array('class' => 'disabled')); ?>
@@ -222,7 +229,7 @@
 
                 <?php if (!empty($albaranesclientesreparacione['TareasAlbaranesclientesreparacione'])): ?>
                     <?php
-                    echo 'SIZE=' . sizeof($albaranesclientesreparacione['TareasAlbaranesclientesreparacione']);
+                    //   echo 'SIZE=' . sizeof($albaranesclientesreparacione['TareasAlbaranesclientesreparacione']);
                     $sizeTareas = sizeof($albaranesclientesreparacione['TareasAlbaranesclientesreparacione']);
                     $acumuladoHoras = 0;
                     $acumuladoDezpl = 0;
