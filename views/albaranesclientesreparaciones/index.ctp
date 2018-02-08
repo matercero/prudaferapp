@@ -147,13 +147,16 @@
             </tr>
         </table>
         <?php echo $this->Form->button('Nueva Búsqueda', array('type' => 'reset', 'class' => 'button_css_green')); ?>
-       
+
         <!-- Se muestra boton de Exportar si se ha seleccionado cliente -->
         <?php if (!empty($this->params['named']['cliente_id']) || !empty($this->params['url']['cliente_id'])): ?>
-            <?php echo $this->Html->link('Exportar CSV', array('controller' => 'Albaranesclientesreparaciones', 'action' => 'download'), array('target' => '_blank')); ?>
-        <?php endif; ?>
-       
-         <?php echo $this->Form->end(array('label' => 'Buscar', 'div' => True, 'class' => 'button_css_blue')) ?>
+
+            <?php echo $this->Html->link('Exportar CSV', array('controller' => 'Albaranesclientesreparaciones', 'action' => 'download', 
+                'parameter' => $_SERVER['QUERY_STRING'] ), array('target' => '_blank'));
+            ?>
+        <?php endif; ?>            
+
+        <?php echo $this->Form->end(array('label' => 'Buscar', 'div' => True, 'class' => 'button_css_blue')) ?>
     </div>
     <p>
         <?php
@@ -266,7 +269,7 @@
                                 <td>0</td>
                                 <td>0</td>
                                 <td><?php echo $tarea['totalotroserviciosimputables'] ?></td>
-                            <?php else : //no hace nada  ?>                            
+                            <?php else : //no hace nada   ?>                            
                             <?php endif; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>

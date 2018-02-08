@@ -52,7 +52,7 @@ class AlbaranesclientesreparacionesController extends AppController {
             $data2 = date("Y-m-d", strtotime($this->params['url']['FechaFin']));
             $conditions[] = array("Albaranesclientesreparacione.fecha BETWEEN '$data1' AND '$data2'");
         }
-        
+
         if (!empty($this->params['named']['FechaInicio']) && !empty($this->params['named']['FechaFin'])) {
             $data1 = date("Y-m-d", strtotime($this->params['named']['FechaInicio']));
             $data2 = date("Y-m-d", strtotime($this->params['named']['FechaFin']));
@@ -98,7 +98,6 @@ class AlbaranesclientesreparacionesController extends AppController {
             $paginate_results_per_page = intval($this->params['named']['resultados_por_pagina']);
 
         $this->paginate = array('limit' => $paginate_results_per_page, 'contain' => $contain, 'conditions' => $conditions, 'url' => $this->params['pass']);
-
 
         $series = $this->Config->SeriesAlbaranesventa->find('list', array('fields' => array('SeriesAlbaranesventa.serie', 'SeriesAlbaranesventa.serie')));
         $this->set('series', $series);
@@ -388,61 +387,32 @@ class AlbaranesclientesreparacionesController extends AppController {
                 'TareasAlbaranesclientesreparacionesParte' => 'Mecanico',
                 'TareasAlbaranesclientesreparacionesPartestallere' => 'Mecanico'),
         );
+        
+        
+        $query = $_SERVER['QUERY_STRING'];
+        $myArray = explode('&', $query);
+        
+        // quita el primer elemento (url:controller)
+        array_shift($myArray);
+        // quita el ultimo elemento (paginacion)
+        array_pop($myArray);              
+        //print_r($myArray);
+        
+       print_r(array_values($myArray));
+        
+        //Uno los parametros con &
+       // $conditions = implode("&", $myArray);       
+        // print_r($conditions);
         $conditions = array();
+//
+//        if (!empty($this->params['url']['serie']))
+//            $conditions [] = array('Albaranesclientesreparacione.serie' => $this->params['url']['serie']);
+//        if (!empty($this->params['named']['serie']))
+//            $conditions [] = array('Albaranesclientesreparacione.serie' => $this->params['named']['serie']);
 
-        if (!empty($this->params['url']['serie']))
-            $conditions [] = array('Albaranesclientesreparacione.serie' => $this->params['url']['serie']);
-        if (!empty($this->params['named']['serie']))
-            $conditions [] = array('Albaranesclientesreparacione.serie' => $this->params['named']['serie']);
+        
 
-
-        if (!empty($this->params['url']['numero']))
-            $conditions [] = array('Albaranesclientesreparacione.numero' => $this->params['url']['numero']);
-        if (!empty($this->params['named']['numero']))
-            $conditions [] = array('Albaranesclientesreparacione.numero' => $this->params['named']['numero']);
-
-
-
-         if ( (!empty($this->params['url']['FechaInicio']) && !empty($this->params['url']['FechaFin'])) 
-              || !empty($this->params['named']['FechaInicio']) && !empty($this->params['named']['FechaFin'])) {
-            $data1 = date("Y-m-d", strtotime($this->params['url']['FechaInicio']));
-            $data2 = date("Y-m-d", strtotime($this->params['url']['FechaFin']));
-            $conditions[] = array("Albaranesclientesreparacione.fecha BETWEEN '$data1' AND '$data2'");
-        }
-
-        if (!empty($this->params['url']['articulo_id']))
-            $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.id IN (SELECT TareasAlbaranesclientesreparacione.albaranesclientesreparacione_id FROM tareas_albaranesclientesreparaciones TareasAlbaranesclientesreparacione WHERE TareasAlbaranesclientesreparacione.id IN (SELECT ArticulosTareasAlbaranesclientesreparacione.tareas_albaranesclientesreparacione_id FROM articulos_tareas_albaranesclientesreparaciones ArticulosTareasAlbaranesclientesreparacione WHERE ArticulosTareasAlbaranesclientesreparacione.articulo_id = ' . $this->params['url']['articulo_id'] . '))');
-        if (!empty($this->params['named']['articulo_id']))
-            $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.id IN (SELECT TareasAlbaranesclientesreparacione.albaranesclientesreparacione_id FROM tareas_albaranesclientesreparaciones TareasAlbaranesclientesreparacione WHERE TareasAlbaranesclientesreparacione.id IN (SELECT ArticulosTareasAlbaranesclientesreparacione.tareas_albaranesclientesreparacione_id FROM articulos_tareas_albaranesclientesreparaciones ArticulosTareasAlbaranesclientesreparacione WHERE ArticulosTareasAlbaranesclientesreparacione.articulo_id = ' . $this->params['named']['articulo_id'] . '))');
-
-
-        if (!empty($this->params['url']['cliente_id']))
-            $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.cliente_id = ' . $this->params['url']['cliente_id']);
-        if (!empty($this->params['named']['cliente_id']))
-            $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.cliente_id = ' . $this->params['named']['cliente_id']);
-
-        if (!empty($this->params['url']['comerciale_id']))
-            $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.comerciale_id = ' . $this->params['url']['comerciale_id']);
-        if (!empty($this->params['named']['comerciale_id']))
-            $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.comerciale_id = ' . $this->params['named']['comerciale_id']);
-
-        if (!empty($this->params['url']['numero_ordene']))
-            $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.ordene_id IN (SELECT Ordene.id FROM ordenes Ordene WHERE Ordene.numero = "' . $this->params['url']['numero_ordene'] . '")');
-        if (!empty($this->params['named']['numero_ordene']))
-            $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.ordene_id  IN (SELECT Ordene.id FROM ordenes Ordene WHERE Ordene.numero = "' . $this->params['named']['numero_ordene'] . '")');
-
-        if (!empty($this->params['url']['estadosalbaranesclientesreparacione_id']))
-            $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.estadosalbaranesclientesreparacione_id = ' . $this->params['url']['estadosalbaranesclientesreparacione_id']);
-        if (!empty($this->params['named']['estadosalbaranesclientesreparacione_id']))
-            $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.estadosalbaranesclientesreparacione_id = ' . $this->params['named']['estadosalbaranesclientesreparacione_id']);
-
-        if (!empty($this->params['url']['numero_avisostallere']))
-            $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.ordene_id IN (SELECT Ordene.id FROM ordenes Ordene WHERE Ordene.avisostallere_id IN  (SELECT Avisostallere.id FROM avisostalleres Avisostallere WHERE Avisostallere.numero =  "' . $this->params['url']['numero_avisostallere'] . '"))');
-        if (!empty($this->params['named']['numero_avisostallere']))
-            $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.ordene_id  IN (SELECT Ordene.id FROM ordenes Ordene WHERE Ordene.avisostallere_id IN (SELECT Avisostallere.id FROM avisostalleres Avisostallere WHERE Avisostallere.numero = "' . $this->params['named']['numero_avisostallere'] . '"))');
-
-
-        $this->set('albaranes', $this->Albaranesclientesreparacione->find('all', array('contain' => $contain, 'conditions' => $conditions,'limit' => 100)));
+        $this->set('albaranes', $this->Albaranesclientesreparacione->find('all', array('contain' => $contain, 'conditions' => $conditions, 'limit' => 5)));
 
         $this->layout = null;
         $this->autoLayout = false;
