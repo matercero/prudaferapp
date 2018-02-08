@@ -20,9 +20,9 @@ foreach ($albaranes as $item) {
 echo $this->Csv->render();
 
 
-//echo '<pre>';
-//echo var_dump($parametros);
-//echo '</pre>';
+echo '<pre>';
+echo var_dump($parametros);
+echo '</pre>';
 
 ?>
 
