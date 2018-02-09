@@ -90,8 +90,6 @@ class AlbaranesclientesreparacionesController extends AppController {
         if (!empty($this->params['named']['numero_avisostallere']))
             $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.ordene_id  IN (SELECT Ordene.id FROM ordenes Ordene WHERE Ordene.avisostallere_id IN (SELECT Avisostallere.id FROM avisostalleres Avisostallere WHERE Avisostallere.numero = "' . $this->params['named']['numero_avisostallere'] . '"))');
 
-        print_r($conditions); 
-        
         $paginate_results_per_page = 20;
         if (!empty($this->params['url']['resultados_por_pagina']))
             $paginate_results_per_page = intval($this->params['url']['resultados_por_pagina']);
@@ -401,9 +399,12 @@ class AlbaranesclientesreparacionesController extends AppController {
 
         $conditions = array();
 
+        $fecha1 = date("Y-m-d", strtotime('01-01-1998'));
+        $fecha2 = date("Y-m-d");
+
+        
         foreach ($myArray as &$valor) {
             $i = explode('=', $valor);
-           // print_r($i);
 
             switch ($i[0]) {
                 case 'serie':
@@ -413,17 +414,17 @@ class AlbaranesclientesreparacionesController extends AppController {
                     break;
                 case 'numero':
                     if (!empty($i[1])) {
-                        $conditions [] = array('1' => '1 AND  Albaranesclientesreparacione.numero = ' . $i[1]);
+                        $conditions [] = array('Albaranesclientesreparacione.numero' => $i[1]);
                     }
                     break;
                 case 'FechaInicio':
                     if (!empty($i[1])) {
-                        $fecha1 = $i[1];
+                        $fecha1 = date("Y-m-d", strtotime($i[1]));
                     }
                     break;
                 case 'FechaFin':
                     if (!empty($i[1])) {
-                        $fecha2 = $i[1];
+                        $fecha2 = date("Y-m-d", strtotime($i[1]));
                     }
                     break;
                 case 'cliente_id':
@@ -433,42 +434,39 @@ class AlbaranesclientesreparacionesController extends AppController {
                     break;
                 case 'articulo_id':
                     if (!empty($i[1])) {
-                        $conditions [] = array('1' => '1 ANDAlbaranesclientesreparacione.id IN (SELECT TareasAlbaranesclientesreparacione.albaranesclientesreparacione_id FROM tareas_albaranesclientesreparaciones TareasAlbaranesclientesreparacione WHERE TareasAlbaranesclientesreparacione.id IN (SELECT ArticulosTareasAlbaranesclientesreparacione.tareas_albaranesclientesreparacione_id FROM articulos_tareas_albaranesclientesreparaciones ArticulosTareasAlbaranesclientesreparacione WHERE ArticulosTareasAlbaranesclientesreparacione.articulo_id = ' . $i[1]);
+                        $conditions [] = array('Albaranesclientesreparacione.id IN (SELECT TareasAlbaranesclientesreparacione.albaranesclientesreparacione_id FROM tareas_albaranesclientesreparaciones TareasAlbaranesclientesreparacione WHERE TareasAlbaranesclientesreparacione.id IN (SELECT ArticulosTareasAlbaranesclientesreparacione.tareas_albaranesclientesreparacione_id FROM articulos_tareas_albaranesclientesreparaciones ArticulosTareasAlbaranesclientesreparacione WHERE ArticulosTareasAlbaranesclientesreparacione.articulo_id' => $i[1]);
                     }
                     break;
-                case 'numero_avisostallere':
-                    if (!empty($i[1])) {
-                        $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.ordene_id  IN (SELECT Ordene.id FROM ordenes Ordene WHERE Ordene.avisostallere_id IN (SELECT Avisostallere.id FROM avisostalleres Avisostallere WHERE Avisostallere.numero = ' . $i[1]);
-                    }
-                    break;
-                case 'numero_ordene':
-                    if (!empty($i[1])) {
-                        $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.ordene_id  IN (SELECT Ordene.id FROM ordenes Ordene WHERE Ordene.numero = '  . $i[1]);
-                    }
-                    break;
+//                case 'numero_avisostallere':
+//                    if (!empty($i[1])) {
+//                        $conditions [] = array('Albaranesclientesreparacione.ordene_id  IN (SELECT Ordene.id FROM ordenes Ordene WHERE Ordene.avisostallere_id IN (SELECT Avisostallere.id FROM avisostalleres Avisostallere WHERE Avisostallere.numero' => $i[1]);
+//                    }
+//                    break;
+//                case 'numero_ordene':
+//                    if (!empty($i[1])) {
+//                        $conditions [] = array('Albaranesclientesreparacione.ordene_id  IN (SELECT Ordene.id FROM ordenes Ordene WHERE Ordene.numero' => $i[1]);
+//                    }
+//                    break;
                 case 'comerciale_id':
                     if (!empty($i[1])) {
-                       $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.comerciale_id = ' . $i[1]);
+                        $conditions [] = array('Albaranesclientesreparacione.comerciale_id' => $i[1]);
                     }
                     break;
                 case 'estadosalbaranesclientesreparacione_id':
                     if (!empty($i[1])) {
-                       $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.estadosalbaranesclientesreparacione_id = ' . $i[1]);
+                        $conditions [] = array('Albaranesclientesreparacione.estadosalbaranesclientesreparacione_id ' => $i[1]);
                     }
                     break;
             }
         }
-        $conditions[] = array("Albaranesclientesreparacione.fecha BETWEEN '$fecha1' AND '$fecha2'");
+        $conditions[] = array('Albaranesclientesreparacione.fecha BETWEEN ? AND ?' => array($fecha1, $fecha2));
 
-        print_r($conditions);
-         
-        $sql =  $this->Albaranesclientesreparacione->find('all', array('contain' => $contain, 'conditions' => $conditions, 'limit' => 20));
-        
-        echo $this->sql('sql_dump');
-        
+//       print_r($conditions);
+
+        $sql = $this->Albaranesclientesreparacione->find('all', array('contain' => $contain, 'conditions' => $conditions, 'limit' => 100));
+
         $this->set('albaranes', $sql);
-        
-    
+
         $this->layout = null;
         $this->autoLayout = false;
         Configure::write('debug', '0');
