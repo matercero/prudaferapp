@@ -1,4 +1,4 @@
-<div class="ordenes">
+    <div class="ordenes">
     <h2>
         <?php __('Orden Nº ' . $ordene['Ordene']['numero']); //?>
         <?php echo $this->Html->link(__('Editar', true), array('action' => 'edit', $ordene['Ordene']['id']), array('class' => 'button_link')); ?>

@@ -402,7 +402,7 @@ class AlbaranesclientesreparacionesController extends AppController {
         $fecha1 = date("Y-m-d", strtotime('01-01-1998'));
         $fecha2 = date("Y-m-d");
 
-        
+
         foreach ($myArray as &$valor) {
             $i = explode('=', $valor);
 
@@ -429,7 +429,7 @@ class AlbaranesclientesreparacionesController extends AppController {
                     break;
                 case 'cliente_id':
                     if (!empty($i[1])) {
-                        $conditions [] = array('1' => '1 AND Albaranesclientesreparacione.cliente_id = ' . $i[1]);
+                        $conditions [] = array('Albaranesclientesreparacione.cliente_id ' => $i[1]);
                     }
                     break;
                 case 'articulo_id':
@@ -466,7 +466,11 @@ class AlbaranesclientesreparacionesController extends AppController {
         $sql = $this->Albaranesclientesreparacione->find('all', array('contain' => $contain, 'conditions' => $conditions, 'limit' => 100));
 
         $this->set('albaranes', $sql);
-
+//
+//        echo '<pre>';
+//        echo var_dump($sql);
+//        echo '</pre>';
+        
         $this->layout = null;
         $this->autoLayout = false;
         Configure::write('debug', '0');
