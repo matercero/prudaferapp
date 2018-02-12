@@ -1,6 +1,4 @@
-<?php
-
-$line = array('FECHA', 'SERIE', 'numero', 'Comercial', 'Observaciones', 'Estado', 'Nº_factura', 'Cliente', 'Centrostrabajo', 'Máquina', 'numero_aceptacion_aportado', 'horas_maquina', 'total_materiales', 'total_manoobra', 'baseimponible', 'Orden_numero', 'Orden descripcion', 'Tarea descripción');
+<?php $line = array('FECHA', 'SERIE', 'numero', 'Comercial', 'Observaciones', 'Estado', 'Nº_factura', 'Cliente', 'Centrostrabajo', 'Máquina', 'numero_aceptacion_aportado', 'horas_maquina', 'total_materiales', 'total_manoobra', 'baseimponible', 'Orden_numero', 'Orden descripcion', 'Tareas descripción');
 $this->Csv->addRow($line);
 foreach ($albaranes as $item) {
     $line = array($item['Albaranesclientesreparacione']['fecha'],
@@ -25,6 +23,11 @@ foreach ($albaranes as $item) {
     if (!empty($item['TareasAlbaranesclientesreparacione'])) {
         if (count($item['TareasAlbaranesclientesreparacione']) == 1) {
             array_push($line, $item['TareasAlbaranesclientesreparacione'][0]['descripcion']);            
+        }  else {
+            $i=0;
+            foreach ($item['TareasAlbaranesclientesreparacione'] as $tarea) {
+                array_push($line, $item['TareasAlbaranesclientesreparacione'][$i]['descripcion']);                                        
+            }
         }        
     }
 
