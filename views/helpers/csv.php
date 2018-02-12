@@ -42,7 +42,7 @@ class CsvHelper extends AppHelper {
         }
     }
 
-    function render($outputHeaders = true, $to_encoding = null, $from_encoding = "auto") {
+    function render($outputHeaders = true, $to_encoding = "UTF-8", $from_encoding = "auto") {
         if ($outputHeaders) {
             if (is_string($outputHeaders)) {
                 $this->setFilename($outputHeaders);

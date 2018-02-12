@@ -1,4 +1,6 @@
-<?php $line = array('FECHA', 'SERIE', 'numero', 'Comercial', 'Observaciones', 'Estado', 'Nº_factura', 'Cliente', 'Centrostrabajo', 'Máquina', 'numero_aceptacion_aportado', 'horas_maquina', 'total_materiales', 'total_manoobra', 'baseimponible', 'Orden_numero', 'Orden descripcion', 'Tareas descripción');
+<?php
+$line = array();
+$line = array('FECHA', 'SERIE', 'NUMERO', 'COMERCIAL', 'OBSERVACIONES', 'ESTADO', 'NUM. FACTURA', 'CLIENTE', 'CENTROSTRABAJO', 'MAQUINA', 'NUMERO_ACEPTACION_APORTADO', 'HORAS_MAQUINA', 'TOTAL_MATERIALES', 'TOTAL_MANOOBRA', 'BASE_IMPONIBLE', 'ORDEN_NUMERO', 'ORDEN DESCRIPCION', 'TAREAS DESCRIPCIÓN');
 $this->Csv->addRow($line);
 foreach ($albaranes as $item) {
     $line = array($item['Albaranesclientesreparacione']['fecha'],

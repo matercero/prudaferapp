@@ -463,7 +463,7 @@ class AlbaranesclientesreparacionesController extends AppController {
 
 //       print_r($conditions);
 
-        $sql = $this->Albaranesclientesreparacione->find('all', array('contain' => $contain, 'conditions' => $conditions, 'limit' => 100));
+        $sql = $this->Albaranesclientesreparacione->find('all', array('contain' => $contain, 'conditions' => $conditions, 'limit' => 10));
 
         $this->set('albaranes', $sql);
 //

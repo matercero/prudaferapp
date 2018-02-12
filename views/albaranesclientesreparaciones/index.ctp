@@ -151,8 +151,8 @@
         <!-- Se muestra boton de Exportar si se ha seleccionado cliente -->
         <?php if (!empty($this->params['named']['cliente_id']) || !empty($this->params['url']['cliente_id'])): ?>
 
-            <?php echo $this->Html->link('Exportar CSV', array('controller' => 'Albaranesclientesreparaciones', 'action' => 'download', 
-                'parameter' => $_SERVER['QUERY_STRING'] ), array('target' => '_blank'));
+            <?php echo $this->Html->link('Exportar CSV', array('controller' => 'Albaranesclientesreparaciones', 'action' => 'download', 'class' => 'button_link',
+                'parameter' => $_SERVER['QUERY_STRING']), array('class' => 'button_link', 'target' => '_blank') );
             ?>
         <?php endif; ?>            
 
