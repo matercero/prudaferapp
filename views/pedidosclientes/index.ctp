@@ -11,13 +11,27 @@
         if (!empty($this->params['url'])) {
             $this->Paginator->options(array('url' => $this->params['url']));
         }
-          // Inicializa fechas Inicio y  Fin
-        if (empty($this->params['url']['FechaInicio'])) {
-            $this->params['url']['FechaInicio'] = '1998-01-01';
+        $valueFechaInicio = date("Y-m-d", strtotime('1998-01-01'));
+        $valueFechaFin = date("Y-m-d");
+
+        // Inicializa fechas inicio Fin
+        if (!empty($this->params['url']['FechaInicio'])) {
+            $fechaUrlInicio = date("Y-m-d", strtotime($this->params['url']['FechaInicio']));
+            if ($fechaUrlInicio > $valueFechaInicio) {
+                $valueFechaInicio = $fechaUrlInicio;
+            }
         }
-        if (empty($this->params['url']['FechaFin'])) {
-            $this->params['url']['FechaFin'] = date("d-m-Y");
-            ;
+
+        if (!empty($this->params['named']['FechaInicio'])) {
+            $valueFechaInicio = $this->params['named']['FechaInicio'];
+        }
+
+        if (!empty($this->params['url']['FechaFin'])) {
+            $valueFechaFin = date("Y-m-d", strtotime($this->params['url']['FechaFin']));
+        }
+
+        if (!empty($this->params['named']['FechaFin'])) {
+            $valueFechaFin = $this->params['named']['FechaFin'];
         }
         ?>
         <?php echo $this->Form->create('Pedidoscliente', array('type' => 'get')) ?>
@@ -38,43 +52,44 @@
                     <td style="width: 250px"><?php echo $this->Form->input('Search.numero') ?></td>
                 <?php endif; ?>
 
-                    <!-- Fecha inicio NUEVA -->
-                    <td style="width: 250px">
-                        <?php
-                        echo $this->Form->input('FechaInicio', array('type' => 'text', 'id' => 'calendar_inputEnt',
-                            'value' => $this->params['url']['FechaInicio'], 'style' => 'width: 100px;'))
-                        ?>
-                    </td>
 
-                    <!-- Fecha Fin NUEVA -->
-                    <td style="width: 250px">
-                        <?php
-                        echo $this->Form->input('FechaFin', array('type' => 'text', 'id' => 'calendar_inputFin',
-                            'value' => $this->params['url']['FechaFin'], 'style' => 'width: 100px;'))
-                        ?>
-                    </td>
+                <!-- Fecha inicio NUEVA -->
+                <td style="width: 250px">
+                    <?php
+                    echo $this->Form->input('FechaInicio', array('type' => 'text', 'id' => 'calendar_inputEnt',
+                        'value' => $valueFechaInicio, 'style' => 'width: 100px;'));
+                    ?>
+                </td>
+
+                <!-- Fecha Fin NUEVA -->
+                <td style="width: 250px">
+                    <?php
+                    echo $this->Form->input('FechaFin', array('type' => 'text', 'id' => 'calendar_inputFin',
+                        'value' => $valueFechaFin, 'style' => 'width: 100px;'));
+                    ?>
+                </td>
 
                 <td><?php echo $this->Form->input('Search.articulo_id', array('label' => 'Árticulo', 'type' => 'text', 'class' => 'articulos_select', 'style' => 'width: 300px;')) ?></td>
                 <?php if (!empty($this->params['named']['articulo_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON(proyect_url()+'articulos/get_json/<?php echo $this->params['named']['articulo_id'] ?>', function(data) {
+                    $(document).ready(function () {
+                        $.getJSON(proyect_url() + 'articulos/get_json/<?php echo $this->params['named']['articulo_id'] ?>', function (data) {
                             $(".articulos_select").select2("data", {
-                                'id' : data.id,
-                                'ref' : data.ref,
-                                'nombre' : data.nombre
+                                'id': data.id,
+                                'ref': data.ref,
+                                'nombre': data.nombre
                             });
                         });
                     });
                 </script>
             <?php elseif (!empty($this->params['url']['articulo_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON(proyect_url()+'articulos/get_json/<?php echo $this->params['url']['articulo_id'] ?>', function(data) {
+                    $(document).ready(function () {
+                        $.getJSON(proyect_url() + 'articulos/get_json/<?php echo $this->params['url']['articulo_id'] ?>', function (data) {
                             $(".articulos_select").select2("data", {
-                                'id' : data.id,
-                                'ref' : data.ref,
-                                'nombre' : data.nombre
+                                'id': data.id,
+                                'ref': data.ref,
+                                'nombre': data.nombre
                             });
                         });
                     });
@@ -83,22 +98,22 @@
             <td><?php echo $this->Form->input('Search.cliente_id', array('label' => 'Cliente', 'type' => 'text', 'class' => 'clientes_select', 'style' => 'width: 300px;')) ?></td>
             <?php if (!empty($this->params['named']['cliente_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON(proyect_url()+'clientes/get_json/<?php echo $this->params['named']['cliente_id'] ?>', function(data) {
+                    $(document).ready(function () {
+                        $.getJSON(proyect_url() + 'clientes/get_json/<?php echo $this->params['named']['cliente_id'] ?>', function (data) {
                             $(".clientes_select").select2("data", {
-                                'id' : data.id,
-                                'nombre' : data.nombre
+                                'id': data.id,
+                                'nombre': data.nombre
                             });
                         });
                     });
                 </script>
             <?php elseif (!empty($this->params['url']['cliente_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON(proyect_url()+'clientes/get_json/<?php echo $this->params['url']['cliente_id'] ?>', function(data) {
+                    $(document).ready(function () {
+                        $.getJSON(proyect_url() + 'clientes/get_json/<?php echo $this->params['url']['cliente_id'] ?>', function (data) {
                             $(".clientes_select").select2("data", {
-                                'id' : data.id,
-                                'nombre' : data.nombre
+                                'id': data.id,
+                                'nombre': data.nombre
                             });
                         });
                     });
@@ -207,14 +222,14 @@
             $sumatorio_impuestos += $pedidoscliente['Pedidoscliente']['impuestos'];
             ?>
         <?php endforeach; ?>
-            <tr class="totales_pagina">
-                <td colspan="6">TOTALES</td>
-                <td><?php echo redondear_dos_decimal($sumatorio_precio_mat) ?></td>
-                <td><?php echo redondear_dos_decimal($sumatorio_precio_obra) ?></td>
-                <td><?php echo redondear_dos_decimal($sumatorio_precio) ?></td>
-                <td><?php echo redondear_dos_decimal($sumatorio_impuestos) ?></td>
-                <td colspan="6"></td>
-            </tr>
+        <tr class="totales_pagina">
+            <td colspan="6">TOTALES</td>
+            <td><?php echo redondear_dos_decimal($sumatorio_precio_mat) ?></td>
+            <td><?php echo redondear_dos_decimal($sumatorio_precio_obra) ?></td>
+            <td><?php echo redondear_dos_decimal($sumatorio_precio) ?></td>
+            <td><?php echo redondear_dos_decimal($sumatorio_impuestos) ?></td>
+            <td colspan="6"></td>
+        </tr>
     </table>
     <p>
         <?php

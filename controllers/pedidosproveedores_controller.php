@@ -44,20 +44,32 @@ class PedidosproveedoresController extends AppController {
             $conditions [] = array('Pedidosproveedore.numero' => $this->params['named']['numero']);
 
 
-       if (!empty($this->params['url']['FechaInicio']) && !empty($this->params['url']['FechaFin'])) {
-            $data1 = date("Y-m-d", strtotime( $this->params['url']['FechaInicio']));
-            $data2 = date("Y-m-d", strtotime( $this->params['url']['FechaFin']));
-        //    echo '$data1=' . $data1 . ' $data2=' . $data2  ;
-            $conditions[] = array("Pedidosproveedore.fecha BETWEEN '$data1' AND '$data2'");       
+        if (!empty($this->params['url']['FechaInicio']) && !empty($this->params['url']['FechaFin'])) {
+            $data1 = date("Y-m-d", strtotime($this->params['url']['FechaInicio']));
+            $data2 = date("Y-m-d", strtotime($this->params['url']['FechaFin']));
+            $conditions[] = array("Pedidosproveedore.fecha BETWEEN '$data1' AND '$data2'");
+        }
+
+        if (!empty($this->params['named']['FechaInicio']) && !empty($this->params['named']['FechaFin'])) {
+            $data1 = date("Y-m-d", strtotime($this->params['named']['FechaInicio']));
+            $data2 = date("Y-m-d", strtotime($this->params['named']['FechaFin']));
+            $conditions[] = array("Pedidosproveedore.fecha BETWEEN '$data1' AND '$data2'");
         }
         
         // Filtro fecha entrega
          if (!empty($this->params['url']['FechaInicioEntrega']) && !empty($this->params['url']['FechaFinEntrega'])) {
             $data1 = date("Y-m-d", strtotime( $this->params['url']['FechaInicioEntrega']));
             $data2 = date("Y-m-d", strtotime( $this->params['url']['FechaFinEntrega']));
-        //    echo '$data1=' . $data1 . ' $data2=' . $data2  ;
             $conditions[] = array("Pedidosproveedore.fecharecepcion BETWEEN '$data1' AND '$data2'");       
         }
+        
+
+        if (!empty($this->params['named']['FechaInicioEntrega']) && !empty($this->params['named']['FechaFinEntrega'])) {
+            $data1 = date("Y-m-d", strtotime($this->params['named']['FechaInicioEntrega']));
+            $data2 = date("Y-m-d", strtotime($this->params['named']['FechaFinEntrega']));
+            $conditions[] = array("Pedidosproveedore.fecharecepcion BETWEEN '$data1' AND '$data2'");
+        }
+        
     
         if (!empty($this->params['url']['proveedore_id']))
             $conditions [] = array('1' => '1 AND Pedidosproveedore.proveedore_id = ' . $this->params['url']['proveedore_id']);

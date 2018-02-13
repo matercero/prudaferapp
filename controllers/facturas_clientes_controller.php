@@ -33,20 +33,19 @@ class FacturasClientesController extends AppController {
             $conditions [] = array('FacturasCliente.numero' => $this->params['url']['numero']);
         if (!empty($this->params['named']['numero']))
             $conditions [] = array('FacturasCliente.numero' => $this->params['named']['numero']);
-
-
+   
         if (!empty($this->params['url']['FechaInicio']) && !empty($this->params['url']['FechaFin'])) {
             $data1 = date("Y-m-d", strtotime($this->params['url']['FechaInicio']));
             $data2 = date("Y-m-d", strtotime($this->params['url']['FechaFin']));
-            //    echo '$data1=' . $data1 . ' $data2=' . $data2  ;
-            $conditions[] = array("FacturasCliente.fecha BETWEEN '$data1' AND '$data2'");
-        }
-        if (!empty($this->params['named']['fecha_inicio[year]']) && !empty($this->params['named']['fecha_fin[year]'])) {
-            $data1 = $this->params['named']['fecha_inicio[year]'] . '-' . $this->params['named']['fecha_inicio[month]'] . '-' . $this->params['named']['fecha_inicio[day]'];
-            $data2 = $this->params['named']['fecha_fin[year]'] . '-' . $this->params['named']['fecha_fin[month]'] . '-' . $this->params['named']['fecha_fin[day]'];
             $conditions[] = array("FacturasCliente.fecha BETWEEN '$data1' AND '$data2'");
         }
 
+        if (!empty($this->params['named']['FechaInicio']) && !empty($this->params['named']['FechaFin'])) {
+            $data1 = date("Y-m-d", strtotime($this->params['named']['FechaInicio']));
+            $data2 = date("Y-m-d", strtotime($this->params['named']['FechaFin']));
+            $conditions[] = array("FacturasCliente.fecha BETWEEN '$data1' AND '$data2'");
+        }
+     
         if (!empty($this->params['url']['cliente_id']))
             $conditions [] = array('1' => '1 AND FacturasCliente.cliente_id = "' . $this->params['url']['cliente_id'] . '"');
         if (!empty($this->params['named']['cliente_id']))

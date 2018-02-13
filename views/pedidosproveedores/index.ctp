@@ -13,19 +13,56 @@
             $this->Paginator->options(array('url' => $this->params['url']));
         }
         // Inicializa fechas inicio Fin
-        if (empty($this->params['url']['FechaInicio'])) {
-            $this->params['url']['FechaInicio'] = '1998-01-01';
-        }
-        if (empty($this->params['url']['FechaFin'])) {
-            $this->params['url']['FechaFin'] = date("Y-m-d");
-        }
+        $valueFechaInicio = date("Y-m-d", strtotime('1998-01-01'));
+        $valueFechaFin = date("Y-m-d");
+
         // Inicializa fechas inicio Fin
-        if (empty($this->params['url']['FechaInicioEntrega'])) {
-            $this->params['url']['FechaInicioEntrega'] = '1998-01-01';
+        if (!empty($this->params['url']['FechaInicio'])) {
+            $fechaUrlInicio = date("Y-m-d", strtotime($this->params['url']['FechaInicio']));
+            if ($fechaUrlInicio > $valueFechaInicio) {
+                $valueFechaInicio = $fechaUrlInicio;
+            }
         }
-        if (empty($this->params['url']['FechaFinEntrega'])) {
-            $this->params['url']['FechaFinEntrega'] = date("Y-m-d");
+
+        if (!empty($this->params['named']['FechaInicio'])) {
+            $valueFechaInicio = $this->params['named']['FechaInicio'];
         }
+
+        if (!empty($this->params['url']['FechaFin'])) {
+            $valueFechaFin = date("Y-m-d", strtotime($this->params['url']['FechaFin']));
+        }
+
+        if (!empty($this->params['named']['FechaFin'])) {
+            $valueFechaFin = $this->params['named']['FechaFin'];
+        }
+        
+        // Inicializa fechas inicio Fin Entrega -------------------------------------
+        $valueFechaInicioEnt = date("Y-m-d", strtotime('1998-01-01'));
+        $valueFechaFinEnt = date("Y-m-d");
+
+        // Inicializa fechas inicio Fin
+        if (!empty($this->params['url']['FechaInicioEntrega'])) {
+            $fechaUrlInicio = date("Y-m-d", strtotime($this->params['url']['FechaInicioEntrega']));
+            if ($fechaUrlInicio > $valueFechaInicioEnt) {
+                $valueFechaInicioEnt = $fechaUrlInicio;
+            }
+        }
+
+        if (!empty($this->params['named']['FechaInicioEntrega'])) {
+            $valueFechaInicioEnt = $this->params['named']['FechaInicioEntrega'];
+        }
+
+        if (!empty($this->params['url']['FechaFinEntrega'])) {
+            $valueFechaFinEnt = date("Y-m-d", strtotime($this->params['url']['FechaFinEntrega']));
+        }
+
+        if (!empty($this->params['named']['FechaFinEntrega'])) {
+            $valueFechaFinEnt = $this->params['named']['FechaFinEntrega'];
+        }
+        
+        
+        
+        // ----------------------------------------------------------------
         ?>
         <table class="view">
             <tr>
@@ -49,7 +86,7 @@
                 <td style="width: 250px">
                     <?php
                     echo $this->Form->input('FechaInicio', array('type' => 'text', 'id' => 'calendar_inputEnt',
-                        'value' => $this->params['url']['FechaInicio'], 'style' => 'width: 100px;'));
+                        'value' => $valueFechaInicio, 'style' => 'width: 100px;'));
                     ?>
                 </td>
 
@@ -57,7 +94,7 @@
                 <td style="width: 250px">
                     <?php
                     echo $this->Form->input('FechaFin', array('type' => 'text', 'id' => 'calendar_inputFin',
-                        'value' => $this->params['url']['FechaFin'], 'style' => 'width: 100px;'));
+                        'value' => $valueFechaFin, 'style' => 'width: 100px;'));
                     ?>
                 </td>
 
@@ -185,7 +222,7 @@
                 <td style="width: 250px">
                     <?php
                     echo $this->Form->input('FechaInicioEntrega', array('type' => 'text', 'id' => 'calendar_inputEntEntrega',
-                        'value' => $this->params['url']['FechaInicioEntrega'], 'style' => 'width: 100px;'));
+                        'value' => $valueFechaInicioEnt, 'style' => 'width: 100px;'));
                     ?>
                 </td>
 
@@ -193,7 +230,7 @@
                 <td style="width: 250px">
                     <?php
                     echo $this->Form->input('FechaFinEntrega', array('type' => 'text', 'id' => 'calendar_inputFinEntrega',
-                        'value' => $this->params['url']['FechaFinEntrega'], 'style' => 'width: 100px;'));
+                        'value' => $valueFechaFinEnt, 'style' => 'width: 100px;'));
                     ?>
                 </td>
 
@@ -243,7 +280,7 @@
                 <td><?php echo @$this->Html->link($pedidosproveedore['Presupuestosproveedore']['Avisosrepuesto']['numero'], array('controller' => 'avisosrepuestos', 'action' => 'view', $pedidosproveedore['Presupuestosproveedore']['avisosrepuesto_id'])); ?></td>    
                 <td><?php echo @$this->Html->link($pedidosproveedore['Presupuestosproveedore']['Avisostallere']['numero'], array('controller' => 'avisostalleres', 'action' => 'view', $pedidosproveedore['Presupuestosproveedore']['avisostallere_id'])); ?></td>   
                 <td><?php echo @$this->Html->link($pedidosproveedore['Presupuestosproveedore']['Ordene']['numero'], array('controller' => 'ordenes', 'action' => 'view', $pedidosproveedore['Presupuestosproveedore']['ordene_id'])); ?></td>
-                <td><?php echo $pedidosproveedore['Pedidosproveedore']['fecharecepcion']; ?>&nbsp;</td>
+                <td><?php echo  $this->Time->format('d-m-Y',$pedidosproveedore['Pedidosproveedore']['fecharecepcion']); ?>&nbsp;</td>
                 <td><?php echo $pedidosproveedore['Pedidosproveedore']['observaciones']; ?>&nbsp;</td>
                 <td><?php echo!empty($pedidosproveedore['Pedidosproveedore']['confirmado']) ? 'Sí' : 'No'; ?></td>
                 <td><?php if (!empty($pedidosproveedore['Pedidosproveedore']['pedidoescaneado'])) echo $this->Html->image('clip.png', array('url' => '/files/pedidosproveedore/' . $pedidosproveedore['Pedidosproveedore']['pedidoescaneado'])); ?></td>

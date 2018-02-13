@@ -37,11 +37,16 @@ class FacturasproveedoresController extends AppController {
         if (!empty($this->params['named']['numero']))
             $conditions [] = array('Facturasproveedore.numero' => $this->params['named']['numero']);
 
-
+        
         if (!empty($this->params['url']['FechaInicio']) && !empty($this->params['url']['FechaFin'])) {
             $data1 = date("Y-m-d", strtotime($this->params['url']['FechaInicio']));
             $data2 = date("Y-m-d", strtotime($this->params['url']['FechaFin']));
-            //    echo '$data1=' . $data1 . ' $data2=' . $data2  ;
+            $conditions[] = array("Facturasproveedore.fechafactura  BETWEEN '$data1' AND '$data2'");
+        }
+
+        if (!empty($this->params['named']['FechaInicio']) && !empty($this->params['named']['FechaFin'])) {
+            $data1 = date("Y-m-d", strtotime($this->params['named']['FechaInicio']));
+            $data2 = date("Y-m-d", strtotime($this->params['named']['FechaFin']));
             $conditions[] = array("Facturasproveedore.fechafactura  BETWEEN '$data1' AND '$data2'");
         }
 

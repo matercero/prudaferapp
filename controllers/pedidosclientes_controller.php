@@ -43,12 +43,17 @@ class PedidosclientesController extends AppController {
         if (!empty($this->params['named']['numero']))
             $conditions [] = array('Pedidoscliente.numero' => $this->params['named']['numero']);
 
-
+      
         if (!empty($this->params['url']['FechaInicio']) && !empty($this->params['url']['FechaFin'])) {
-            $data1 = date("Y-m-d", strtotime( $this->params['url']['FechaInicio']));
-            $data2 = date("Y-m-d", strtotime( $this->params['url']['FechaFin']));
-          //  echo '$data1=' . $data1 . ' $data2=' . $data2  ;
-            $conditions[] = array("Pedidoscliente.fecha BETWEEN '$data1' AND '$data2'");       
+            $data1 = date("Y-m-d", strtotime($this->params['url']['FechaInicio']));
+            $data2 = date("Y-m-d", strtotime($this->params['url']['FechaFin']));
+            $conditions[] = array("Pedidoscliente.fecha BETWEEN '$data1' AND '$data2'");
+        }
+
+        if (!empty($this->params['named']['FechaInicio']) && !empty($this->params['named']['FechaFin'])) {
+            $data1 = date("Y-m-d", strtotime($this->params['named']['FechaInicio']));
+            $data2 = date("Y-m-d", strtotime($this->params['named']['FechaFin']));
+            $conditions[] = array("Pedidoscliente.fecha BETWEEN '$data1' AND '$data2'");
         }
 
         if (!empty($this->params['url']['articulo_id']))

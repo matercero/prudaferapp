@@ -11,11 +11,27 @@
             $this->Paginator->options(array('url' => $this->params['url']));
         }
         // Inicializa fechas inicio Fin
-        if (empty($this->params['url']['FechaInicio'])) {
-            $this->params['url']['FechaInicio'] = '1998-01-01';
+        $valueFechaInicio = date("Y-m-d", strtotime('1998-01-01'));
+        $valueFechaFin = date("Y-m-d");
+
+        // Inicializa fechas inicio Fin
+        if (!empty($this->params['url']['FechaInicio'])) {
+            $fechaUrlInicio = date("Y-m-d", strtotime($this->params['url']['FechaInicio']));
+            if ($fechaUrlInicio > $valueFechaInicio) {
+                $valueFechaInicio = $fechaUrlInicio;
+            }
         }
-        if (empty($this->params['url']['FechaFin'])) {
-            $this->params['url']['FechaFin'] = date("Y-m-d");
+
+        if (!empty($this->params['named']['FechaInicio'])) {
+            $valueFechaInicio = $this->params['named']['FechaInicio'];
+        }
+
+        if (!empty($this->params['url']['FechaFin'])) {
+            $valueFechaFin = date("Y-m-d", strtotime($this->params['url']['FechaFin']));
+        }
+
+        if (!empty($this->params['named']['FechaFin'])) {
+            $valueFechaFin = $this->params['named']['FechaFin'];
         }
         ?>
         <?php echo $this->Form->create('Facturasproveedore', array('type' => 'get')) ?>
@@ -36,6 +52,24 @@
                 <?php else: ?>
                     <td style="width: 250px"><?php echo $this->Form->input('Search.numero') ?></td>
                 <?php endif; ?>
+
+
+                <!-- Fecha inicio NUEVA -->
+                <td style="width: 250px">
+                    <?php
+                    echo $this->Form->input('FechaInicio', array('type' => 'text', 'id' => 'calendar_inputEnt',
+                        'value' => $valueFechaInicio, 'style' => 'width: 100px;'));
+                    ?>
+                </td>
+
+                <!-- Fecha Fin NUEVA -->
+                <td style="width: 250px">
+                    <?php
+                    echo $this->Form->input('FechaFin', array('type' => 'text', 'id' => 'calendar_inputFin',
+                        'value' => $valueFechaFin, 'style' => 'width: 100px;'));
+                    ?>
+                </td>
+
 
                 <td><?php echo $this->Form->input('Search.proveedore_id', array('label' => 'Proveedor', 'type' => 'text', 'class' => 'proveedores_select', 'style' => 'width: 300px;')) ?></td>
                 <?php if (!empty($this->params['named']['proveedore_id'])): ?>
@@ -77,21 +111,7 @@
             <?php else: ?>
                 <td style="width: 250px"><?php echo $this->Form->input('Search.numero_albaran', array('label' => 'Nº Albarán')) ?></td>
             <?php endif; ?>
-            <!-- Fecha inicio NUEVA -->
-            <td style="width: 250px">
-                <?php
-                echo $this->Form->input('FechaInicio', array('type' => 'text', 'id' => 'calendar_inputEnt',
-                    'value' => $this->params['url']['FechaInicio'], 'style' => 'width: 100px;'));
-                ?>
-            </td>
 
-            <!-- Fecha Fin NUEVA -->
-            <td style="width: 250px">
-                <?php
-                echo $this->Form->input('FechaFin', array('type' => 'text', 'id' => 'calendar_inputFin',
-                    'value' => $this->params['url']['FechaFin'], 'style' => 'width: 100px;'));
-                ?>
-            </td>
 
             <?php if (!empty($this->params['named']['resultados_por_pagina'])): ?>
                 <td><?php echo $this->Form->input('Search.resultados_por_pagina', array('label' => 'Resultados por Página', 'type' => 'select', 'options' => array('20' => 20, '50' => 50, '100' => 100, '500' => 500, '1000' => 1000), 'default' => '20', 'selected' => $this->params['named']['resultados_por_pagina'])) ?></td>

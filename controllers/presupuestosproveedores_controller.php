@@ -46,6 +46,17 @@ class PresupuestosproveedoresController extends AppController {
             $conditions[] = array("Presupuestosproveedore.fecha BETWEEN '$data1' AND '$data2'");       
         }
 
+        if (!empty($this->params['url']['FechaInicio']) && !empty($this->params['url']['FechaFin'])) {
+            $data1 = date("Y-m-d", strtotime($this->params['url']['FechaInicio']));
+            $data2 = date("Y-m-d", strtotime($this->params['url']['FechaFin']));
+            $conditions[] = array("Presupuestosproveedore.fecha BETWEEN '$data1' AND '$data2'");
+        }
+
+        if (!empty($this->params['named']['FechaInicio']) && !empty($this->params['named']['FechaFin'])) {
+            $data1 = date("Y-m-d", strtotime($this->params['named']['FechaInicio']));
+            $data2 = date("Y-m-d", strtotime($this->params['named']['FechaFin']));
+            $conditions[] = array("Presupuestosproveedore.fecha BETWEEN '$data1' AND '$data2'");
+        }
 
 
         if (!empty($this->params['url']['proveedore_id']))

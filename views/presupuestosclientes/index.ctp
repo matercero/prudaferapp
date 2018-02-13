@@ -12,7 +12,7 @@
         if (!empty($this->params['url'])) {
             $this->Paginator->options(array('url' => $this->params['url']));
         }
-
+        // Inicializa fechas inicio Fin
         $valueFechaInicio = date("Y-m-d", strtotime('1998-01-01'));
         $valueFechaFin = date("Y-m-d");
 

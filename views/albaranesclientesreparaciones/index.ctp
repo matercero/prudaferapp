@@ -11,12 +11,27 @@
             $this->Paginator->options(array('url' => $this->params['url']));
         }
         // Inicializa fechas Inicio y  Fin
-        if (empty($this->params['url']['FechaInicio'])) {
-            $this->params['url']['FechaInicio'] = '1998-01-01';
+        $valueFechaInicio = date("Y-m-d", strtotime('1998-01-01'));
+        $valueFechaFin = date("Y-m-d");
+
+        // Inicializa fechas inicio Fin
+        if (!empty($this->params['url']['FechaInicio'])) {
+            $fechaUrlInicio = date("Y-m-d", strtotime($this->params['url']['FechaInicio']));
+            if ($fechaUrlInicio > $valueFechaInicio) {
+                $valueFechaInicio = $fechaUrlInicio;
+            }
         }
-        if (empty($this->params['url']['FechaFin'])) {
-            $this->params['url']['FechaFin'] = date("d-m-Y");
-            ;
+
+        if (!empty($this->params['named']['FechaInicio'])) {
+            $valueFechaInicio = $this->params['named']['FechaInicio'];
+        }
+
+        if (!empty($this->params['url']['FechaFin'])) {
+            $valueFechaFin = date("Y-m-d", strtotime($this->params['url']['FechaFin']));
+        }
+
+        if (!empty($this->params['named']['FechaFin'])) {
+            $valueFechaFin = $this->params['named']['FechaFin'];
         }
         ?>
         <?php echo $this->Form->create('Albaranesclientesreparacione', array('type' => 'get')) ?>
@@ -41,7 +56,7 @@
                 <td style="width: 250px">
                     <?php
                     echo $this->Form->input('FechaInicio', array('type' => 'text', 'id' => 'calendar_inputEnt',
-                        'value' => $this->params['url']['FechaInicio'], 'style' => 'width: 100px;'))
+                        'value' => $valueFechaInicio, 'style' => 'width: 100px;'))
                     ?>
                 </td>
 
@@ -49,7 +64,7 @@
                 <td style="width: 250px">
                     <?php
                     echo $this->Form->input('FechaFin', array('type' => 'text', 'id' => 'calendar_inputFin',
-                        'value' => $this->params['url']['FechaFin'], 'style' => 'width: 100px;'))
+                        'value' => $valueFechaFin, 'style' => 'width: 100px;'))
                     ?>
                 </td>
 

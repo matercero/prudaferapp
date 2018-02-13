@@ -28,7 +28,8 @@ foreach ($albaranes as $item) {
         }  else {
             $i=0;
             foreach ($item['TareasAlbaranesclientesreparacione'] as $tarea) {
-                array_push($line, $item['TareasAlbaranesclientesreparacione'][$i]['descripcion']);                                        
+                array_push($line, $item['TareasAlbaranesclientesreparacione'][$i]['descripcion']);        
+                 $i++;                                
             }
         }        
     }
