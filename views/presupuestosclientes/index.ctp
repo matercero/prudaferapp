@@ -9,15 +9,31 @@
         <?php
         array_shift($this->params['url']);
         array_shift($this->params['url']);
-        if (!empty($this->params['url'])) {         
+        if (!empty($this->params['url'])) {
             $this->Paginator->options(array('url' => $this->params['url']));
         }
+
+        $valueFechaInicio = date("Y-m-d", strtotime('1998-01-01'));
+        $valueFechaFin = date("Y-m-d");
+
         // Inicializa fechas inicio Fin
-        if (empty($this->params['url']['FechaInicio'])) {
-            $this->params['url']['FechaInicio'] = '1998-01-01';
+        if (!empty($this->params['url']['FechaInicio'])) {
+            $fechaUrlInicio = date("Y-m-d", strtotime($this->params['url']['FechaInicio']));
+            if ($fechaUrlInicio > $valueFechaInicio) {
+                $valueFechaInicio = $fechaUrlInicio;
+            }
         }
-        if (empty($this->params['url']['FechaFin'])) {
-            $this->params['url']['FechaFin'] = date("Y-m-d");
+
+        if (!empty($this->params['named']['FechaInicio'])) {
+            $valueFechaInicio = $this->params['named']['FechaInicio'];
+        }
+
+        if (!empty($this->params['url']['FechaFin'])) {
+            $valueFechaFin = date("Y-m-d", strtotime($this->params['url']['FechaFin']));
+        }
+
+        if (!empty($this->params['named']['FechaFin'])) {
+            $valueFechaFin = $this->params['named']['FechaFin'];
         }
         ?>
         <?php echo $this->Form->create('Presupuestoscliente', array('type' => 'get')) ?>
@@ -43,7 +59,7 @@
                 <td style="width: 250px">
                     <?php
                     echo $this->Form->input('FechaInicio', array('type' => 'text', 'id' => 'calendar_inputEnt2',
-                        'value' => $this->params['url']['FechaInicio'], 'style' => 'width: 100px;'));
+                        'value' => $valueFechaInicio, 'style' => 'width: 100px;'));
                     ?>
                 </td>
 
@@ -51,31 +67,31 @@
                 <td style="width: 250px">
                     <?php
                     echo $this->Form->input('FechaFin', array('type' => 'text', 'id' => 'calendar_inputFin2',
-                        'value' => $this->params['url']['FechaFin'], 'style' => 'width: 100px;'));
+                        'value' => $valueFechaFin, 'style' => 'width: 100px;'));
                     ?>
                 </td>
 
                 <td><?php echo $this->Form->input('Search.articulo_id', array('label' => 'Árticulo', 'type' => 'text', 'class' => 'articulos_select', 'style' => 'width: 300px;')) ?></td>
                 <?php if (!empty($this->params['named']['articulo_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['named']['articulo_id'] ?>', function(data) {
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['named']['articulo_id'] ?>', function (data) {
                                     $(".articulos_select").select2("data", {
-                                'id' : data.id,
-                                'ref' : data.ref,
-                                'nombre' : data.nombre
+                                        'id': data.id,
+                                        'ref': data.ref,
+                                        'nombre': data.nombre
                                     });
                                 });
                             });
                 </script>
             <?php elseif (!empty($this->params['url']['articulo_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['url']['articulo_id'] ?>', function(data) {
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>articulos/get_json/<?php echo $this->params['url']['articulo_id'] ?>', function (data) {
                                     $(".articulos_select").select2("data", {
-                                'id' : data.id,
-                                'ref' : data.ref,
-                                'nombre' : data.nombre
+                                        'id': data.id,
+                                        'ref': data.ref,
+                                        'nombre': data.nombre
                                     });
                                 });
                             });
@@ -84,22 +100,22 @@
             <td><?php echo $this->Form->input('Search.cliente_id', array('label' => 'Cliente', 'type' => 'text', 'class' => 'clientes_select', 'style' => 'width: 300px;')) ?></td>
             <?php if (!empty($this->params['named']['cliente_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['named']['cliente_id'] ?>', function(data) {
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['named']['cliente_id'] ?>', function (data) {
                                     $(".clientes_select").select2("data", {
-                                'id' : data.id,
-                                'nombre' : data.nombre
+                                        'id': data.id,
+                                        'nombre': data.nombre
                                     });
                                 });
                             });
                 </script>
             <?php elseif (!empty($this->params['url']['cliente_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['url']['cliente_id'] ?>', function(data) {
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>clientes/get_json/<?php echo $this->params['url']['cliente_id'] ?>', function (data) {
                                     $(".clientes_select").select2("data", {
-                                'id' : data.id,
-                                'nombre' : data.nombre
+                                        'id': data.id,
+                                        'nombre': data.nombre
                                     });
                                 });
                             });
@@ -134,24 +150,24 @@
                 <td><?php echo $this->Form->input('Search.maquina_id', array('label' => 'Máquina', 'type' => 'text', 'class' => 'maquinas_select', 'style' => 'width: 300px;')) ?></td>
                 <?php if (!empty($this->params['named']['maquina_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>maquinas/get_json/<?php echo $this->params['named']['maquina_id'] ?>', function(data) {
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>maquinas/get_json/<?php echo $this->params['named']['maquina_id'] ?>', function (data) {
                                     $(".maquinas_select").select2("data", {
-                                'id' : data.id,
-                                'codigo' : data.codigo,
-                                'nombre' : data.nombre
+                                        'id': data.id,
+                                        'codigo': data.codigo,
+                                        'nombre': data.nombre
                                     });
                                 });
                             });
                 </script>
             <?php elseif (!empty($this->params['url']['maquina_id'])): ?>
                 <script>
-                    $(document).ready(function() {
-                        $.getJSON('<?php echo Configure::read('proyect_url') ?>maquinas/get_json/<?php echo $this->params['url']['maquina_id'] ?>', function(data) {
+                    $(document).ready(function () {
+                        $.getJSON('<?php echo Configure::read('proyect_url') ?>maquinas/get_json/<?php echo $this->params['url']['maquina_id'] ?>', function (data) {
                                     $(".maquinas_select").select2("data", {
-                                'id' : data.id,
-                                'codigo' : data.codigo,
-                                'nombre' : data.nombre
+                                        'id': data.id,
+                                        'codigo': data.codigo,
+                                        'nombre': data.nombre
                                     });
                                 });
                             });
@@ -174,7 +190,7 @@
     <p>
         <?php
         echo $this->Paginator->counter(array(
-            'format' => __('Page %page% of %pages%, showing %current% records out of %count% total, starting on record %start%, ending on %end%', true)
+            'format' => __('Pag. %page% de %pages%, mostrando %current% registros de %count% total, comienza en registro %start%, finaliza %end%', true)
         ));
         ?>	</p>
 
